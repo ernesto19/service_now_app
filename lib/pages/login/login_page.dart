@@ -36,10 +36,12 @@ class _LoginPageState extends State<LoginPage> {
           color: Color.fromRGBO(247, 247, 247, 1),
           child: SingleChildScrollView(
             child: Container(
-              height: responsive.height,
+              // height: responsive.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  // Expanded(child: Welcome()),
+                  // Expanded(child: LoginForm())
                   Welcome(),
                   LoginForm()
                 ]

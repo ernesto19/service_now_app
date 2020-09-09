@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:service_now/widgets/circle_button.dart';
 import 'package:service_now/widgets/input_text.dart';
 import 'package:service_now/widgets/rounded_button.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:http/http.dart' as http;
 
 class LoginForm extends StatelessWidget {
   const LoginForm({Key key}) : super(key: key);
@@ -21,12 +25,16 @@ class LoginForm extends StatelessWidget {
           children: <Widget>[
             InputText(
               iconPath: 'assets/icons/mail.svg', 
-              placeholder: 'Correo electrónico'
+              placeholder: 'Correo electrónico',
+              textSize: responsive.ip(2.2),
+              iconSize: responsive.ip(4)
             ),
             SizedBox(height: responsive.ip(2)),
             InputText(
               iconPath: 'assets/icons/key.svg', 
-              placeholder: 'Contraseña'
+              placeholder: 'Contraseña',
+              textSize: responsive.ip(2.2),
+              iconSize: responsive.ip(4)
             ),
             Container(
               width: double.infinity,
@@ -45,7 +53,7 @@ class LoginForm extends StatelessWidget {
             SizedBox(height: responsive.ip(2)),
             RoundedButton(
               label: 'Iniciar sesión',
-              onPressed: () => {}
+              onPressed: () => _initiateFacebookLogin()
               // onPressed: () => Navigator.pushReplacementNamed(context, MainPage.routeName)
             ),
             SizedBox(height: responsive.ip(3)),
@@ -88,5 +96,31 @@ class LoginForm extends StatelessWidget {
         )
       ),
     );
+  }
+
+  void _initiateFacebookLogin() async {
+    print('Hola');
+    var login = FacebookLogin();
+    var result = await login.logInWithReadPermissions(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.error:
+        print('Error');
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print('Cancelado por el usuario');
+        break;
+      case FacebookLoginStatus.loggedIn:
+        print('Logueado exitosamente');
+        _getUserInfo(result);
+        break;
+    }
+  }
+
+  void _getUserInfo(FacebookLoginResult result) async {
+    final token = result.accessToken.token;
+    final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
+    final profile = json.decode(graphResponse.body);
+    print(profile['email']);
   }
 }
