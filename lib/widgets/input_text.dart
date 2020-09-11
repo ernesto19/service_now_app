@@ -14,7 +14,7 @@ class InputText extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
       prefix: Container(
         width: 35,
-        height: iconSize,
+        height: 25,
         padding: EdgeInsets.all(4),
         child: SvgPicture.asset(
           this.iconPath,
@@ -22,7 +22,7 @@ class InputText extends StatelessWidget {
         )
       ),
       placeholder: this.placeholder,
-      placeholderStyle: TextStyle(fontSize: textSize, fontFamily: 'sans', color: Color(0xffcccccc)),
+      placeholderStyle: TextStyle(fontSize: 17, fontFamily: 'sans', color: Color(0xffcccccc)),
       style: TextStyle(fontFamily: 'sans'),
       decoration: BoxDecoration(
         border: Border(

@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:service_now/libs/auth.dart';
+import 'package:service_now/models/user.dart';
+import 'package:service_now/pages/home/home_page.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:service_now/widgets/circle_button.dart';
 import 'package:service_now/widgets/input_text.dart';
 import 'package:service_now/widgets/rounded_button.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+// import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 
 class LoginForm extends StatelessWidget {
@@ -65,13 +68,22 @@ class LoginForm extends StatelessWidget {
                 CircleButton(
                   iconPath: 'assets/icons/facebook.svg',
                   backgroundColor: Color(0xff448AFF),
-                  size: 55
+                  size: 55,
+                  onPressed: () async {
+                    User user = await Auth.instance.facebook();
+                    Navigator.pushNamed(context, HomePage.routeName, arguments: user);
+                    print('Listo');
+                  }
                 ),
                 SizedBox(width: 20),
                 CircleButton(
                   iconPath: 'assets/icons/google.svg',
                   backgroundColor: Color(0xffFF1744),
-                  size: 55
+                  size: 55,
+                  onPressed: () async {
+                    await Auth.instance.google();
+                    print('Listo');
+                  }
                 )
               ]
             ),
@@ -99,28 +111,28 @@ class LoginForm extends StatelessWidget {
   }
 
   void _initiateFacebookLogin() async {
-    print('Hola');
-    var login = FacebookLogin();
-    var result = await login.logInWithReadPermissions(['email']);
+    // print('Hola');
+    // var login = FacebookLogin();
+    // var result = await login.logInWithReadPermissions(['email']);
 
-    switch (result.status) {
-      case FacebookLoginStatus.error:
-        print('Error');
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print('Cancelado por el usuario');
-        break;
-      case FacebookLoginStatus.loggedIn:
-        print('Logueado exitosamente');
-        _getUserInfo(result);
-        break;
-    }
+    // switch (result.status) {
+    //   case FacebookLoginStatus.error:
+    //     print('Error');
+    //     break;
+    //   case FacebookLoginStatus.cancelledByUser:
+    //     print('Cancelado por el usuario');
+    //     break;
+    //   case FacebookLoginStatus.loggedIn:
+    //     print('Logueado exitosamente');
+    //     _getUserInfo(result);
+    //     break;
+    // }
   }
 
-  void _getUserInfo(FacebookLoginResult result) async {
-    final token = result.accessToken.token;
-    final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
-    final profile = json.decode(graphResponse.body);
-    print(profile['email']);
-  }
+  // void _getUserInfo(FacebookLoginResult result) async {
+    // final token = result.accessToken.token;
+    // final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
+    // final profile = json.decode(graphResponse.body);
+    // print(profile['email']);
+  // }
 }
