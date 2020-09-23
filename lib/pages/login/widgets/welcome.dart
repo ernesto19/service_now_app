@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 
 class Welcome extends StatelessWidget {
@@ -10,36 +11,14 @@ class Welcome extends StatelessWidget {
     
     return Column(
       children: <Widget>[
-        // AspectRatio(
-        //   aspectRatio: 16 / 11,
-        //   child: LayoutBuilder(
-        //     builder: (_, contraints) {
-        //       return Container(
-        //         child: Container(
-        //           child: Stack(
-        //             children: <Widget>[
-        //               Center(
-        //                 child: Image.asset(
-        //                   'assets/images/logo.jpeg',
-        //                   width: contraints.maxWidth * 0.35
-        //                 )
-        //               )
-        //             ]
-        //           )
-        //         )
-        //       );
-        //     }
-        //   )
-        // ),
         Container(
-          padding: EdgeInsets.only(top: 80, bottom: 30),
+          padding: EdgeInsets.only(top: 50, bottom: 30),
           child: Container(
             child: Stack(
               children: <Widget>[
                 Center(
                   child: Image.asset(
                     'assets/images/logo.jpeg',
-                    // width: contraints.maxWidth * 0.35
                     width: 110
                   )
                 )
@@ -48,7 +27,7 @@ class Welcome extends StatelessWidget {
           )
         ),
         Text(
-          '¡Bienvenido!',
+          allTranslations.traslate('welcome'),
           style: TextStyle(
             fontSize: responsive.ip(2.5),
             fontWeight: FontWeight.bold,

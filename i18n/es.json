@@ -1,0 +1,16 @@
+{
+    "welcome": "¡Bienvenido!",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "log_in": "Iniciar sesión",
+    "recover_password": "Recuperar contraseña",
+    "or_continue": "o continúe con",
+    "not_have_account": "¿Aún no tiene una cuenta?",
+    "create_account": "Registrarme",
+    "services_title": "¿Qué servicios necesitas hoy?",
+    "menu_profile": "Perfil",
+    "menu_services": "Servicios",
+    "menu_terms": "Condiciones",
+    "menu_support": "Soporte",
+    "log_out": "Cerrar sesión"
+}

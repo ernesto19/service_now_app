@@ -23,7 +23,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  # provider: ^3.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,6 +42,16 @@ dev_dependencies:
   google_sign_in: ^4.5.3
   firebase_messaging: ^6.0.16
   firebase_auth: ^0.16.1
+  permission_handler: ^5.0.1
+  # shared_preferences: ^0.5.8
+  shared_preferences: ^0.5.10
+  rxdart: ^0.22.0
+  bloc: ^4.0.0
+  flutter_bloc: ^4.0.0
+  flutter_inner_drawer: ^0.5.5+3
+  equatable: ^1.1.1
+  google_maps_flutter: ^0.5.28+1
+  geolocator: ^5.3.2+2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +68,8 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - i18n/en.json
+    - i18n/es.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

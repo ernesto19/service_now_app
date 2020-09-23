@@ -1,0 +1,16 @@
+{
+    "welcome": "Welcome!",
+    "email": "Email",
+    "password": "Password",
+    "log_in": "Log in",
+    "recover_password": "Recover password",
+    "or_continue": "or continue with",
+    "not_have_account": "You do not have an account yet?",
+    "create_account": "Sign up",
+    "services_title": "What services do you need today?",
+    "menu_profile": "Profile",
+    "menu_services": "Services",
+    "menu_terms": "Terms",
+    "menu_support": "Support",
+    "log_out": "Log out"
+}

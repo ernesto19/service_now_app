@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import FBSDKLoginKit
 import FBSDKCoreKit
+import GoogleMaps
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -14,7 +15,7 @@ import FBSDKCoreKit
       application,
       didFinishLaunchingWithOptions: launchOptions
     )
-
+    GMSServices.provideAPIKey("AIzaSyBZOZ2FwSFPiqCwdLLNw9WwXBYcwZdyz0E")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

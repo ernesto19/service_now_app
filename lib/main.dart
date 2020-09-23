@@ -1,25 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:service_now/pages/home/home_page.dart';
 import 'package:service_now/pages/login/login_page.dart';
-import 'package:firebase_core/firebase_core.dart';
-
+import 'package:service_now/utils/all_translations.dart';
+import 'preferences/user_preferences.dart';
 import 'routes/routes.dart';
 
 void main() async {
   // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserPreferences.instance.initPreferences();
+  await allTranslations.init();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    allTranslations.onLocaleChangedCallback = _onLocaleChanged;
+  }
+
+  _onLocaleChanged() async {
+    print('Language has been changed to: ${allTranslations.currentLanguage}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Service Now',
+      supportedLocales: allTranslations.supportedLocales(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'sans'
       ),
-      home: LoginPage(),
+      initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
       routes: getApplicationRoutes()
     );
   }

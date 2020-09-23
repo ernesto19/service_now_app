@@ -1,23 +1,22 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:service_now/blocs/user_bloc.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/models/user.dart';
 import 'package:service_now/pages/home/home_page.dart';
+import 'package:service_now/preferences/user_preferences.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:service_now/widgets/circle_button.dart';
 import 'package:service_now/widgets/input_text.dart';
 import 'package:service_now/widgets/rounded_button.dart';
-// import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:http/http.dart' as http;
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
+    final _emailController = TextEditingController();
+    final _passwordController = TextEditingController();
 
     return SafeArea(
       top: false,
@@ -27,17 +26,17 @@ class LoginForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             InputText(
+              controller: _emailController,
               iconPath: 'assets/icons/mail.svg', 
-              placeholder: 'Correo electrónico',
-              textSize: responsive.ip(2.2),
-              iconSize: responsive.ip(4)
+              placeholder: allTranslations.traslate('email'),
+              obscureText: false
             ),
             SizedBox(height: responsive.ip(2)),
             InputText(
+              controller: _passwordController,
               iconPath: 'assets/icons/key.svg', 
-              placeholder: 'Contraseña',
-              textSize: responsive.ip(2.2),
-              iconSize: responsive.ip(4)
+              placeholder: allTranslations.traslate('password'),
+              obscureText: true
             ),
             Container(
               width: double.infinity,
@@ -45,7 +44,7 @@ class LoginForm extends StatelessWidget {
               child: CupertinoButton(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: Text(
-                  'Recuperar contraseña',
+                  allTranslations.traslate('recover_password'),
                   style: TextStyle(
                     fontFamily: 'sans'
                   )
@@ -55,12 +54,24 @@ class LoginForm extends StatelessWidget {
             ),
             SizedBox(height: responsive.ip(2)),
             RoundedButton(
-              label: 'Iniciar sesión',
-              onPressed: () => _initiateFacebookLogin()
-              // onPressed: () => Navigator.pushReplacementNamed(context, MainPage.routeName)
+              label: allTranslations.traslate('log_in'),
+              onPressed: () {
+                bloc.login(_emailController.text, _passwordController.text).then((response) {
+                  if (response.error == 0) {
+                    User user = response.data;
+                    UserPreferences.instance.userId   = user.id;
+                    UserPreferences.instance.email    = user.email;
+                    UserPreferences.instance.firstName = user.firstName;
+                    UserPreferences.instance.lastName = user.lastName;
+                    UserPreferences.instance.token    = user.token;
+
+                    Navigator.pushNamed(context, HomePage.routeName, arguments: user);
+                  }
+                });
+              }
             ),
             SizedBox(height: responsive.ip(3)),
-            Text('o continúe con'),
+            Text(allTranslations.traslate('or_continue')),
             SizedBox(height: responsive.ip(1)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -71,8 +82,7 @@ class LoginForm extends StatelessWidget {
                   size: 55,
                   onPressed: () async {
                     User user = await Auth.instance.facebook();
-                    Navigator.pushNamed(context, HomePage.routeName, arguments: user);
-                    print('Listo');
+                    // Navigator.pushNamed(context, HomePage.routeName, arguments: user);
                   }
                 ),
                 SizedBox(width: 20),
@@ -81,8 +91,8 @@ class LoginForm extends StatelessWidget {
                   backgroundColor: Color(0xffFF1744),
                   size: 55,
                   onPressed: () async {
-                    await Auth.instance.google();
-                    print('Listo');
+                    User user = await Auth.instance.google();
+                    // Navigator.pushNamed(context, HomePage.routeName, arguments: user);
                   }
                 )
               ]
@@ -91,10 +101,10 @@ class LoginForm extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('¿Aún no tiene una cuenta?'),
+                Text(allTranslations.traslate('not_have_account')),
                 CupertinoButton(
                   child: Text(
-                    'Registrarme',
+                    allTranslations.traslate('create_account'),
                     style: TextStyle(
                       fontFamily: 'sans',
                       fontWeight: FontWeight.w600
@@ -109,30 +119,4 @@ class LoginForm extends StatelessWidget {
       ),
     );
   }
-
-  void _initiateFacebookLogin() async {
-    // print('Hola');
-    // var login = FacebookLogin();
-    // var result = await login.logInWithReadPermissions(['email']);
-
-    // switch (result.status) {
-    //   case FacebookLoginStatus.error:
-    //     print('Error');
-    //     break;
-    //   case FacebookLoginStatus.cancelledByUser:
-    //     print('Cancelado por el usuario');
-    //     break;
-    //   case FacebookLoginStatus.loggedIn:
-    //     print('Logueado exitosamente');
-    //     _getUserInfo(result);
-    //     break;
-    // }
-  }
-
-  // void _getUserInfo(FacebookLoginResult result) async {
-    // final token = result.accessToken.token;
-    // final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
-    // final profile = json.decode(graphResponse.body);
-    // print(profile['email']);
-  // }
 }

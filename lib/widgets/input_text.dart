@@ -4,13 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class InputText extends StatelessWidget {
   final String iconPath, placeholder;
-  final double textSize;
-  final double iconSize;
-  const InputText({Key key, @required this.iconPath, @required this.placeholder, @required this.textSize, @required this.iconSize}) : assert(iconPath != null && placeholder != null) , super(key: key);
+  final TextEditingController controller;
+  final bool obscureText;
+  const InputText({Key key, @required this.iconPath, @required this.placeholder, @required this.controller, @required this.obscureText }) : assert(iconPath != null && placeholder != null) , super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoTextField(
+      controller: controller,
+      obscureText: obscureText,
       padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
       prefix: Container(
         width: 35,

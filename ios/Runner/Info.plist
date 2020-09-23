@@ -23,7 +23,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb263294411318746</string>
+				<string>fb624749711453580</string>
 			</array>
 		</dict>
 		<dict>
@@ -38,7 +38,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
-	<string>263294411318746</string>
+	<string>624749711453580</string>
 	<key>FacebookDisplayName</key>
 	<string>service_now</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -80,5 +80,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Necesito acceder a tu ubicación para poder brindarte un correcto servicio</string>
 </dict>
 </plist>
