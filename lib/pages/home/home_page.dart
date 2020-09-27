@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/blocs/category/bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/bloc.dart';
+import 'package:service_now/injection_container.dart';
 import 'package:service_now/models/user.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/pages/home/widgets/category_picker.dart';
+import 'package:service_now/pages/menu/settings_services_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'widgets/home_header.dart';
 import 'widgets/menu.dart';
@@ -18,12 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   User user = User();
   final GlobalKey<InnerDrawerState> _drawerKey = GlobalKey();
-  final CategoryBloc _bloc = CategoryBloc();
   String _iniciales = '';
 
   @override
   void dispose() {
-    _bloc.close();
     super.dispose();
   }
 
@@ -45,65 +45,68 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc, 
-      child: InnerDrawer(
-        key: _drawerKey,
-        onTapClose: true,
-        rightChild: Menu(),
-        scaffold: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-            body: Container(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    child: CustomScrollView(
-                      slivers: [
-                        HomeHeader(
-                          name: _iniciales,
-                          drawerKey: this._drawerKey
-                        ),
+    return InnerDrawer(
+      key: _drawerKey,
+      onTapClose: true,
+      rightChild: Menu(),
+      scaffold: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          body: buildBody(context)
+        )
+      )
+    );
+  }
 
-                        BlocBuilder<CategoryBloc, CategoryState>(
-                          builder: (_, state) {
-                            if (state.status == CategoryStatus.ready) {
-                              return ServicePicker();
-                            }
+  BlocProvider<CategoryBloc> buildBody(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<CategoryBloc>(),
+      child: Container(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              child: CustomScrollView(
+                slivers: [
+                  HomeHeader(
+                    name: _iniciales,
+                    drawerKey: this._drawerKey
+                  ),
+                  BlocBuilder<CategoryBloc, CategoryState>(
+                    builder: (context, state) {
+                      String text = '';
 
-                            String text = '';
-                            switch (state.status) {
-                              case CategoryStatus.checking:
-                                text = 'Checking DB ...';
-                                break;
-                              case CategoryStatus.loading:
-                                text = 'Loading services ...';
-                                break;
-                              default: text = '';
-                            }
+                      // if (state is Loaded) {
+                      if (state.status == CategoryStatus.ready) {
+                        // return ServicePicker();
+                        return SettingsCategories();
+                      // } else if (state is Loading) {
+                      } else if (state.status == CategoryStatus.checking) {
+                        text = 'Cargando ...';
+                      } else if (state.status == CategoryStatus.selecting) {
+                        return SettingsCategories();
+                      } else {
+                        text = 'Error';
+                      }
 
-                            return SliverFillRemaining(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: LinearProgressIndicator(),
-                                  ),
-                                  Text(text)
-                                ]
-                              )
-                            );
-                          }
+                      return SliverFillRemaining(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: LinearProgressIndicator(),
+                            ),
+                            Text(text)
+                          ]
                         )
-                      ]
-                    )
+                      );
+                    }
                   )
                 ]
               )
             )
-          )
+          ]
         )
-      )
+      ),
     );
   }
 }

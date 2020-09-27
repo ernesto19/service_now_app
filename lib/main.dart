@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:service_now/core/db/db.dart';
 import 'package:service_now/pages/home/home_page.dart';
 import 'package:service_now/pages/login/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'preferences/user_preferences.dart';
 import 'routes/routes.dart';
+import 'injection_container.dart' as di;
 
 void main() async {
   // await Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
+  await DB.instance.init();
+  await di.init();
   await UserPreferences.instance.initPreferences();
   await allTranslations.init();
   runApp(MyApp());
