@@ -75,11 +75,9 @@ class _HomePageState extends State<HomePage> {
                     builder: (context, state) {
                       String text = '';
 
-                      // if (state is Loaded) {
                       if (state.status == CategoryStatus.ready) {
-                        // return ServicePicker();
-                        return SettingsCategories();
-                      // } else if (state is Loading) {
+                        return ServicePicker();
+                        // return SettingsCategories();
                       } else if (state.status == CategoryStatus.checking) {
                         text = 'Cargando ...';
                       } else if (state.status == CategoryStatus.selecting) {

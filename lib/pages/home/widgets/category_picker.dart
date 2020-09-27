@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/home/data/models/category_model.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/pages/service/search_service.dart';
@@ -70,13 +69,8 @@ class _ServicePickerState extends State<ServicePicker> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState> (builder: (_, state) {
-      // List<Category> lista = state.services.where((item) => item.favorite).toList();
-      // List<Category> lista = List();
-      List<CategoryModel> lista = List();
-      // if (state is Loaded) {
+      List<Category> lista = List();
       if (state.status == CategoryStatus.ready) {
-        // Category category = state.category;
-        // lista.add(category);
         lista = state.categories;
       }
 

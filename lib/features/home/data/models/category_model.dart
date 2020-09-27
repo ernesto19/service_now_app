@@ -1,53 +1,41 @@
-// import 'package:service_now/features/home/domain/entities/category.dart';
+import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:meta/meta.dart';
 
-class CategoryModel/* extends Category*/ {
-  final int id;
-  final String name;
-  final String logo;
-  final bool favorite;
-  /*CategoryModel({
+class CategoryModel extends Category {
+  CategoryModel({
     @required int id,
     @required String name,
     @required String logo,
-    @required bool favorite
-  }) : super(id: id, name: name, logo: logo, favorite: favorite);*/
-  CategoryModel({
-    this.id,
-    this.name,
-    this.logo,
-    this.favorite = false
-  });
+    @required int favorite
+  }) : super(id: id, name: name, logo: logo, favorite: favorite);
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
       id: json['id'], 
       name: json['name'], 
       logo: json['logo'], 
-      // favorite: json['favorite'] == 1
+      favorite: json['favorite']
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    var json = {
       'id': id,
       'name': name,
       'logo': logo,
       'favorite': favorite
     };
+
+    return json;
   }
 
   CategoryModel onFavorites() {
-    final category = CategoryModel(
+    return CategoryModel(
       id: this.id, 
       name: this.name, 
       logo: this.logo, 
-      favorite: !this.favorite
+      favorite: this.favorite == 1 ? 0 : 1
     );
-
-    print('========= ${category.favorite} =========');
-
-    return category;
   }
 }
 

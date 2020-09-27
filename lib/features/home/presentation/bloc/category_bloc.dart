@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/home/data/models/category_model.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/domain/usecases/get_categories_by_user.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
@@ -20,15 +19,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   @override
-  // CategoryState get initialState => Empty([]);
   CategoryState get initialState => CategoryState.inititalState;
 
   @override
   Stream<CategoryState> mapEventToState(CategoryEvent event) async* {
     if (event is GetCategoriesForUser) {
-      // yield Loading([]);
       final failureOrCategories = await getCategoriesByUser(Params(token: event.token));
-      // final List<Category> categories = await getCategoriesByUser(Params(token: event.token));
 
       yield* _eitherLoadedOrErrorState(failureOrCategories);
     } else if (event is OnFavoritesEvent) {
@@ -38,25 +34,18 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   Stream<CategoryState> _mapOnFavorites(OnFavoritesEvent event) async* {
     final int id = event.id;
-    final List<CategoryModel> tmp = List<CategoryModel>.from(this.state.categories);
+    final List<Category> tmp = List<Category>.from(this.state.categories);
     final int index = tmp.indexWhere((element) => element.id == id);
     if (index != -1) {
       tmp[index] = tmp[index].onFavorites();
-      // tmp[index].favorite = true;
       yield this.state.copyWith(status: CategoryStatus.ready, categories: tmp);
     }
-
-    // yield Loaded(categories: tmp);
-    // yield this.state.copyWith(status: CategoryStatus.ready, categories: tmp);
   }
 
   Stream<CategoryState> _eitherLoadedOrErrorState(
-    // Either<Failure, List<Category>> failureOrCategories
-  Either<Failure, List<CategoryModel>> failureOrCategories
+    Either<Failure, List<Category>> failureOrCategories
   ) async * {
     yield failureOrCategories.fold(
-      // (failure) => Error(message: 'Error desconocido : Implementar'), 
-      // (categories) => Loaded(categories: categories)
       (failure) {
         return this.state.copyWith(status: CategoryStatus.error, categories: []);
       },
