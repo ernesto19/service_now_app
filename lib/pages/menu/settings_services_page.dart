@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
+import 'package:service_now/features/home/presentation/widgets/home_bottom_bar.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
-import 'package:service_now/widgets/rounded_button.dart';
 import '../../injection_container.dart';
 
 class SettingsCategories extends StatefulWidget {
@@ -23,7 +23,8 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
         title: Text('Configuración categorías', style: labelTitleForm),
         backgroundColor: primaryColor
       ),
-      body: buildBody(context)
+      body: buildBody(context),
+      bottomNavigationBar: HomeBottomBar()
     );
   }
 
@@ -58,16 +59,16 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
                       );
                     }
                   ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      padding: EdgeInsets.only(top: 40),
-                      child: RoundedButton(
-                        onPressed: () {}, 
-                        label: 'Guardar',
-                        backgroundColor: secondaryDarkColor
-                      ),
-                    )
-                  )
+                  // SliverToBoxAdapter(
+                  //   child: Container(
+                  //     padding: EdgeInsets.only(top: 40),
+                  //     child: RoundedButton(
+                  //       onPressed: () {}, 
+                  //       label: 'Guardar',
+                  //       backgroundColor: secondaryDarkColor
+                  //     ),
+                  //   )
+                  // )
                 ]
               )
             )

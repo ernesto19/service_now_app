@@ -71,8 +71,10 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
     return BlocBuilder<CategoryBloc, CategoryState> (builder: (_, state) {
       List<Category> lista = List();
       if (state.status == CategoryStatus.ready) {
-        lista = state.categories;
+        lista = state.categories.where((element) => element.favorite == 1).toList();
       }
+
+      // List<Category> newList = lista.where((element) => element.favorite == 1).toList();
 
       return SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -87,7 +89,6 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
                     fit: StackFit.expand,
                     children: <Widget>[
                       Image.network(
-                        // lista[index].poster, 
                         lista[index].logo,
                         fit: BoxFit.fill
                       ),

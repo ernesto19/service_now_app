@@ -63,4 +63,12 @@ class UserPreferences {
   set email(String value) {
     _preferences.setString('email', value);
   }
+
+  get firstUseApp {
+    return _preferences.getInt('firstUseApp' ?? 0);
+  }
+
+  set firstUseApp(int value) {
+    _preferences.setInt('firstUseApp', value);
+  }
 }

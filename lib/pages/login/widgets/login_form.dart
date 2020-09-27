@@ -55,6 +55,7 @@ class LoginForm extends StatelessWidget {
             SizedBox(height: responsive.ip(2)),
             RoundedButton(
               label: allTranslations.traslate('log_in'),
+              width: responsive.wp(50),
               onPressed: () {
                 bloc.login(_emailController.text, _passwordController.text).then((response) {
                   if (response.error == 0) {

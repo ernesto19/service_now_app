@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:service_now/features/home/data/datasources/category_remote_data_source.dart';
 import 'package:service_now/features/home/data/repositories/category_repository_impl.dart';
 import 'package:service_now/features/home/domain/repositories/category_repository.dart';
+import 'package:service_now/features/home/domain/usecases/update_local_category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
@@ -21,7 +22,8 @@ Future<void> init() async {
     //   random: sl(),
     // ),
     () => CategoryBloc(
-      categories: sl()
+      categories: sl(),
+      updateCategory: sl()
     )
   );
 
@@ -29,6 +31,7 @@ Future<void> init() async {
   // sl.registerLazySingleton(() => GetConcreteNumberTrivia(sl()));
   // sl.registerLazySingleton(() => GetRandomNumberTrivia(sl()));
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
+  sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
 
   // Repository
   // sl.registerLazySingleton<NumberTriviaRepository>(

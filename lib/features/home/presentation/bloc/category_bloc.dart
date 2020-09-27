@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/domain/usecases/get_categories_by_user.dart';
+import 'package:service_now/features/home/domain/usecases/update_local_category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/core/error/failures.dart';
@@ -10,11 +11,14 @@ import 'package:dartz/dartz.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final GetCategoriesByUser getCategoriesByUser;
+  final UpdateLocalCategory updateLocalCategory;
 
   CategoryBloc({
-    @required GetCategoriesByUser categories
+    @required GetCategoriesByUser categories,
+    @required UpdateLocalCategory updateCategory,
   }) : assert(categories != null),
-       getCategoriesByUser = categories{
+       getCategoriesByUser = categories,
+       updateLocalCategory = updateCategory {
        add(GetCategoriesForUser('adasd'));
   }
 
@@ -38,6 +42,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     final int index = tmp.indexWhere((element) => element.id == id);
     if (index != -1) {
       tmp[index] = tmp[index].onFavorites();
+      updateLocalCategory(UpdateParams(category: tmp[index]));
       yield this.state.copyWith(status: CategoryStatus.ready, categories: tmp);
     }
   }

@@ -7,6 +7,7 @@ import 'package:dartz/dartz.dart';
 import 'package:service_now/features/home/domain/repositories/category_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/core/error/exceptions.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 
 typedef Future<List<Category>> _CategoriesType();
 
@@ -31,9 +32,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> _getCategoriesType(_CategoriesType getCategoriesType) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteCategories = await getCategoriesType();
-        localDataSource.createCategories(remoteCategories);
-        return Right(remoteCategories);
+        if (UserPreferences.instance.firstUseApp == 1) {
+          final remoteCategories = await getCategoriesType();
+          localDataSource.createCategories(remoteCategories);
+          UserPreferences.instance.firstUseApp++;
+        }
+        
+        final localCategories = await localDataSource.getAllCategories();
+        return Right(localCategories);
       } on ServerException {
         return Left(ServerFailure());
       }
@@ -44,6 +50,16 @@ class CategoryRepositoryImpl implements CategoryRepository {
       } on CacheException {
         return Left(CacheFailure());
       }
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateLocalCategory(Category category) async {
+    try {
+      var create = await localDataSource.createCategory(category);
+      return Right(create);
+    } on LocalException {
+      return Left(LocalFailure());
     }
   }
 }

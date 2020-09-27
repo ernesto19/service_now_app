@@ -30,6 +30,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     allTranslations.onLocaleChangedCallback = _onLocaleChanged;
+
+    if (UserPreferences.instance.firstUseApp == null || UserPreferences.instance.firstUseApp == 0) {
+      UserPreferences.instance.firstUseApp = 1;
+    }
   }
 
   _onLocaleChanged() async {
