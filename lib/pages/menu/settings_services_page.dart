@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
+import 'package:service_now/widgets/rounded_button.dart';
 import '../../injection_container.dart';
 
 class SettingsCategories extends StatefulWidget {
@@ -45,6 +47,7 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
                             return CheckboxListTile(
                               title: Text(category.name),
                               value: category.favorite == 1,
+                              activeColor: secondaryDarkColor,
                               onChanged: (bool value) {
                                 bloc.add(OnFavoritesEvent(category.id));
                               }
@@ -54,6 +57,16 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
                         )
                       );
                     }
+                  ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 40),
+                      child: RoundedButton(
+                        onPressed: () {}, 
+                        label: 'Guardar',
+                        backgroundColor: secondaryDarkColor
+                      ),
+                    )
                   )
                 ]
               )

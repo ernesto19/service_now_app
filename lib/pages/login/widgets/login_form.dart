@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:service_now/blocs/user_bloc.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/models/user.dart';
-import 'package:service_now/pages/home/home_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';

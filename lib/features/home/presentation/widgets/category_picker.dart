@@ -5,15 +5,15 @@ import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/pages/service/search_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ServicePicker extends StatefulWidget {
+class CategoryPicker extends StatefulWidget {
 
-  const ServicePicker();
+  const CategoryPicker();
 
   @override
-  _ServicePickerState createState() => _ServicePickerState();
+  _CategoryPickerState createState() => _CategoryPickerState();
 }
 
-class _ServicePickerState extends State<ServicePicker> with WidgetsBindingObserver {
+class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObserver {
   bool _fromSettings = false;
 
   Future<void> _request() async {

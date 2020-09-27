@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
+import 'package:service_now/features/home/presentation/widgets/category_picker.dart';
+import 'package:service_now/features/home/presentation/widgets/home_header.dart';
+import 'package:service_now/features/home/presentation/widgets/menu.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/models/user.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/pages/home/widgets/category_picker.dart';
 import 'package:service_now/pages/menu/settings_services_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
-import 'widgets/home_header.dart';
-import 'widgets/menu.dart';
 
 class HomePage extends StatefulWidget {
   static final routeName = 'home_page';
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                       String text = '';
 
                       if (state.status == CategoryStatus.ready) {
-                        return ServicePicker();
+                        return CategoryPicker();
                         // return SettingsCategories();
                       } else if (state.status == CategoryStatus.checking) {
                         text = 'Cargando ...';
