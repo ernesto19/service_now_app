@@ -58,17 +58,7 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
                         )
                       );
                     }
-                  ),
-                  // SliverToBoxAdapter(
-                  //   child: Container(
-                  //     padding: EdgeInsets.only(top: 40),
-                  //     child: RoundedButton(
-                  //       onPressed: () {}, 
-                  //       label: 'Guardar',
-                  //       backgroundColor: secondaryDarkColor
-                  //     ),
-                  //   )
-                  // )
+                  )
                 ]
               )
             )

@@ -15,6 +15,7 @@ class CategoryPicker extends StatefulWidget {
 
 class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObserver {
   bool _fromSettings = false;
+  Category _category;
 
   Future<void> _request() async {
     final PermissionStatus status = await Permission.locationWhenInUse.request();
@@ -63,7 +64,8 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
   }
 
   _goToMap() {
-    Navigator.pushNamed(context, SearchService.routeName);
+    // Navigator.pushNamed(context, SearchService.routeName, arguments: _category);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchService(category: _category)));
   }
 
   @override
@@ -73,8 +75,6 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
       if (state.status == CategoryStatus.ready) {
         lista = state.categories.where((element) => element.favorite == 1).toList();
       }
-
-      // List<Category> newList = lista.where((element) => element.favorite == 1).toList();
 
       return SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -152,7 +152,11 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
                   ]
                 )
               ),
-              onTap: _request
+              onTap: () {
+                _category = lista[index];
+                print(lista[index].id);
+                _request();
+              }
             );
           },
           childCount: lista.length

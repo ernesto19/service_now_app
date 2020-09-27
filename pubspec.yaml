@@ -57,6 +57,7 @@ dev_dependencies:
   data_connection_checker: ^0.3.4
   sembast: ^2.4.4
   path_provider: ^1.6.8
+  flutter_rating_bar: ^3.0.1+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

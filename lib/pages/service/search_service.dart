@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_now/features/home/domain/entities/category.dart';
 import '../../blocs/maps/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class SearchService extends StatefulWidget {
   static final routeName = 'search_service_page';
+  final Category category;
 
-  SearchService({Key key}) : super(key: key);
+  SearchService({Key key, this.category}) : super(key: key);
 
   @override
   _SearchServiceState createState() => _SearchServiceState();
@@ -48,7 +51,7 @@ class _SearchServiceState extends State<SearchService> {
               builder: (BuildContext context, ScrollController scrollController) {
                 return SingleChildScrollView(
                   controller: scrollController,
-                  child: CustomScrollViewContent()
+                  child: CustomScrollViewContent(category: widget.category)
                 );
               }
             )
@@ -90,7 +93,7 @@ class CustomHeader extends StatelessWidget {
     return Column(
       children: <Widget>[
         CustomSearchContainer(),
-        CustomSearchCategories(),
+        // CustomSearchCategories(),
       ],
     );
   }
@@ -189,6 +192,10 @@ class CustomCategoryChip extends StatelessWidget {
 // BOTTOM SHEET
 
 class CustomScrollViewContent extends StatelessWidget {
+  final Category category;
+
+  const CustomScrollViewContent({Key key, this.category}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -199,13 +206,17 @@ class CustomScrollViewContent extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
         ),
-        child: CustomInnerContent(),
+        child: CustomInnerContent(category: category),
       ),
     );
   }
 }
 
 class CustomInnerContent extends StatelessWidget {
+  final Category category;
+
+  const CustomInnerContent({Key key, this.category}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -213,8 +224,26 @@ class CustomInnerContent extends StatelessWidget {
         SizedBox(height: 12),
         CustomDraggingHandle(),
         SizedBox(height: 16),
-        CustomExploreBerlin(),
+        CustomExploreBerlin(category: category),
         SizedBox(height: 16),
+        BusinessList(),
+        RatingBar(
+          initialRating: 3,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          ignoreGestures: true,
+          onRatingUpdate: null
+          // onRatingUpdate: (rating) {
+          //   print(rating);
+          // },
+        ),
         CustomHorizontallyScrollingRestaurants(),
         SizedBox(height: 24),
         CustomFeaturedListsText(),
@@ -244,20 +273,23 @@ class CustomDraggingHandle extends StatelessWidget {
 }
 
 class CustomExploreBerlin extends StatelessWidget {
+  final Category category;
+
+  const CustomExploreBerlin({Key key, this.category}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        // Text("Explore Berlin", style: TextStyle(fontSize: 22, color: Colors.black45)),
-        Text("Explorar", style: TextStyle(fontSize: 22, color: Colors.black45)),
-        SizedBox(width: 8),
-        Container(
-          height: 24,
-          width: 24,
-          child: Icon(Icons.arrow_forward_ios, size: 12, color: Colors.black54),
-          decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
-        ),
+        Text(category != null ? category.name : 'Category', style: TextStyle(fontSize: 22, color: Colors.black45)),
+        // SizedBox(width: 8),
+        // Container(
+        //   height: 24,
+        //   width: 24,
+        //   child: Icon(Icons.arrow_forward_ios, size: 12, color: Colors.black54),
+        //   decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
+        // ),
       ],
     );
   }
@@ -339,6 +371,29 @@ class CustomRecentPhotosText extends StatelessWidget {
   }
 }
 
+class BusinessList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: BusinessItem(),
+    );
+  }
+}
+
+class BusinessItem extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey[500],
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+}
+
 class CustomRecentPhotoLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -366,6 +421,11 @@ class CustomRestaurantCategory extends StatelessWidget {
         color: Colors.grey[500],
         borderRadius: BorderRadius.circular(8),
       ),
+      child: Column(
+        children: [
+          Text('Hola'),
+        ]
+      )
     );
   }
 }
