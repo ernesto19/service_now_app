@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:service_now/core/db/db.dart';
+import 'package:service_now/pages/detail_page.dart';
 import 'package:service_now/pages/login/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'features/home/presentation/pages/home_page.dart';
@@ -54,8 +55,9 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         fontFamily: 'sans'
       ),
-      initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
-      routes: getApplicationRoutes()
+      // initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
+      // routes: getApplicationRoutes()
+      home: BusinessDetailPage(),
     );
   }
 }
