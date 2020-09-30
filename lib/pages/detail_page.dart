@@ -110,7 +110,8 @@ class BusinessDetailPage extends StatelessWidget {
                           Text('450 km'),
                           SizedBox(height: 20),
                           Text(
-                            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'                    ),
+                            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'                    
+                          ),
                         ]
                       )
                     )
@@ -125,8 +126,34 @@ class BusinessDetailPage extends StatelessWidget {
                   )
                 ]
               ),
-              Container(
-                child: Text("Articles Body"),
+              // Container(
+              //   child: Text("Articles Body"),
+              // ),
+              CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: 10),
+                  ),
+                  SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Container(
+                          height: 100,
+                          alignment: Alignment.center,
+                          color: Colors.grey,
+                          child: Text('grid item $index'),
+                        );
+                      },
+                      childCount: 10,
+                    ), 
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200.0,
+                      mainAxisSpacing: 10.0,
+                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 1.1
+                    )
+                  )
+                ],
               ),
               Container(
                 child: Text("User Body"),
