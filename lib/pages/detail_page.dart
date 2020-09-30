@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 
-class BusinessDetailPage extends StatelessWidget {
+class BusinessDetailPage extends StatefulWidget {
   const BusinessDetailPage({Key key}) : super(key: key);
+
+  @override
+  _BusinessDetailPageState createState() => _BusinessDetailPageState();
+}
+
+class _BusinessDetailPageState extends State<BusinessDetailPage> {
+  ButtonState stateOnlyText = ButtonState.idle;
 
   @override
   Widget build(BuildContext context) {
@@ -126,43 +135,87 @@ class BusinessDetailPage extends StatelessWidget {
                   )
                 ]
               ),
-              // Container(
-              //   child: Text("Articles Body"),
-              // ),
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: 10),
-                  ),
-                  SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return Container(
-                          height: 100,
-                          alignment: Alignment.center,
-                          color: Colors.grey,
-                          child: Text('grid item $index'),
-                        );
-                      },
-                      childCount: 10,
-                    ), 
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200.0,
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
-                      childAspectRatio: 1.1
+              Container(
+                padding: EdgeInsets.all(10),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverGrid(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return Container(
+                            height: 100,
+                            alignment: Alignment.center,
+                            color: Colors.grey,
+                            // child: Text('grid item $index'),
+                            child: Image.network(imgList[index], fit: BoxFit.cover, width: 350, height: 350)
+                          );
+                        },
+                        childCount: imgList.length,
+                      ), 
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200.0,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 10.0,
+                        childAspectRatio: 1.1
+                      )
                     )
-                  )
-                ],
+                  ],
+                ),
               ),
               Container(
-                child: Text("User Body"),
+                child: Center(
+                  child: ProgressButton.icon(
+                    iconedButtons: {
+                      ButtonState.idle:
+                        IconedButton(
+                          text: "Send",
+                          icon: Icon(Icons.send,color: Colors.white),
+                          color: Colors.deepPurple.shade500),
+                      ButtonState.loading:
+                        IconedButton(
+                          text: "Loading",
+                          color: Colors.deepPurple.shade700),
+                      ButtonState.fail:
+                        IconedButton(
+                          text: "Failed",
+                          icon: Icon(Icons.cancel,color: Colors.white),
+                          color: Colors.red.shade300),
+                      ButtonState.success:
+                        IconedButton(
+                          text: "Success",
+                          icon: Icon(Icons.check_circle,color: Colors.white,),
+                          color: Colors.green.shade400
+                        )
+                    }, 
+                    onPressed: onPressedCustomButton,
+                    state: stateOnlyText
+                  )
+                )
               )
             ]
           )
         )
       )
     );
+  }
+
+  void onPressedCustomButton() {
+    setState(() {
+      switch (stateOnlyText) {
+        case ButtonState.idle:
+          stateOnlyText = ButtonState.loading;
+          break;
+        case ButtonState.loading:
+          stateOnlyText = ButtonState.fail;
+          break;
+        case ButtonState.success:
+          stateOnlyText = ButtonState.idle;
+          break;
+        case ButtonState.fail:
+          stateOnlyText = ButtonState.success;
+          break;
+      }
+    });
   }
 
   Widget _buildComment() {
