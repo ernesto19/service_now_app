@@ -5,6 +5,8 @@ import '../../blocs/maps/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../detail_page.dart';
+
 class SearchService extends StatefulWidget {
   static final routeName = 'search_service_page';
   final Category category;
@@ -15,9 +17,18 @@ class SearchService extends StatefulWidget {
   _SearchServiceState createState() => _SearchServiceState();
 }
 
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
+  'https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350'
+];
+
 class _SearchServiceState extends State<SearchService> {
   final MapBloc _bloc = MapBloc();
-
+  
   @override
   void dispose() {
     _bloc.close();
@@ -46,12 +57,291 @@ class _SearchServiceState extends State<SearchService> {
             ),
             CustomHeader(),
             DraggableScrollableSheet(
-              initialChildSize: 0.30,
+              initialChildSize: 0.40,
               minChildSize: 0.15,
               builder: (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  controller: scrollController,
-                  child: CustomScrollViewContent(category: widget.category)
+                return Card(
+                  color: Colors.grey[200],
+                  elevation: 12.0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  margin: EdgeInsets.all(0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: CustomScrollView(
+                      controller: scrollController,
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Container(
+                            height: 12,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                              color: Colors.white
+                            )
+                          )
+                        ),
+                        SliverToBoxAdapter(
+                          child: GestureDetector(
+                            child: Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(left: 20, top: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
+                                        SizedBox(height: 2),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text('3.5'),
+                                            SizedBox(width: 2),
+                                            RatingBar(
+                                              initialRating: 3.5,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemSize: 20,
+                                              itemBuilder: (context, _) => Icon(
+                                                Icons.star,
+                                                color: Colors.amber
+                                              ),
+                                              ignoreGestures: true,
+                                              onRatingUpdate: null
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text('450 km'),
+                                        SizedBox(height: 10)
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 170.0,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: imgList.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          height: 200,
+                                          width: 200,
+                                          child: Image.network(
+                                            imgList[index], 
+                                            fit: BoxFit.cover
+                                          )
+                                        );
+                                      }
+                                    )
+                                  )
+                                ],
+                              )
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, BusinessDetailPage.routeName);
+                            }
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(height: 10),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text('3.5'),
+                                          SizedBox(width: 2),
+                                          RatingBar(
+                                            initialRating: 3.5,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 20,
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber
+                                            ),
+                                            ignoreGestures: true,
+                                            onRatingUpdate: null
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text('450 km'),
+                                      SizedBox(height: 10)
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 170.0,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: imgList.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 200,
+                                        width: 200,
+                                        child: Image.network(
+                                          imgList[index], 
+                                          fit: BoxFit.cover
+                                        )
+                                      );
+                                    }
+                                  )
+                                )
+                              ],
+                            )
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(height: 10),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text('3.5'),
+                                          SizedBox(width: 2),
+                                          RatingBar(
+                                            initialRating: 3.5,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 20,
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber
+                                            ),
+                                            ignoreGestures: true,
+                                            onRatingUpdate: null
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text('450 km'),
+                                      SizedBox(height: 10)
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 170.0,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: imgList.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 200,
+                                        width: 200,
+                                        child: Image.network(
+                                          imgList[index], 
+                                          fit: BoxFit.cover
+                                        )
+                                      );
+                                    }
+                                  )
+                                )
+                              ],
+                            )
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(height: 10),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20, top: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text('3.5'),
+                                          SizedBox(width: 2),
+                                          RatingBar(
+                                            initialRating: 3.5,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 20,
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber
+                                            ),
+                                            ignoreGestures: true,
+                                            onRatingUpdate: null
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text('450 km'),
+                                      SizedBox(height: 10)
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 170.0,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: imgList.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 200,
+                                        width: 200,
+                                        child: Image.network(
+                                          imgList[index], 
+                                          fit: BoxFit.cover
+                                        )
+                                      );
+                                    }
+                                  )
+                                )
+                              ],
+                            )
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 );
               }
             )
@@ -86,14 +376,12 @@ class CustomGoogleMap extends StatelessWidget {
 }
 
 // BUSCADOR
-
 class CustomHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         CustomSearchContainer(),
-        // CustomSearchCategories(),
       ],
     );
   }
@@ -103,7 +391,7 @@ class CustomSearchContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 40, 16, 8), //adjust "40" according to the status bar size
+      padding: const EdgeInsets.fromLTRB(16, 40, 16, 8), 
       child: Container(
         height: 50,
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
@@ -185,260 +473,6 @@ class CustomCategoryChip extends StatelessWidget {
         children: <Widget>[Icon(iconData, size: 16), SizedBox(width: 8), Text(title)],
       ),
       backgroundColor: Colors.grey[50],
-    );
-  }
-}
-
-// BOTTOM SHEET
-
-class CustomScrollViewContent extends StatelessWidget {
-  final Category category;
-
-  const CustomScrollViewContent({Key key, this.category}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 12.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      margin: const EdgeInsets.all(0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: CustomInnerContent(category: category),
-      ),
-    );
-  }
-}
-
-class CustomInnerContent extends StatelessWidget {
-  final Category category;
-
-  const CustomInnerContent({Key key, this.category}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 12),
-        CustomDraggingHandle(),
-        SizedBox(height: 16),
-        CustomExploreBerlin(category: category),
-        SizedBox(height: 16),
-        BusinessList(),
-        RatingBar(
-          initialRating: 3,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-          itemBuilder: (context, _) => Icon(
-            Icons.star,
-            color: Colors.amber,
-          ),
-          ignoreGestures: true,
-          onRatingUpdate: null
-          // onRatingUpdate: (rating) {
-          //   print(rating);
-          // },
-        ),
-        CustomHorizontallyScrollingRestaurants(),
-        SizedBox(height: 24),
-        CustomFeaturedListsText(),
-        SizedBox(height: 16),
-        CustomFeaturedItemsGrid(),
-        SizedBox(height: 24),
-        CustomRecentPhotosText(),
-        SizedBox(height: 16),
-        CustomRecentPhotoLarge(),
-        SizedBox(height: 12),
-        CustomRecentPhotosSmall(),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-class CustomDraggingHandle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 5,
-      width: 30,
-      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
-    );
-  }
-}
-
-class CustomExploreBerlin extends StatelessWidget {
-  final Category category;
-
-  const CustomExploreBerlin({Key key, this.category}) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(category != null ? category.name : 'Category', style: TextStyle(fontSize: 22, color: Colors.black45)),
-        // SizedBox(width: 8),
-        // Container(
-        //   height: 24,
-        //   width: 24,
-        //   child: Icon(Icons.arrow_forward_ios, size: 12, color: Colors.black54),
-        //   decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
-        // ),
-      ],
-    );
-  }
-}
-
-class CustomHorizontallyScrollingRestaurants extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomFeaturedListsText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      //only to left align the text
-      child: Row(
-        children: <Widget>[Text("Featured Lists", style: TextStyle(fontSize: 14))],
-      ),
-    );
-  }
-}
-
-class CustomFeaturedItemsGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.count(
-        //to avoid scrolling conflict with the dragging sheet
-        physics: NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(0),
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        shrinkWrap: true,
-        children: <Widget>[
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomRecentPhotosText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: Row(
-        children: <Widget>[
-          Text("Recent Photos", style: TextStyle(fontSize: 14)),
-        ],
-      ),
-    );
-  }
-}
-
-class BusinessList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: BusinessItem(),
-    );
-  }
-}
-
-class BusinessItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[500],
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-  }
-}
-
-class CustomRecentPhotoLarge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: CustomFeaturedItem(),
-    );
-  }
-}
-
-class CustomRecentPhotosSmall extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomFeaturedItemsGrid();
-  }
-}
-
-class CustomRestaurantCategory extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 100,
-      decoration: BoxDecoration(
-        color: Colors.grey[500],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Text('Hola'),
-        ]
-      )
-    );
-  }
-}
-
-class CustomFeaturedItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[500],
-        borderRadius: BorderRadius.circular(8),
-      ),
     );
   }
 }

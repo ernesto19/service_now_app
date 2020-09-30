@@ -55,9 +55,9 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         fontFamily: 'sans'
       ),
-      // initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
-      // routes: getApplicationRoutes()
-      home: BusinessDetailPage(),
+      initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
+      routes: getApplicationRoutes()
+      // home: BusinessDetailPage(),
     );
   }
 }

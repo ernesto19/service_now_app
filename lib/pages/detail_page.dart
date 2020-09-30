@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class BusinessDetailPage extends StatefulWidget {
-  const BusinessDetailPage({Key key}) : super(key: key);
+  static final routeName = 'business_detail_page';
 
   @override
   _BusinessDetailPageState createState() => _BusinessDetailPageState();
@@ -18,7 +19,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
   @override
   Widget build(BuildContext context) {
     final List<String> imgList = [
-      'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+      // 'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
       'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
       'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
       'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
@@ -58,7 +59,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
                     tabs: [
                       Tab(text: 'Información'),
                       Tab(text: 'Fotos'),
-                      Tab(text: 'Solicitar')
+                      Tab(text: 'Seleccionar')
                     ]
                   )
                 )
@@ -139,56 +140,134 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
                 padding: EdgeInsets.all(10),
                 child: CustomScrollView(
                   slivers: [
-                    SliverGrid(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return Container(
-                            height: 100,
-                            alignment: Alignment.center,
-                            color: Colors.grey,
-                            // child: Text('grid item $index'),
-                            child: Image.network(imgList[index], fit: BoxFit.cover, width: 350, height: 350)
-                          );
-                        },
-                        childCount: imgList.length,
-                      ), 
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200.0,
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 10.0,
-                        childAspectRatio: 1.1
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Servicio 1'),
+                            SizedBox(height: 10),
+                            Container(
+                              height: 200.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: imgList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    height: 200,
+                                    width: 200,
+                                    child: Image.network(
+                                      imgList[index], 
+                                      fit: BoxFit.cover
+                                    )
+                                  );
+                                }
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Servicio 1'),
+                            SizedBox(height: 10),
+                            Container(
+                              height: 200.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: imgList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    height: 200,
+                                    width: 200,
+                                    child: Image.network(
+                                      imgList[index], 
+                                      fit: BoxFit.cover
+                                    )
+                                  );
+                                }
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Servicio 1'),
+                            SizedBox(height: 10),
+                            Container(
+                              height: 200.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: imgList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    height: 200,
+                                    width: 200,
+                                    child: Image.network(
+                                      imgList[index], 
+                                      fit: BoxFit.cover
+                                    )
+                                  );
+                                }
+                              )
+                            )
+                          ]
+                        )
                       )
                     )
-                  ],
-                ),
+                  ]
+                )
               ),
               Container(
+                padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Center(
                   child: ProgressButton.icon(
                     iconedButtons: {
                       ButtonState.idle:
                         IconedButton(
-                          text: "Send",
-                          icon: Icon(Icons.send,color: Colors.white),
-                          color: Colors.deepPurple.shade500),
+                          text: "Solicitar",
+                          icon: Icon(Icons.send, color: Colors.white, size: 28),
+                          color: secondaryDarkColor
+                        ),
                       ButtonState.loading:
                         IconedButton(
-                          text: "Loading",
-                          color: Colors.deepPurple.shade700),
+                          text: "Confirmando cita",
+                          color: secondaryDarkColor
+                        ),
                       ButtonState.fail:
                         IconedButton(
-                          text: "Failed",
-                          icon: Icon(Icons.cancel,color: Colors.white),
-                          color: Colors.red.shade300),
+                          text: "Confirmación fallida",
+                          icon: Icon(Icons.cancel, color: Colors.white, size: 28),
+                          color: Colors.red.shade300
+                        ),
                       ButtonState.success:
                         IconedButton(
-                          text: "Success",
-                          icon: Icon(Icons.check_circle,color: Colors.white,),
+                          text: "Confirmación exitosa",
+                          icon: Icon(Icons.check_circle, color: Colors.white, size: 28),
                           color: Colors.green.shade400
                         )
                     }, 
                     onPressed: onPressedCustomButton,
-                    state: stateOnlyText
+                    state: stateOnlyText,
+                    height: 60.0,
+                    minWidth: double.infinity,
+                    maxWidth: double.infinity,
+                    textStyle: TextStyle(fontSize: 19, color: Colors.white),
                   )
                 )
               )
