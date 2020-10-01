@@ -81,267 +81,85 @@ class _SearchServiceState extends State<SearchService> {
                             )
                           )
                         ),
-                        SliverToBoxAdapter(
-                          child: GestureDetector(
-                            child: Container(
-                              color: Colors.white,
-                              child: Column(
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Column(
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.only(left: 20, top: 10),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
-                                        SizedBox(height: 2),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Text('3.5'),
-                                            SizedBox(width: 2),
-                                            RatingBar(
-                                              initialRating: 3.5,
-                                              minRating: 1,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemSize: 20,
-                                              itemBuilder: (context, _) => Icon(
-                                                Icons.star,
-                                                color: Colors.amber
-                                              ),
-                                              ignoreGestures: true,
-                                              onRatingUpdate: null
+                                  GestureDetector(
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(left: 20, top: 10),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('BARBERIA ABC$index', style: TextStyle(fontSize: 17)),
+                                                SizedBox(height: 2),
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text('3.5'),
+                                                    SizedBox(width: 2),
+                                                    RatingBar(
+                                                      initialRating: 3.5,
+                                                      minRating: 1,
+                                                      direction: Axis.horizontal,
+                                                      allowHalfRating: true,
+                                                      itemCount: 5,
+                                                      itemSize: 20,
+                                                      itemBuilder: (context, _) => Icon(
+                                                        Icons.star,
+                                                        color: Colors.amber
+                                                      ),
+                                                      ignoreGestures: true,
+                                                      onRatingUpdate: null
+                                                    )
+                                                  ]
+                                                ),
+                                                SizedBox(height: 2),
+                                                Text('450 km'),
+                                                SizedBox(height: 10)
+                                              ]
                                             )
-                                          ],
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text('450 km'),
-                                        SizedBox(height: 10)
-                                      ],
+                                          ),
+                                          Container(
+                                            height: 170.0,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: imgList.length,
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  margin: EdgeInsets.only(right: 10),
+                                                  height: 200,
+                                                  width: 200,
+                                                  child: Image.network(
+                                                    imgList[index], 
+                                                    fit: BoxFit.cover
+                                                  )
+                                                );
+                                              }
+                                            )
+                                          )
+                                        ]
+                                      )
                                     ),
-                                  ),
-                                  Container(
-                                    height: 170.0,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: imgList.length,
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          margin: EdgeInsets.only(right: 10),
-                                          height: 200,
-                                          width: 200,
-                                          child: Image.network(
-                                            imgList[index], 
-                                            fit: BoxFit.cover
-                                          )
-                                        );
-                                      }
-                                    )
-                                  )
-                                ],
-                              )
-                            ),
-                            onTap: () {
-                              Navigator.pushNamed(context, BusinessDetailPage.routeName);
-                            }
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(height: 10),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 20, top: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
-                                      SizedBox(height: 2),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text('3.5'),
-                                          SizedBox(width: 2),
-                                          RatingBar(
-                                            initialRating: 3.5,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemCount: 5,
-                                            itemSize: 20,
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: Colors.amber
-                                            ),
-                                            ignoreGestures: true,
-                                            onRatingUpdate: null
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 2),
-                                      Text('450 km'),
-                                      SizedBox(height: 10)
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: 170.0,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: imgList.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        height: 200,
-                                        width: 200,
-                                        child: Image.network(
-                                          imgList[index], 
-                                          fit: BoxFit.cover
-                                        )
-                                      );
+                                    onTap: () {
+                                      Navigator.pushNamed(context, BusinessDetailPage.routeName);
                                     }
-                                  )
-                                )
-                              ],
-                            )
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(height: 10),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 20, top: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
-                                      SizedBox(height: 2),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text('3.5'),
-                                          SizedBox(width: 2),
-                                          RatingBar(
-                                            initialRating: 3.5,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemCount: 5,
-                                            itemSize: 20,
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: Colors.amber
-                                            ),
-                                            ignoreGestures: true,
-                                            onRatingUpdate: null
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 2),
-                                      Text('450 km'),
-                                      SizedBox(height: 10)
-                                    ],
                                   ),
-                                ),
-                                Container(
-                                  height: 170.0,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: imgList.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        height: 200,
-                                        width: 200,
-                                        child: Image.network(
-                                          imgList[index], 
-                                          fit: BoxFit.cover
-                                        )
-                                      );
-                                    }
-                                  )
-                                )
-                              ],
-                            )
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(height: 10),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 20, top: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('BARBERIA ABC', style: TextStyle(fontSize: 17)),
-                                      SizedBox(height: 2),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text('3.5'),
-                                          SizedBox(width: 2),
-                                          RatingBar(
-                                            initialRating: 3.5,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemCount: 5,
-                                            itemSize: 20,
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: Colors.amber
-                                            ),
-                                            ignoreGestures: true,
-                                            onRatingUpdate: null
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 2),
-                                      Text('450 km'),
-                                      SizedBox(height: 10)
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: 170.0,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: imgList.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        height: 200,
-                                        width: 200,
-                                        child: Image.network(
-                                          imgList[index], 
-                                          fit: BoxFit.cover
-                                        )
-                                      );
-                                    }
-                                  )
-                                )
-                              ],
-                            )
-                          ),
+                                  SizedBox(height: 10)
+                                ]
+                              );
+                            },
+                            childCount: 5
+                          )
                         )
-                      ],
-                    ),
-                  ),
+                      ]
+                    )
+                  )
                 );
               }
             )
@@ -397,14 +215,10 @@ class CustomSearchContainer extends StatelessWidget {
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
         child: Row(
           children: <Widget>[
-            CustomTextField(),
-            // Icon(Icons.mic),
-            // SizedBox(width: 16),
-            CustomUserAvatar(),
-            SizedBox(width: 16),
-          ],
-        ),
-      ),
+            CustomTextField()
+          ]
+        )
+      )
     );
   }
 }

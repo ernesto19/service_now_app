@@ -14,12 +14,9 @@ class BusinessDetailPage extends StatefulWidget {
 }
 
 class _BusinessDetailPageState extends State<BusinessDetailPage> {
-  ButtonState stateOnlyText = ButtonState.idle;
-
   @override
   Widget build(BuildContext context) {
     final List<String> imgList = [
-      // 'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
       'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
       'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
       'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
@@ -68,211 +65,62 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
           },
           body: TabBarView(
             children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text('BARBERIA ABC', style: TextStyle(fontSize: 19))
-                              ),
-                              // RawMaterialButton(
-                              //   elevation: 2.0,
-                              //   fillColor: secondaryColor,
-                              //   child: Icon(
-                              //     Icons.favorite_border,
-                              //     size: 20,
-                              //     color: Colors.white
-                              //   ),
-                              //   shape: CircleBorder(),
-                              //   onPressed: () {},
-                              // )
-                            ]
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('3.5'),
-                              SizedBox(width: 10),
-                              RatingBar(
-                                initialRating: 3.5,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemSize: 20,
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber
-                                ),
-                                ignoreGestures: true,
-                                onRatingUpdate: null
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Text('450 km'),
-                          SizedBox(height: 20),
-                          Text(
-                            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'                    
-                          ),
-                        ]
-                      )
-                    )
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return _buildComment();
-                      },
-                      childCount: 10
-                    ),
-                  )
-                ]
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Servicio 1'),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 200.0,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: imgList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    height: 200,
-                                    width: 200,
-                                    child: Image.network(
-                                      imgList[index], 
-                                      fit: BoxFit.cover
-                                    )
-                                  );
-                                }
-                              )
-                            )
-                          ]
-                        )
-                      )
-                    ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Servicio 1'),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 200.0,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: imgList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    height: 200,
-                                    width: 200,
-                                    child: Image.network(
-                                      imgList[index], 
-                                      fit: BoxFit.cover
-                                    )
-                                  );
-                                }
-                              )
-                            )
-                          ]
-                        )
-                      )
-                    ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Servicio 1'),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 200.0,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: imgList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    height: 200,
-                                    width: 200,
-                                    child: Image.network(
-                                      imgList[index], 
-                                      fit: BoxFit.cover
-                                    )
-                                  );
-                                }
-                              )
-                            )
-                          ]
-                        )
-                      )
-                    )
-                  ]
-                )
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Center(
-                  child: ProgressButton.icon(
-                    iconedButtons: {
-                      ButtonState.idle:
-                        IconedButton(
-                          text: "Solicitar",
-                          icon: Icon(Icons.send, color: Colors.white, size: 28),
-                          color: secondaryDarkColor
-                        ),
-                      ButtonState.loading:
-                        IconedButton(
-                          text: "Confirmando cita",
-                          color: secondaryDarkColor
-                        ),
-                      ButtonState.fail:
-                        IconedButton(
-                          text: "Confirmación fallida",
-                          icon: Icon(Icons.cancel, color: Colors.white, size: 28),
-                          color: Colors.red.shade300
-                        ),
-                      ButtonState.success:
-                        IconedButton(
-                          text: "Confirmación exitosa",
-                          icon: Icon(Icons.check_circle, color: Colors.white, size: 28),
-                          color: Colors.green.shade400
-                        )
-                    }, 
-                    onPressed: onPressedCustomButton,
-                    state: stateOnlyText,
-                    height: 60.0,
-                    minWidth: double.infinity,
-                    maxWidth: double.infinity,
-                    textStyle: TextStyle(fontSize: 19, color: Colors.white),
-                  )
-                )
-              )
+              BusinessInformationPage(),
+              BusinessPhotosPage(imgList: imgList),
+              BusinessSelectPage()
             ]
           )
+        )
+      )
+    );
+  }
+}
+
+class BusinessSelectPage extends StatefulWidget {
+  @override
+  _BusinessSelectPageState createState() => _BusinessSelectPageState();
+}
+
+class _BusinessSelectPageState extends State<BusinessSelectPage> {
+  ButtonState stateOnlyText = ButtonState.idle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Center(
+        child: ProgressButton.icon(
+          iconedButtons: {
+            ButtonState.idle:
+              IconedButton(
+                text: "Solicitar",
+                icon: Icon(Icons.send, color: Colors.white, size: 28),
+                color: secondaryDarkColor
+              ),
+            ButtonState.loading:
+              IconedButton(
+                text: "Confirmando cita",
+                color: secondaryDarkColor
+              ),
+            ButtonState.fail:
+              IconedButton(
+                text: "Confirmación fallida",
+                icon: Icon(Icons.cancel, color: Colors.white, size: 28),
+                color: Colors.red.shade300
+              ),
+            ButtonState.success:
+              IconedButton(
+                text: "Confirmación exitosa",
+                icon: Icon(Icons.check_circle, color: Colors.white, size: 28),
+                color: Colors.green.shade400
+              )
+          }, 
+          onPressed: onPressedCustomButton,
+          state: stateOnlyText,
+          height: 60.0,
+          minWidth: double.infinity,
+          maxWidth: double.infinity,
+          textStyle: TextStyle(fontSize: 19, color: Colors.white),
         )
       )
     );
@@ -295,6 +143,139 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
           break;
       }
     });
+  }
+}
+
+class BusinessPhotosPage extends StatelessWidget {
+  const BusinessPhotosPage({
+    Key key,
+    @required this.imgList,
+  }) : super(key: key);
+
+  final List<String> imgList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Servicio $index'),
+                      SizedBox(height: 10),
+                      Container(
+                        height: 200.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: imgList.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(right: 10),
+                              height: 200,
+                              width: 200,
+                              child: Image.network(
+                                imgList[index], 
+                                fit: BoxFit.cover
+                              )
+                            );
+                          }
+                        )
+                      )
+                    ]
+                  )
+                );
+              },
+              childCount: 4
+            )
+          )
+        ]
+      )
+    );
+  }
+}
+
+class BusinessInformationPage extends StatelessWidget {
+  const BusinessInformationPage({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text('BARBERIA ABC', style: TextStyle(fontSize: 19))
+                    ),
+                    // RawMaterialButton(
+                    //   elevation: 2.0,
+                    //   fillColor: secondaryColor,
+                    //   child: Icon(
+                    //     Icons.favorite_border,
+                    //     size: 20,
+                    //     color: Colors.white
+                    //   ),
+                    //   shape: CircleBorder(),
+                    //   onPressed: () {},
+                    // )
+                  ]
+                ),
+                SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('3.5'),
+                    SizedBox(width: 10),
+                    RatingBar(
+                      initialRating: 3.5,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 20,
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber
+                      ),
+                      ignoreGestures: true,
+                      onRatingUpdate: null
+                    )
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text('450 km'),
+                SizedBox(height: 20),
+                Text(
+                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'                    
+                ),
+              ]
+            )
+          )
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return _buildComment();
+            },
+            childCount: 10
+          ),
+        )
+      ]
+    );
   }
 
   Widget _buildComment() {
