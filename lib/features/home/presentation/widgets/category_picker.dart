@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/features/appointment/presentation/pages/search_business_page.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
-import 'package:service_now/pages/service/search_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CategoryPicker extends StatefulWidget {
@@ -65,7 +65,7 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
 
   _goToMap() {
     // Navigator.pushNamed(context, SearchService.routeName, arguments: _category);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchService(category: _category)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchBusinessPage(category: _category)));
   }
 
   @override

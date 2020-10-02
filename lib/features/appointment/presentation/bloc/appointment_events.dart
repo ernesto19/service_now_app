@@ -1,10 +1,10 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-abstract class MapEvents {
+abstract class AppointmentEvents {
 
 }
 
-class OnMyLocationUpdate extends MapEvents {
+class OnMyLocationUpdate extends AppointmentEvents {
   final LatLng location;
 
   OnMyLocationUpdate(this.location);

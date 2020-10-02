@@ -16,7 +16,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   CategoryRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<List<CategoryModel>> getCategories(String token) => _getCategoriesFromUrl('http://ec2-54-209-226-215.compute-1.amazonaws.com/service_now/public/api/favorite_business_categories');
+  Future<List<CategoryModel>> getCategories(String token) => _getCategoriesFromUrl('https://test.konxulto.com/service_now/public/api/favorite_business_categories');
 
   Future<List<CategoryModel>> _getCategoriesFromUrl(String url) async {
     final response = await client.get(
