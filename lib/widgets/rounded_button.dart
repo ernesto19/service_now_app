@@ -24,7 +24,7 @@ class RoundedButton extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        padding: EdgeInsets.symmetric(/*horizontal: 35, */vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10),
         width: this.width,
         decoration: BoxDecoration(
           color: this.backgroundColor ?? AppColor.primaryColor,

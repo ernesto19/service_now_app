@@ -37,11 +37,3 @@ class LoginResponse {
     }
   }
 }
-
-/*
-{
-    "id": 1,
-    "name": null,
-    "email": "ernestochirat@gmail.com"
-}
- */

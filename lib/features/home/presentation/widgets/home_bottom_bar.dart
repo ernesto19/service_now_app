@@ -13,7 +13,6 @@ class HomeBottomBar extends StatelessWidget {
       child: RoundedButton(
         onPressed: () {
           Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (Route<dynamic> route) => false);
-          // Navigator.of(context).pushNamedAndRemoveUntil(HomePage.routeName, (Route<dynamic> route) => false);
         }, 
         label: 'Guardar',
         backgroundColor: secondaryDarkColor,

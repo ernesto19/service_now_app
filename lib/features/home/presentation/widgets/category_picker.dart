@@ -64,7 +64,6 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
   }
 
   _goToMap() {
-    // Navigator.pushNamed(context, SearchService.routeName, arguments: _category);
     Navigator.push(context, MaterialPageRoute(builder: (context) => SearchBusinessPage(category: _category)));
   }
 

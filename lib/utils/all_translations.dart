@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
 const List<String> _supportedLanguages = ['en','es'];
-// var preferences = UserPreferences();
 
 class GlobalTranslations {
   Locale _locale;
@@ -68,11 +67,9 @@ class GlobalTranslations {
 
   Future<String> _getApplicationSavedInformation() async {
     return UserPreferences.instance.language ?? '';
-    // return preferences.language ?? '';
   }
 
   Future<void> _setApplicationSavedInformation(String value) async {
-    // preferences.language = value;
     UserPreferences.instance.language = value;
   }
 

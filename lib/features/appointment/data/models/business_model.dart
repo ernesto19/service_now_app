@@ -17,10 +17,14 @@ class BusinessModel extends Business {
       id:           json['id'], 
       name:         json['name'], 
       description:  json['description'], 
-      latitude:     json['lat'],
-      longitude:    json['long'],
+      latitude:     (json['lat'] as double).toStringAsFixed(2),
+      longitude:    (json['lng'] as double).toStringAsFixed(2),
       rating:       json['rating'],
       distance:     json['distance']
     );
+  }
+
+  String toString() {
+    return '\n$id\n$name\n$description\n';
   }
 }

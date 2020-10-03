@@ -1,6 +1,10 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:service_now/features/appointment/data/datasources/appointment_remote_data_source.dart';
+import 'package:service_now/features/appointment/data/repositories/appointment_repository_impl.dart';
+import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
+import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
 import 'package:service_now/features/home/data/datasources/category_remote_data_source.dart';
 import 'package:service_now/features/home/data/repositories/category_repository_impl.dart';
 import 'package:service_now/features/home/domain/repositories/category_repository.dart';
@@ -8,6 +12,7 @@ import 'package:service_now/features/home/domain/usecases/update_local_category.
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
+import 'features/appointment/presentation/bloc/bloc.dart';
 import 'features/home/data/datasources/category_local_data_source.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
 
@@ -15,32 +20,27 @@ import 'features/home/domain/usecases/get_categories_by_user.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // [ Blocs ]
   sl.registerFactory(
-    // () => NumberTriviaBloc(
-    //   concrete: sl(),
-    //   inputConverter: sl(),
-    //   random: sl(),
-    // ),
     () => CategoryBloc(
       categories: sl(),
       updateCategory: sl()
     )
   );
 
-  // Use cases
-  // sl.registerLazySingleton(() => GetConcreteNumberTrivia(sl()));
-  // sl.registerLazySingleton(() => GetRandomNumberTrivia(sl()));
+  sl.registerFactory(
+    () => AppointmentBloc(
+      business: sl()
+    )
+  );
+
+  // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
 
-  // Repository
-  // sl.registerLazySingleton<NumberTriviaRepository>(
-  //   () => NumberTriviaRepositoryImpl(
-  //     localDataSource: sl(),
-  //     networkInfo: sl(),
-  //     remoteDataSource: sl(),
-  //   ),
-  // );
+  sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
+
+  // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(
     () => CategoryRepositoryImpl(
       networkInfo: sl(), 
@@ -49,14 +49,14 @@ Future<void> init() async {
     )
   );
 
-  // Data sources
-  // sl.registerLazySingleton<NumberTriviaRemoteDataSource>(
-  //   () => NumberTriviaRemoteDataSourceImpl(client: sl()),
-  // );
+  sl.registerLazySingleton<AppointmentRepository>(
+    () => AppointmentRepositoryImpl(
+      remoteDataSource: sl(), 
+      networkInfo: sl()
+    )
+  );
 
-  // sl.registerLazySingleton<NumberTriviaLocalDataSource>(
-  //   () => NumberTriviaLocalDataSourceImpl(sharedPreferences: sl()),
-  // );
+  // [ Data sources ]
   sl.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(client: sl())
   );
@@ -65,16 +65,14 @@ Future<void> init() async {
     () => CategoryLocalDataSourceImpl(sharedPreferences: sl())
   );
 
-  //! Core
-  // sl.registerLazySingleton(() => InputConverter());
-  // sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<AppointmentRemoteDataSource>(
+    () => AppointmentRemoteDataSourceImpl(client: sl())
+  );
+
+  // [ Core ]
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
-  //! External
-  // final sharedPreferences = await SharedPreferences.getInstance();
-  // sl.registerLazySingleton(() => sharedPreferences);
-  // sl.registerLazySingleton(() => http.Client());
-  // sl.registerLazySingleton(() => DataConnectionChecker());
+  // [ External ]
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());

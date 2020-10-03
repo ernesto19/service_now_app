@@ -6,10 +6,6 @@ class UserPreferences {
 
   static UserPreferences instance = UserPreferences._internal();
 
-  // factory UserPreferences() {
-  //   return _instancia;
-  // }
-
   SharedPreferences _preferences;
 
   initPreferences() async {

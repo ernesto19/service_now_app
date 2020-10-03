@@ -4,6 +4,7 @@ import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/features/appointment/presentation/widgets/business_list.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/injection_container.dart';
 
 import '../widgets/custom_google_map.dart';
 import '../widgets/custom_search.dart';
@@ -19,37 +20,36 @@ class SearchBusinessPage extends StatefulWidget {
 }
 
 class _SearchBusinessPageState extends State<SearchBusinessPage> {
-  final AppointmentBloc _bloc = AppointmentBloc();
   
   @override
   void dispose() {
-    _bloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: this._bloc,
+    return BlocProvider(
+      create: (_) => sl<AppointmentBloc>(),
       child: Scaffold(
         body: Stack(
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
-              builder: (_, state) {
-                if (state.loading) {
+              builder: (context, state) {
+                if (state.status == BusinessStatus.loading) {
                   return Center(
                     child: CircularProgressIndicator()
                   );
+                } else {
+                  // ignore: close_sinks
+                  final bloc = AppointmentBloc.of(context);
+                  bloc.add(GetBusinessForUser(widget.category.id, state.myLocation.latitude.toString(), state.myLocation.longitude.toString()));
+                  return CustomGoogleMap(initialPosition: CameraPosition(target: state.myLocation, zoom: 15));
                 }
-
-                final CameraPosition initialPosition = CameraPosition(target: state.myLocation, zoom: 15);
-
-                return CustomGoogleMap(initialPosition: initialPosition);
               }
             ),
             CustomHeader(),
             DraggableScrollableSheet(
-              initialChildSize: 0.40,
+              initialChildSize: 0.30,
               minChildSize: 0.15,
               builder: (BuildContext context, ScrollController scrollController) {
                 return Card(
@@ -73,7 +73,22 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
                             )
                           )
                         ),
-                        BusinessList()
+                        BlocBuilder<AppointmentBloc, AppointmentState>(
+                          builder: (_, state) {
+                            if (state.status == BusinessStatus.ready) {
+                              return BusinessList();
+                            } else {
+                              return SliverFillRemaining(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: CircularProgressIndicator()
+                                  ),
+                                )
+                              );
+                            }
+                          }
+                        )
                       ]
                     )
                   )

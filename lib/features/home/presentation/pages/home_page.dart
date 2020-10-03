@@ -77,7 +77,6 @@ class _HomePageState extends State<HomePage> {
 
                       if (state.status == CategoryStatus.ready) {
                         return CategoryPicker();
-                        // return SettingsCategories();
                       } else if (state.status == CategoryStatus.checking) {
                         text = 'Cargando ...';
                       } else if (state.status == CategoryStatus.selecting) {

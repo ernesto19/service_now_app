@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/features/home/data/models/category_model.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +29,6 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
 
     if (response.statusCode == 200) {
       final body = CategoryResponse.fromJson(json.decode(response.body));
-      // return CategoryModel.fromJson(json.decode(response.body));
       return body.data;
     } else {
       throw ServerException();

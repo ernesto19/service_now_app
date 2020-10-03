@@ -39,6 +39,7 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
                 slivers: [
                   BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (context, state) {
+                      // ignore: close_sinks
                       final bloc = CategoryBloc.of(context);
 
                       return SliverList(
