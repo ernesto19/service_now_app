@@ -2,8 +2,8 @@ import 'package:service_now/core/error/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:service_now/features/appointment/data/models/business_model.dart';
-import 'package:service_now/features/appointment/data/request/get_business_request.dart';
-import 'package:service_now/features/appointment/data/response/get_business_response.dart';
+import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
+import 'package:service_now/features/appointment/data/responses/get_business_response.dart';
 import 'dart:convert';
 
 import 'package:service_now/preferences/user_preferences.dart';

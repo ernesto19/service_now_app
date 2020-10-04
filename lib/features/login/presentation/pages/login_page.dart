@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
-
-import 'widgets/login_form.dart';
-import 'widgets/welcome.dart';
+import '../widgets/login_form.dart';
+import '../widgets/welcome.dart';
 
 class LoginPage extends StatefulWidget {
   static final routeName = 'login_page';

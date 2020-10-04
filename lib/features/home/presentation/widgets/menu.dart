@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:service_now/pages/login/login_page.dart';
-import 'package:service_now/pages/menu/settings_services_page.dart';
+import 'package:service_now/features/login/presentation/pages/login_page.dart';
+import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 

@@ -3,7 +3,7 @@ import 'package:service_now/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/core/network/network_info.dart';
 import 'package:service_now/features/appointment/data/datasources/appointment_remote_data_source.dart';
-import 'package:service_now/features/appointment/data/request/get_business_request.dart';
+import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
 import 'package:meta/meta.dart';
@@ -39,5 +39,4 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       return Left(NetworkFailure());
     }
   }
-  
 }

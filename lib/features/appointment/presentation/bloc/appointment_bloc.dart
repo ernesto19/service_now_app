@@ -41,7 +41,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   }
 
   @override
-  AppointmentState get initialState => AppointmentState.inititalState;
+  AppointmentState get initialState => AppointmentState.initialState;
 
   @override
   Stream<AppointmentState> mapEventToState(AppointmentEvent event) async* {

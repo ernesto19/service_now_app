@@ -11,7 +11,7 @@ class AppointmentState extends Equatable {
 
   AppointmentState({ this.myLocation, this.business, this.status });
 
-  static AppointmentState get inititalState => AppointmentState(
+  static AppointmentState get initialState => AppointmentState(
     myLocation: null,
     business: const [],
     status: BusinessStatus.loading

@@ -4,10 +4,9 @@ import 'package:service_now/features/home/presentation/widgets/category_picker.d
 import 'package:service_now/features/home/presentation/widgets/home_header.dart';
 import 'package:service_now/features/home/presentation/widgets/menu.dart';
 import 'package:service_now/injection_container.dart';
-import 'package:service_now/models/user.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/pages/menu/settings_services_page.dart';
+import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  User user = User();
   final GlobalKey<InnerDrawerState> _drawerKey = GlobalKey();
   String _iniciales = '';
 
@@ -29,15 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      final args = ModalRoute.of(context).settings.arguments;
-      if (args != null) {
-        setState(() {
-          user = args;
-        });
-      }
-    });
-
     _iniciales = UserPreferences.instance.lastName.toString().isEmpty ? UserPreferences.instance.firstName.substring(0, 2) : UserPreferences.instance.firstName.substring(0, 1) + UserPreferences.instance.lastName.substring(0, 1);
 
     super.initState();

@@ -6,7 +6,7 @@ import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/features/home/presentation/widgets/home_bottom_bar.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
-import '../../injection_container.dart';
+import '../../../../injection_container.dart';
 
 class SettingsCategories extends StatefulWidget {
   static final routeName = 'settings_categories_page';
