@@ -12,5 +12,6 @@
     "menu_services": "Servicios",
     "menu_terms": "Condiciones",
     "menu_support": "Soporte",
-    "log_out": "Cerrar sesión"
+    "log_out": "Cerrar sesión",
+    "authenticating_message": "Autenticando ..."
 }

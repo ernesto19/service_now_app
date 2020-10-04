@@ -12,5 +12,6 @@
     "menu_services": "Services",
     "menu_terms": "Terms",
     "menu_support": "Support",
-    "log_out": "Log out"
+    "log_out": "Log out",
+    "authenticating_message": "Authenticating ..."
 }
