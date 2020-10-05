@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
+import 'package:service_now/features/appointment/presentation/widgets/business_list.dart';
+import 'package:service_now/injection_container.dart';
 
 class BusinessPhotosPage extends StatelessWidget {
   final Business business;
@@ -17,6 +21,108 @@ class BusinessPhotosPage extends StatelessWidget {
       'https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350'
     ];
 
+    return BlocProvider(
+      create: (_) => sl<AppointmentBloc>(),
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: CustomScrollView(
+          slivers: [
+            BlocBuilder<AppointmentBloc, AppointmentState>(
+              builder: (context, state) {
+                // ignore: close_sinks
+                final bloc = AppointmentBloc.of(context);
+                bloc.add(GetGalleriesForUser(business.id));
+
+                if (state.status == BusinessStatus.readyGallery) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Container(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Servicio $index'),
+                              SizedBox(height: 10),
+                              Container(
+                                height: 200.0,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: imgList.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: EdgeInsets.only(right: 10),
+                                      height: 200,
+                                      width: 200,
+                                      child: Image.network(
+                                        imgList[index], 
+                                        fit: BoxFit.cover
+                                      )
+                                    );
+                                  }
+                                )
+                              )
+                            ]
+                          )
+                        );
+                      },
+                      childCount: 4
+                    )
+                  );
+                } else {
+                  return SliverFillRemaining(
+                    child: Container(
+                      color: Colors.white,
+                      child: Center(
+                        child: CircularProgressIndicator()
+                      ),
+                    )
+                  );
+                }
+              }
+            )
+            /*
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Container(
+                    padding: EdgeInsets.only(top: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Servicio $index'),
+                        SizedBox(height: 10),
+                        Container(
+                          height: 200.0,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: imgList.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(right: 10),
+                                height: 200,
+                                width: 200,
+                                child: Image.network(
+                                  imgList[index], 
+                                  fit: BoxFit.cover
+                                )
+                              );
+                            }
+                          )
+                        )
+                      ]
+                    )
+                  );
+                },
+                childCount: 4
+              )
+            )
+            */
+          ]
+        )
+      )
+    );
+    /*
     return Container(
       padding: EdgeInsets.all(10),
       child: CustomScrollView(
@@ -59,5 +165,6 @@ class BusinessPhotosPage extends StatelessWidget {
         ]
       )
     );
+    */
   }
 }

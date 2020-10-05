@@ -5,6 +5,7 @@ import 'package:service_now/features/appointment/data/datasources/appointment_re
 import 'package:service_now/features/appointment/data/repositories/appointment_repository_impl.dart';
 import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
+import 'package:service_now/features/appointment/domain/usecases/get_galleries_by_business.dart';
 import 'package:service_now/features/home/data/datasources/category_remote_data_source.dart';
 import 'package:service_now/features/home/data/repositories/category_repository_impl.dart';
 import 'package:service_now/features/home/domain/repositories/category_repository.dart';
@@ -35,7 +36,8 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => AppointmentBloc(
-      business: sl()
+      business: sl(),
+      galleries: sl()
     )
   );
 
@@ -50,6 +52,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
 
   sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
+  sl.registerLazySingleton(() => GetGalleriesByBusiness(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
 

@@ -15,3 +15,9 @@ class GetBusinessForUser extends AppointmentEvent {
 
   GetBusinessForUser(this.categoryId, this.latitude, this.longitude);
 }
+
+class GetGalleriesForUser extends AppointmentEvent {
+  final int businessId;
+
+  GetGalleriesForUser(this.businessId);
+}
