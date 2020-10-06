@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 
 class CustomGoogleMap extends StatelessWidget {
   const CustomGoogleMap({ @required CameraPosition initialPosition }) : _initialPosition = initialPosition;
@@ -8,15 +10,23 @@ class CustomGoogleMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: GoogleMap(
-        initialCameraPosition: _initialPosition,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        zoomControlsEnabled: false
-      )
-    );
+    return BlocBuilder<AppointmentBloc, AppointmentState> (builder: (_, state) {
+      return Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: GoogleMap(
+          initialCameraPosition: _initialPosition,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomControlsEnabled: false,
+          markers: state.markers.values.toSet(),
+          onTap: (location) {
+            print('$location');
+          },
+        )
+      );
+    });
   }
 }
+
+// LatLng(-12.135128411564189, -76.94930300116539)

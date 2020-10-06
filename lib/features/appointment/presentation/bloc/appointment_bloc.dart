@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/entities/gallery.dart';
@@ -70,7 +70,18 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         return this.state.copyWith(status: BusinessStatus.error, business: []);
       },
       (business) {
-        return this.state.copyWith(status: BusinessStatus.ready, business: business);
+        final markers = Map<MarkerId, Marker>.from(this.state.markers);
+
+        if (state.status == BusinessStatus.ready) {
+          for (var trade in state.business) {
+            final markerId = MarkerId(trade.id.toString());
+            final marker = Marker(markerId: markerId, position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)));
+
+            markers[markerId] = marker;
+          }
+        }
+
+        return this.state.copyWith(status: BusinessStatus.ready, business: business, markers: markers);
       }
     );
   }
