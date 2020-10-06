@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/features/home/presentation/widgets/home_bottom_bar.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import '../../../../injection_container.dart';
@@ -20,7 +21,7 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Configuración categorías', style: labelTitleForm),
+        title: Text(allTranslations.traslate('categories_settings_title'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: buildBody(context),

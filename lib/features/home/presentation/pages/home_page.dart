@@ -8,6 +8,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
+import 'package:service_now/utils/all_translations.dart';
 
 class HomePage extends StatefulWidget {
   static final routeName = 'home_page';
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                       if (state.status == CategoryStatus.ready) {
                         return CategoryPicker();
                       } else if (state.status == CategoryStatus.checking) {
-                        text = 'Cargando ...';
+                        text = allTranslations.traslate('loading_message');
                       } else if (state.status == CategoryStatus.selecting) {
                         return SettingsCategories();
                       } else {

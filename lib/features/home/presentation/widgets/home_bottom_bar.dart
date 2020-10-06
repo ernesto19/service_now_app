@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 
@@ -14,7 +15,7 @@ class HomeBottomBar extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (Route<dynamic> route) => false);
         }, 
-        label: 'Guardar',
+        label: allTranslations.traslate('save_button_text'),
         backgroundColor: secondaryDarkColor,
         width: double.infinity
       )

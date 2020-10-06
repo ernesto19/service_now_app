@@ -12,7 +12,19 @@ class GalleryModel extends Gallery {
     return GalleryModel(
       businessServiceId:  json['business_service_id'], 
       name:               json['name'],
-      photos:             json['gallery']
+      photos:             ListGallery.fromJson(json).photos
     );
+  }
+}
+
+class ListGallery {
+  List<String> photos;
+
+  ListGallery.fromJson(dynamic json) {
+    photos = List();
+    for (var item in json['gallery']) {
+      final comment = 'https://archivosprestape.s3.amazonaws.com/' + item.toString();
+      photos.add(comment);
+    }
   }
 }

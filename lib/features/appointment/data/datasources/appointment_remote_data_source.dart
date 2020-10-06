@@ -74,7 +74,7 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
 
   Future<List<GalleryModel>> _getGalleriesFromUrl(GetGalleriesRequest request, String url) async {
     final response = await client.get(
-      url,
+      '$url?business_id=${request.businessId}',
       headers: {
         'Authorization': 'Bearer ${UserPreferences.instance.token}',
         'Content-Type': 'application/json',

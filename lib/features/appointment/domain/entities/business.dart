@@ -9,6 +9,7 @@ class Business extends Equatable {
   final String longitude;
   final String rating;
   final double distance;
+  final List<BusinessGallery> gallery;
 
   Business({
     @required this.id, 
@@ -17,9 +18,22 @@ class Business extends Equatable {
     @required this.latitude, 
     @required this.longitude, 
     @required this.rating, 
-    @required this.distance
+    @required this.distance,
+    @required this.gallery
   });
 
   @override
-  List<Object> get props => [id, name, description, latitude, longitude, rating, distance];
+  List<Object> get props => [id, name, description, latitude, longitude, rating, distance, gallery];
+}
+
+class BusinessGallery {
+  int id;
+  int businessId;
+  String url;
+
+  BusinessGallery.fromJson(dynamic json) {
+    id          = json['id'];
+    businessId  = json['business_id'];
+    url         = 'https://archivosprestape.s3.amazonaws.com/' + json['url'];
+  }
 }
