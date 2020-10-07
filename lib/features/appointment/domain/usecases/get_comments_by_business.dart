@@ -6,22 +6,22 @@ import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/appointment/domain/entities/comment.dart';
 import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
 
-class GetCommentsByBusiness implements UseCase<List<Comment>, Params> {
+class GetCommentsByBusiness implements UseCase<List<Comment>, GetCommentsParams> {
   final AppointmentRepository repository;
 
   GetCommentsByBusiness(this.repository);
 
   @override
-  Future<Either<Failure, List<Comment>>> call(Params params) async {
+  Future<Either<Failure, List<Comment>>> call(GetCommentsParams params) async {
     return await repository.getComments(params.businessId);
   }
 
 }
 
-class Params extends Equatable {
+class GetCommentsParams extends Equatable {
   final int businessId;
 
-  Params({ @required this.businessId });
+  GetCommentsParams({ @required this.businessId });
 
   @override
   List<Object> get props => [businessId];

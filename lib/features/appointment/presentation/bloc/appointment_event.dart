@@ -21,3 +21,9 @@ class GetGalleriesForUser extends AppointmentEvent {
 
   GetGalleriesForUser(this.businessId);
 }
+
+class GetCommentsForUser extends AppointmentEvent {
+  final int businessId;
+
+  GetCommentsForUser(this.businessId);
+}

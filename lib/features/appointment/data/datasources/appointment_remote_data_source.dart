@@ -29,7 +29,7 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   Future<List<BusinessModel>> getBusiness(GetBusinessRequest request) => _getBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/nearest_business');
 
   @override
-  Future<List<CommentModel>> getComments(GetCommentsRequest request) => _getCommentsFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/comments');
+  Future<List<CommentModel>> getComments(GetCommentsRequest request) => _getCommentsFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_comment_by_business');
 
   @override
   Future<List<GalleryModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_all_galleries');

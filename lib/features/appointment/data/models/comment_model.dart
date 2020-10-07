@@ -13,8 +13,8 @@ class CommentModel extends Comment {
     return CommentModel(
       id:         json['id'], 
       comment:    json['comment'],
-      rating:     json['rating'],
-      createdAt:  json['createdAt']
+      rating:     json['rate'].toString(),
+      createdAt:  json['created_at']
     );
   }
 }

@@ -7,8 +7,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
+import 'package:service_now/features/appointment/domain/entities/comment.dart';
 import 'package:service_now/features/appointment/domain/entities/gallery.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
+import 'package:service_now/features/appointment/domain/usecases/get_comments_by_business.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_galleries_by_business.dart';
 import 'package:service_now/features/appointment/presentation/bloc/appointment_event.dart';
 import 'package:service_now/features/appointment/presentation/bloc/appointment_state.dart';
@@ -21,13 +23,16 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   StreamSubscription<Position> _subscription;
   final GetBusinessByCategory getBusinessByCategory;
   final GetGalleriesByBusiness getGalleriesByBusiness;
+  final GetCommentsByBusiness getCommentsByBusiness;
 
   AppointmentBloc({
     @required GetBusinessByCategory business,
-    @required GetGalleriesByBusiness galleries
+    @required GetGalleriesByBusiness galleries,
+    @required GetCommentsByBusiness comments
   }) : assert(business != null, galleries != null),
        getBusinessByCategory = business,
-       getGalleriesByBusiness = galleries {
+       getGalleriesByBusiness = galleries,
+       getCommentsByBusiness = comments {
     this._init();
   }
 
@@ -59,6 +64,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       this.state.copyWith(status: BusinessStatus.loadingGallery, galleries: []);
       final failureOrGalleries = await getGalleriesByBusiness(GetGalleriesParams(businessId: event.businessId));
       yield* _eitherLoadedGalleriesOrErrorState(failureOrGalleries);
+    } else if (event is GetCommentsForUser) {
+      final failureOrComments = await getCommentsByBusiness(GetCommentsParams(businessId: event.businessId));
+      yield* _eitherLoadedCommentsOrErrorState(failureOrComments);
     }
   }
 
@@ -95,6 +103,19 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       },
       (galleries) {
         return this.state.copyWith(status: BusinessStatus.readyGallery, galleries: galleries);
+      }
+    );
+  }
+
+  Stream<AppointmentState> _eitherLoadedCommentsOrErrorState(
+    Either<Failure, List<Comment>> failureOrComments
+  ) async * {
+    yield failureOrComments.fold(
+      (failure) {
+        return this.state.copyWith(status: BusinessStatus.error, comments: []);
+      },
+      (comments) {
+        return this.state.copyWith(status: BusinessStatus.readyComments, comments: comments);
       }
     );
   }
