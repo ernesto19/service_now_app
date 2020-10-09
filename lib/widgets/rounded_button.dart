@@ -7,22 +7,30 @@ class RoundedButton extends StatelessWidget {
   final String label;
   final Color backgroundColor;
   final double width;
-  const RoundedButton({Key key, @required this.onPressed, @required this.label, this.backgroundColor, @required this.width}) : assert(label != null), super(key: key);
+  final double fontSize;
+  final Widget icon;
+  const RoundedButton({Key key, @required this.onPressed, @required this.label, this.backgroundColor, @required this.width, this.fontSize, this.icon }) : assert(label != null), super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
       padding: EdgeInsets.zero,
       child: Container(
-        child: Text(
-          this.label, 
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'sans',
-            letterSpacing: 1,
-            fontSize: 17
-          ),
-          textAlign: TextAlign.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            this.icon ?? Container(),
+            Text(
+              this.label,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'sans',
+                letterSpacing: 1,
+                fontSize: this.fontSize ?? 17
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
         padding: EdgeInsets.symmetric(vertical: 10),
         width: this.width,

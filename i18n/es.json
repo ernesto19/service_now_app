@@ -12,6 +12,7 @@
     "menu_services": "Servicios",
     "menu_terms": "Condiciones",
     "menu_support": "Soporte",
+    "menu_business": "Negocios",
     "log_out": "Cerrar sesión",
     "authenticating_message": "Autenticando ...",
     "information_tab_title": "Información",
@@ -19,5 +20,6 @@
     "select_tab_title": "Seleccionar",
     "loading_message": "Cargando ...",
     "categories_settings_title": "Configuración categorías",
-    "save_button_text": "Save"
+    "save_button_text": "Guardar",
+    "acquire_membership": "Adquirir membresía"
 }
