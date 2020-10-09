@@ -19,7 +19,7 @@ class RoundedButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            this.icon ?? Container(),
+            this.icon ?? SizedBox(height: 0),
             Text(
               this.label,
               style: TextStyle(

@@ -16,6 +16,11 @@ import 'package:service_now/features/login/data/datasources/login_remote_data_so
 import 'package:service_now/features/login/data/repositories/login_repository_impl.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 import 'package:service_now/features/login/presentation/bloc/login_bloc.dart';
+import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
+import 'package:service_now/features/professional/data/repositories/professional_repository_impl.dart';
+import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
+import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
+import 'package:service_now/features/professional/presentation/bloc/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'features/appointment/presentation/bloc/bloc.dart';
@@ -49,6 +54,12 @@ Future<void> init() async {
     )
   );
 
+  sl.registerFactory(
+    () => ProfessionalBloc(
+      business: sl()
+    )
+  );
+
   // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
@@ -58,6 +69,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCommentsByBusiness(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
+
+  sl.registerLazySingleton(() => GetProfessionalBusinessByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(
@@ -82,6 +95,13 @@ Future<void> init() async {
     )
   );
 
+  sl.registerLazySingleton<ProfessionalRepository>(
+    () => ProfessionalRepositoryImpl(
+      remoteDataSource: sl(), 
+      networkInfo: sl()
+    )
+  );
+
   // [ Data sources ]
   sl.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(client: sl())
@@ -97,6 +117,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton<LoginRemoteDataSource>(
     () => LoginRemoteDataSourceImpl(client: sl())
+  );
+
+  sl.registerLazySingleton<ProfessionalRemoteDataSource>(
+    () => ProfessionalRemoteDataSourceImpl(client: sl())
   );
 
   // [ Core ]

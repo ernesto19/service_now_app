@@ -4,8 +4,9 @@ import 'package:service_now/utils/colors.dart';
 class Header extends StatelessWidget {
   final String title;
   final double titleSize;
+  final Function onTap;
 
-  const Header({@required this.title, this.titleSize });
+  const Header({ @required this.title, this.titleSize, @required this.onTap });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,16 @@ class Header extends StatelessWidget {
                   child: Container(
                     color: primaryColor
                   )
+                ),
+                Positioned(
+                  bottom: constraints.maxHeight * 0.6,
+                  left: 17,
+                  child: GestureDetector(
+                    child: Container(
+                      child: Icon(Icons.arrow_back, color: Colors.white)
+                    ),
+                    onTap: onTap
+                  ),
                 ),
                 Positioned(
                   bottom: constraints.maxHeight * 0.3,

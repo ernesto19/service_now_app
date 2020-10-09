@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
+import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
@@ -74,17 +75,11 @@ class Menu extends StatelessWidget {
 
   void _onTap(int id, BuildContext context) {
     switch (id) {
-      case 1:
-        
-        break;
       case 2:
         Navigator.pushNamed(context, SettingsCategories.routeName);
         break;
-      case 3:
-        
-        break;
-      case 4:
-        
+      case 5:
+        Navigator.pushNamed(context, ProfessionalBusinessPage.routeName);
         break;
       case 10:
         _clearData();
@@ -96,6 +91,9 @@ class Menu extends StatelessWidget {
 
   void _clearData() {
     UserPreferences.instance.token = '';
+    UserPreferences.instance.email = '';
+    UserPreferences.instance.firstName = '';
+    UserPreferences.instance.lastName = '';
   }
 }
 

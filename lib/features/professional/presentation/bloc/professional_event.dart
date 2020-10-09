@@ -5,3 +5,9 @@ class GetBusinessForProfessional extends ProfessionalEvent {
 
   GetBusinessForProfessional(this.professionalId);
 }
+
+class GetServicesForProfessional extends ProfessionalEvent {
+  final int professionalBusinessId;
+
+  GetServicesForProfessional(this.professionalBusinessId);
+}
