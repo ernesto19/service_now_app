@@ -22,5 +22,7 @@
     "categories_settings_title": "Configuración categorías",
     "save_button_text": "Guardar",
     "acquire_membership": "Adquirir membresía",
-    "my_business_title": "Mis negocios"
+    "my_business_title": "Mis negocios",
+    "my_services_title": "Servicios",
+    "add_service_label": "Agregar servicio"
 }

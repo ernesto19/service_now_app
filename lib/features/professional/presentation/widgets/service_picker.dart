@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
-import 'package:service_now/features/professional/presentation/pages/professional_business_detail_page.dart';
 
-class BusinessPicker extends StatefulWidget {
+class ServicePicker extends StatefulWidget {
 
-  const BusinessPicker();
+  const ServicePicker();
 
   @override
-  _BusinessPickerState createState() => _BusinessPickerState();
+  _ServicePickerState createState() => _ServicePickerState();
 }
 
-class _BusinessPickerState extends State<BusinessPicker> {
+class _ServicePickerState extends State<ServicePicker> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfessionalBloc, ProfessionalState> (builder: (context, state) {
       return SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            ProfessionalBusiness business = state.business[index];
-
             return GestureDetector(
               child: Container(
                 margin: EdgeInsets.only(bottom: 10, right: 15, left: 15),
-                height: 150,
+                height: 100,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
@@ -98,10 +94,13 @@ class _BusinessPickerState extends State<BusinessPicker> {
                   ]
                 )
               ),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business)))
+              onTap: () {
+                // _category = lista[index];
+                // print(lista[index].id);
+              }
             );
           },
-          childCount: state.business.length
+          childCount: state.services.length
         ),
       );
     });

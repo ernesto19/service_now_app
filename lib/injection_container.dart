@@ -20,6 +20,7 @@ import 'package:service_now/features/professional/data/datasources/professional_
 import 'package:service_now/features/professional/data/repositories/professional_repository_impl.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
@@ -56,7 +57,8 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => ProfessionalBloc(
-      business: sl()
+      business: sl(),
+      services: sl()
     )
   );
 
@@ -71,6 +73,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Authentication(sl()));
 
   sl.registerLazySingleton(() => GetProfessionalBusinessByProfessional(sl()));
+  sl.registerLazySingleton(() => GetProfessionalServicesByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(

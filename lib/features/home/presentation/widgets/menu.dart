@@ -62,7 +62,7 @@ class Menu extends StatelessWidget {
                   fontSize: 14,
                   icon: Container(
                     padding: EdgeInsets.only(right: 8),
-                    child: Icon(Icons.work, color: Colors.white, size: 18)
+                    child: Icon(Icons.person_add, color: Colors.white, size: 18)
                   )
                 )
               )

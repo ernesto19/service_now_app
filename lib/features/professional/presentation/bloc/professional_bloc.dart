@@ -33,6 +33,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       final failureOrBusiness = await getBusinessByProfessional(GetProfessionalBusinessParams(professionalId: event.professionalId));
       yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
     } else if (event is GetServicesForProfessional) {
+      this.state.copyWith(status: ProfessionalStatus.loadingServices, services: []);
       final failureOrServices = await getServicesByProfessional(GetProfessionalServicesParams(professionalBusinessId: event.professionalBusinessId));
       yield* _eitherLoadedServicesOrErrorState(failureOrServices);
     }
@@ -52,9 +53,9 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   }
 
   Stream<ProfessionalState> _eitherLoadedServicesOrErrorState(
-    Either<Failure, List<ProfessionalService>> failureOrBusiness
+    Either<Failure, List<ProfessionalService>> failureOrServices
   ) async * {
-    yield failureOrBusiness.fold(
+    yield failureOrServices.fold(
       (failure) {
         return this.state.copyWith(status: ProfessionalStatus.error, services: []);
       },

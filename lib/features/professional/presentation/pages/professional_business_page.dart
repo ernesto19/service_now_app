@@ -48,10 +48,10 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
 
                       if (state.status == ProfessionalStatus.ready) {
                         return BusinessPicker();
-                      } else if (state.status == ProfessionalStatus.checking) {
-                        text = allTranslations.traslate('loading_message');
-                      } else {
+                      } else if (state.status == ProfessionalStatus.error) {
                         text = 'Error';
+                      } else {
+                        text = allTranslations.traslate('loading_message');
                       }
 
                       return SliverFillRemaining(
