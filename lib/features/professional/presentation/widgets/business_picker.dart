@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
@@ -13,6 +14,8 @@ class BusinessPicker extends StatefulWidget {
 }
 
 class _BusinessPickerState extends State<BusinessPicker> {
+  bool toggleValue = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfessionalBloc, ProfessionalState> (builder: (context, state) {
@@ -28,8 +31,32 @@ class _BusinessPickerState extends State<BusinessPicker> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    height: 100,
-                    color: Colors.redAccent,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(business.name)
+                            ),
+                            ShaderMask(
+                              child: CupertinoSwitch(
+                                activeColor: Colors.greenAccent[100],
+                                value: toggleValue,
+                                onChanged: (v) => setState(() => toggleValue = v),
+                              ),
+                              shaderCallback: (r) {
+                                return LinearGradient(
+                                  colors: toggleValue
+                                      ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
+                                      : [ Colors.redAccent[100], Colors.redAccent[100]],
+                                ).createShader(r);
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                   // child: Stack(
                   //   fit: StackFit.expand,

@@ -24,5 +24,7 @@
     "acquire_membership": "Acquire membership",
     "my_business_title": "My business",
     "my_services_title": "Services",
-    "add_service_label": "Add service"
+    "add_service_label": "Add service",
+    "register_business_title": "Register business",
+    "register_service_title": "Register service"
 }

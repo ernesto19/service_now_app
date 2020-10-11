@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
@@ -7,6 +8,8 @@ import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 
+import 'professional_business_register_page.dart';
+
 class ProfessionalBusinessPage extends StatefulWidget {
   static final routeName = 'professional_business_page';
 
@@ -15,6 +18,7 @@ class ProfessionalBusinessPage extends StatefulWidget {
 }
 
 class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
+  bool toggleValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: secondaryDarkColor,
-        onPressed: () {}
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage()))
       )
     );
   }
@@ -74,5 +78,11 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
         )
       )
     );
+  }
+
+  toggleButton() {
+    setState(() {
+      toggleValue = !toggleValue;
+    });
   }
 }
