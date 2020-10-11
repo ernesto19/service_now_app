@@ -23,18 +23,18 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
 
   Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(GetProfessionalBusinessRequest request, String url) async {
     List<ProfessionalBusinessModel> listaBusiness = List();
-    listaBusiness.add(ProfessionalBusinessModel(id: 1, name: 'Negocio 1', description: 'descripcion', address: ''));
-    listaBusiness.add(ProfessionalBusinessModel(id: 2, name: 'Negocio 2', description: 'descripcion', address: ''));
+    listaBusiness.add(ProfessionalBusinessModel(id: 1, name: 'Negocio 1', description: 'descripcion', categoryId: 1, categoryName: '', address: '', licenceNumber: '', fanpage: '', logo: '', latitude: '', longitude: ''));
+    listaBusiness.add(ProfessionalBusinessModel(id: 2, name: 'Negocio 2', description: 'descripcion', categoryId: 1, categoryName: '', address: '', licenceNumber: '', fanpage: '', logo: '', latitude: '', longitude: ''));
 
     return listaBusiness;
   }
 
   Future<List<ProfessionalServiceModel>> _getProfessionalServicesFromUrl(GetProfessionalServicesRequest request, String url) async {
     List<ProfessionalServiceModel> listaServices = List();
-    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 1', description: 'descripcion'));
-    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 2', description: 'descripcion'));
-    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 3', description: 'descripcion'));
-    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 4', description: 'descripcion'));
+    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 1', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
+    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 2', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
+    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 3', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
+    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 4', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
 
     return listaServices;
   }
