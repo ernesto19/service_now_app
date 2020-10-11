@@ -16,3 +16,4 @@ Color primaryTextColor          = Color.fromRGBO(3, 30, 1, 1.0);
 TextStyle textLightColorWhite = TextStyle(color: Colors.white);
 TextStyle textBoldSmallColorBlack = TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.bold, fontFamily: 'sans');
 TextStyle textLightMediumColorBlack = TextStyle(color: Colors.black, fontSize: 14.0, fontFamily: 'sans');
+Color hintColor                 = Colors.black38;

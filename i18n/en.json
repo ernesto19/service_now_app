@@ -26,5 +26,20 @@
     "my_services_title": "Services",
     "add_service_label": "Add service",
     "register_business_title": "Register business",
-    "register_service_title": "Register service"
+    "register_service_title": "Register service",
+    "business_name_label": "Name",
+    "business_description_label": "Description",
+    "business_license_label": "License number",
+    "business_address_label": "Address",
+    "business_fanpage_label": "Fanpage",
+    "business_industry_label": "Industry",
+    "business_category_label": "Category",
+    "business_name_placeholder": "Write the name of your business",
+    "business_description_placeholder": "Write the description of your business",
+    "business_license_placeholder": "Write the license number of your business",
+    "business_address_placeholder": "Write the address of your business",
+    "business_fanpage_placeholder": "Write your business fanpage",
+    "business_industry_placeholder": "Select an industry",
+    "business_category_placeholder": "Select an category",
+    "register_button_text": "Register"
 }

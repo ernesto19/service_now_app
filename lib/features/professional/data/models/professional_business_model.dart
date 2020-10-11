@@ -9,12 +9,13 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
     @required int categoryId,
     @required String categoryName,
     @required String address,
-    @required String licenceNumber,
+    @required String licenseNumber,
     @required String fanpage,
     @required String logo,
     @required String latitude,
-    @required String longitude
-  }) : super(id: id, name: name, description: description, categoryId: categoryId, categoryName: categoryName, address: address, licenceNumber: licenceNumber, fanpage: fanpage, logo: logo, latitude: latitude, longitude: longitude);
+    @required String longitude,
+    @required int active
+  }) : super(id: id, name: name, description: description, categoryId: categoryId, categoryName: categoryName, address: address, licenseNumber: licenseNumber, fanpage: fanpage, logo: logo, latitude: latitude, longitude: longitude, active: active);
 
   factory ProfessionalBusinessModel.fromJson(Map<String, dynamic> json) {
     return ProfessionalBusinessModel(
@@ -24,11 +25,12 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
       categoryId:   json['category_id']     ?? '',
       categoryName: json['category_name']   ?? '',
       address:      json['address']         ?? '',
-      licenceNumber: json['licence_number'] ?? '',
+      licenseNumber: json['license_number'] ?? '',
       fanpage:      json['fanpage']         ?? '',
       logo:         json['logo']            ?? '',
       latitude:     json['latitude']        ?? '',
-      longitude:    json['longitude']       ?? ''
+      longitude:    json['longitude']       ?? '',
+      active:       0
     );
   }
 }

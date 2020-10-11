@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_detail_page.dart';
@@ -14,8 +15,6 @@ class BusinessPicker extends StatefulWidget {
 }
 
 class _BusinessPickerState extends State<BusinessPicker> {
-  bool toggleValue = false;
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfessionalBloc, ProfessionalState> (builder: (context, state) {
@@ -27,90 +26,63 @@ class _BusinessPickerState extends State<BusinessPicker> {
             return GestureDetector(
               child: Container(
                 margin: EdgeInsets.only(bottom: 10, right: 15, left: 15),
-                height: 150,
+                // height: 150,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Expanded(
-                              child: Text(business.name)
+                              child: Text(business.name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
                             ),
                             ShaderMask(
                               child: CupertinoSwitch(
                                 activeColor: Colors.greenAccent[100],
-                                value: toggleValue,
-                                onChanged: (v) => setState(() => toggleValue = v),
+                                value: business.active == 1,
+                                onChanged: (value) => setState(() => business.active = value ? 1 : 0)
                               ),
                               shaderCallback: (r) {
                                 return LinearGradient(
-                                  colors: toggleValue
+                                  colors: business.active == 1
                                       ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
                                       : [ Colors.redAccent[100], Colors.redAccent[100]],
                                 ).createShader(r);
-                              },
-                            ),
+                              }
+                            )
+                          ]
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(Icons.web, size: 20),
+                            SizedBox(width: 10),
+                            Text(business.categoryName.toUpperCase(), style: TextStyle(fontSize: 11)),
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(Icons.pin_drop, size: 20),
+                            SizedBox(width: 10),
+                            Text(business.address, style: TextStyle(fontSize: 11)),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(Icons.stars, size: 20),
+                            SizedBox(width: 10),
+                            Text(business.licenseNumber, style: TextStyle(fontSize: 11)),
+                          ],
+                        ),
+                        SizedBox(height: 5)
+                      ]
+                    )
                   ),
-                  // child: Stack(
-                  //   fit: StackFit.expand,
-                  //   children: <Widget>[
-                  //     Image.network(
-                  //       lista[index].logo,
-                  //       fit: BoxFit.fill
-                  //     ),
-                  //     Container(
-                  //       decoration: BoxDecoration(
-                  //         gradient: LinearGradient(
-                  //           colors: [ Colors.white12, Colors.black87 ],
-                  //           begin: Alignment.topCenter,
-                  //           end: Alignment.bottomCenter
-                  //         )
-                  //       )
-                  //     ),
-                  //     Positioned(
-                  //       bottom: 0,
-                  //       right: 0,
-                  //       child: Container(
-                  //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  //         child: Text(
-                  //           lista[index].name,
-                  //           style: TextStyle(
-                  //             inherit: true,
-                  //             fontSize: 25,
-                  //             fontWeight: FontWeight.bold,
-                  //             color: Colors.white,
-                  //             fontFamily: 'raleway',
-                  //             shadows: [
-                  //               Shadow(
-                  //                 offset: Offset(-1.5, -1.5),
-                  //                 color: Colors.black
-                  //               ),
-                  //               Shadow(
-                  //                 offset: Offset(1.5, -1.5),
-                  //                 color: Colors.black
-                  //               ),
-                  //               Shadow(
-                  //                 offset: Offset(1.5, 1.5),
-                  //                 color: Colors.black
-                  //               ),
-                  //               Shadow(
-                  //                 offset: Offset(-1.5, 1.5),
-                  //                 color: Colors.black
-                  //               )
-                  //             ]
-                  //           )
-                  //         ),
-                  //       ),
-                  //     )
-                  //   ]
-                  // )
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,

@@ -6,12 +6,15 @@ import 'package:service_now/core/network/network_info.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
+import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
+import 'package:service_now/features/professional/domain/entities/industry.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
 
 typedef Future<List<ProfessionalBusiness>> _ProfessionalBusinessType();
 typedef Future<List<ProfessionalService>> _ProfessionalServicesType();
+typedef Future<IndustryCategory> _IndustriesType();
 
 class ProfessionalRepositoryImpl implements ProfessionalRepository {
   final ProfessionalRemoteDataSource remoteDataSource;
@@ -38,6 +41,13 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
     });
   }
 
+  @override
+  Future<Either<Failure, IndustryCategory>> getIndustries() async {
+    return await _getIndustriesType(() {
+      return remoteDataSource.getIndustries();
+    });
+  }
+
   Future<Either<Failure, List<ProfessionalBusiness>>> _getProfessionalBusinessType(_ProfessionalBusinessType getProfessionalBusinessType) async {
     if (await networkInfo.isConnected) {
       try {
@@ -56,6 +66,19 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
       try {
         final remoteBusiness = await getProfessionalServicesType();
         return Right(remoteBusiness);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, IndustryCategory>> _getIndustriesType(_IndustriesType getIndustriesType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteIndustries = await getIndustriesType();
+        return Right(remoteIndustries);
       } on ServerException {
         return Left(ServerFailure());
       }
