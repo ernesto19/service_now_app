@@ -6,8 +6,9 @@ import 'package:service_now/core/network/network_info.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
+import 'package:service_now/features/professional/data/requests/register_business_request.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
-import 'package:service_now/features/professional/domain/entities/industry.dart';
+import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
@@ -15,6 +16,7 @@ import 'package:service_now/features/professional/domain/repositories/profession
 typedef Future<List<ProfessionalBusiness>> _ProfessionalBusinessType();
 typedef Future<List<ProfessionalService>> _ProfessionalServicesType();
 typedef Future<IndustryCategory> _IndustriesType();
+typedef Future<RegisterBusinessResponse> _RegisterBusinessType();
 
 class ProfessionalRepositoryImpl implements ProfessionalRepository {
   final ProfessionalRemoteDataSource remoteDataSource;
@@ -45,6 +47,14 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   Future<Either<Failure, IndustryCategory>> getIndustries() async {
     return await _getIndustriesType(() {
       return remoteDataSource.getIndustries();
+    });
+  }
+
+  @override
+  Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage) async {
+    return await _registerBusinessType(() {
+      var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage);
+      return remoteDataSource.registerBusiness(request);
     });
   }
 
@@ -79,6 +89,19 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
       try {
         final remoteIndustries = await getIndustriesType();
         return Right(remoteIndustries);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, RegisterBusinessResponse>> _registerBusinessType(_RegisterBusinessType registerBusinessType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await registerBusinessType();
+        return Right(response);
       } on ServerException {
         return Left(ServerFailure());
       }

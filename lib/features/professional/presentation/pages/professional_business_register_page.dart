@@ -42,37 +42,30 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   BlocProvider<ProfessionalBloc> _buildBody(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<ProfessionalBloc>(),
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  children: [
-                    BlocBuilder<ProfessionalBloc, ProfessionalState>(
-                      builder: (context, state) {
-                        // ignore: close_sinks
-                        final bloc = ProfessionalBloc.of(context);
-                        bloc.add(GetIndustriesForProfessional());
+      child: BlocBuilder<ProfessionalBloc, ProfessionalState>(
+        builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = ProfessionalBloc.of(context);
+          bloc.add(GetIndustriesForProfessional());
+          String text = allTranslations.traslate('loading_message');
 
-                        String text = '';
-
-                        if (state.status == ProfessionalStatus.readyIndustries) {
-                          return Column(
-                            children: [
-                              _buildIndustiesSelect(state.industries.industries),
-                              SizedBox(height: 12),
-                              _buildCategoriesSelect(state.industries.categories),
-                            ],
-                          );
-                        } else if (state.status == ProfessionalStatus.error) {
-                          text = 'Error';
-                        } else {
-                          text = allTranslations.traslate('loading_message');
-                        }
-
-                        return Column(
+          return Container(
+            child: Stack(
+              children: <Widget>[
+                SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Column(
+                      children: [
+                      state.status == ProfessionalStatus.readyIndustries 
+                        ? Column(
+                          children: [
+                            _buildIndustiesSelect(state.industries.industries),
+                            SizedBox(height: 12),
+                            _buildCategoriesSelect(state.industries.categories),
+                          ],
+                        ) 
+                        : Column(
                           children: [
                             Padding(
                               padding: EdgeInsets.all(8),
@@ -80,27 +73,27 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                             ),
                             Text(text)
                           ]
-                        );
-                      }
-                    ),
-                    SizedBox(height: 10),
-                    _buildName(),
-                    SizedBox(height: 20),
-                    _buildDescription(),
-                    SizedBox(height: 20),
-                    _buildLicenseNumber(),
-                    SizedBox(height: 20),
-                    _buildAddress(),
-                    SizedBox(height: 20),
-                    _buildFanpage(),
-                    SizedBox(height: 40),
-                    _buildSaveButton()
-                  ]
+                        ),
+                        SizedBox(height: 10),
+                        _buildName(),
+                        SizedBox(height: 20),
+                        _buildDescription(),
+                        SizedBox(height: 20),
+                        _buildLicenseNumber(),
+                        SizedBox(height: 20),
+                        _buildAddress(),
+                        SizedBox(height: 20),
+                        _buildFanpage(),
+                        SizedBox(height: 40),
+                        _buildSaveButton(bloc)
+                      ]
+                    )
+                  ),
                 )
-              ),
+              ]
             )
-          ]
-        )
+          );
+        }
       )
     );
   }
@@ -155,12 +148,12 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(ProfessionalBloc bloc) {
     return RoundedButton(
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => {}
+      onPressed: () => bloc.add(RegisterBusinessForProfessional('', '', 1, 1, '', '', '', '', '', '', context))
     );
   }
 

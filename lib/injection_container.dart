@@ -29,6 +29,7 @@ import 'features/home/data/datasources/category_local_data_source.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
 import 'features/login/domain/usecases/authentication.dart';
 import 'features/professional/domain/usecases/get_industries.dart';
+import 'features/professional/domain/usecases/register_business_by_professional.dart';
 
 
 final sl = GetIt.instance;
@@ -60,7 +61,8 @@ Future<void> init() async {
     () => ProfessionalBloc(
       business: sl(),
       services: sl(),
-      industries: sl()
+      industries: sl(),
+      registerBusiness: sl()
     )
   );
 
@@ -77,6 +79,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetProfessionalBusinessByProfessional(sl()));
   sl.registerLazySingleton(() => GetProfessionalServicesByProfessional(sl()));
   sl.registerLazySingleton(() => GetIndustries(sl()));
+  sl.registerLazySingleton(() => RegisterBusinessByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(

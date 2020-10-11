@@ -9,6 +9,7 @@ import 'package:service_now/features/professional/data/models/professional_busin
 import 'package:service_now/features/professional/data/models/professional_service_model.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
+import 'package:service_now/features/professional/data/requests/register_business_request.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/preferences/user_preferences.dart';
@@ -17,7 +18,7 @@ abstract class ProfessionalRemoteDataSource {
   Future<List<ProfessionalBusinessModel>> getProfessionalBusiness(GetProfessionalBusinessRequest request);
   Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request);
   Future<IndustryCategory> getIndustries();
-  Future<RegisterBusinessResponse> registerBusiness();
+  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request);
 }
 
 class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
@@ -35,10 +36,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   Future<IndustryCategory> getIndustries() => _getIndustriesFromUrl('https://test.konxulto.com/service_now/public/api/business/industries_categories');
 
   @override
-  Future<RegisterBusinessResponse> registerBusiness() {
-    // TODO: implement registerBusiness
-    throw UnimplementedError();
-  }
+  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, null, 'https://test.konxulto.com/service_now/public/api/business/create');
 
   Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(GetProfessionalBusinessRequest request, String url) async {
     List<ProfessionalBusinessModel> listaBusiness = List();
@@ -76,20 +74,37 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
     }
   }
 
-  Future<RegisterBusinessResponse> _registerBusinessFromUrl(File logo, String url) async {
-    // final url = Uri.parse('${ApiBaseHelper().baseUrl}loan_file_update?id=${model.id.toString()}&user_id=${model.userId.toString()}&comments=${model.comments ?? ''}&fee=${model.quotas.toString()}&amount=${model.amount.toString()}&loan_reasons=${model.reasonId.toString()}&loan_discount_period=${model.discountPeriod}&equivalent_loan_reasons=${model.equivalentId.toString()}&cambio_imagen=$cambioImagen');
-    final url = Uri.parse('uri');
+  Future<RegisterBusinessResponse> _registerBusinessFromUrl(RegisterBusinessRequest request, File logo, String url) async {
+    final uri = Uri.parse(url 
+      + '?'
+      + 'name=${request.name}&'
+      + 'description${request.description}&'
+      + 'category_id${request.categoryId}&'
+      + 'industry_id${request.industryId}&'
+      + 'license${request.licenseNumber}&'
+      + 'job_offer${request.jobOffer}&'
+      + 'lat${request.latitude}&'
+      + 'lng${request.longitude}&'
+      + 'address${request.address}&'
+      + 'fanpage${request.fanpage}');
 
     var mimeType;
-    final imageUploadRequest = http.MultipartRequest('POST', url);
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${UserPreferences.instance.token}',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final multipartRequest = http.MultipartRequest('POST', uri);
+    multipartRequest.headers.addAll(headers);
 
     if (logo != null ) {
       mimeType = mime(logo.path).split('/');
-      final file = await http.MultipartFile.fromPath('attachment', logo.path, contentType: MediaType(mimeType[0], mimeType[1]));
-      imageUploadRequest.files.add(file);
+      final file = await http.MultipartFile.fromPath('file', logo.path, contentType: MediaType(mimeType[0], mimeType[1]));
+      multipartRequest.files.add(file);
     }
 
-    final streamResponse = await imageUploadRequest.send();
+    final streamResponse = await multipartRequest.send();
     final resp = await http.Response.fromStream(streamResponse);
 
     if (resp.statusCode != 200 && resp.statusCode != 201) {

@@ -6,28 +6,33 @@ import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
-import 'package:service_now/features/professional/domain/entities/industry.dart';
+import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/get_industries.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_event.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_state.dart';
+import 'package:service_now/utils/all_translations.dart';
 
 class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   final GetProfessionalBusinessByProfessional getBusinessByProfessional;
   final GetProfessionalServicesByProfessional getServicesByProfessional;
   final GetIndustries getIndustries;
+  final RegisterBusinessByProfessional registerBusinessByProfessional;
 
   ProfessionalBloc({
     @required GetProfessionalBusinessByProfessional business,
     @required GetProfessionalServicesByProfessional services,
-    @required GetIndustries industries
+    @required GetIndustries industries,
+    @required RegisterBusinessByProfessional registerBusiness
   }) : assert(business != null, services != null),
        getBusinessByProfessional = business,
        getServicesByProfessional = services,
-       getIndustries = industries {
+       getIndustries = industries,
+       registerBusinessByProfessional = registerBusiness {
     add(GetBusinessForProfessional(1));
   }
 
@@ -47,6 +52,8 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       this.state.copyWith(status: ProfessionalStatus.loadingIndustries, industries: null);
       final failureOrIndustries = await getIndustries(NoParams());
       yield* _eitherLoadedIndustriesOrErrorState(failureOrIndustries);
+    } else if (event is RegisterBusinessForProfessional) {
+      yield* _registerBusiness(event);
     } else if (event is OnActiveEvent) {
       yield* this._mapOnFavorites(event);
     }
@@ -87,6 +94,46 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       },
       (industriesAndCategories) {
         return this.state.copyWith(status: ProfessionalStatus.readyIndustries, industries: industriesAndCategories);
+      }
+    );
+  }
+
+  Stream<ProfessionalState> _registerBusiness(RegisterBusinessForProfessional event) async* {
+    showDialog(
+      context: event.context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('authenticating_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+
+    yield this.state.copyWith(status: ProfessionalStatus.registeringBusiness);
+
+    final failureOrSuccess = await registerBusinessByProfessional(RegisterBusinessParams(name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage));
+    yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
+  }
+
+  Stream<ProfessionalState> _eitherBusinessRegisterOrErrorState(
+    Either<Failure, RegisterBusinessResponse> failureOrSuccessRegister
+  ) async * {
+    yield failureOrSuccessRegister.fold(
+      (failure) {
+        return this.state.copyWith(status: ProfessionalStatus.error, registerBusinessResponse: null);
+      },
+      (response) {
+        return this.state.copyWith(status: ProfessionalStatus.registeredBusiness, registerBusinessResponse: response);
       }
     );
   }
