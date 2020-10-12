@@ -41,5 +41,6 @@
     "business_fanpage_placeholder": "Escribe el fanpage de tu negocio",
     "business_industry_placeholder": "Seleccione una industria",
     "business_category_placeholder": "Seleccione una categoría",
-    "register_button_text": "Registrar"
+    "register_button_text": "Registrar",
+    "register_message": "Registrando ..."
 }

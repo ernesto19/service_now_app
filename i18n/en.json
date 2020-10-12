@@ -41,5 +41,6 @@
     "business_fanpage_placeholder": "Write your business fanpage",
     "business_industry_placeholder": "Select an industry",
     "business_category_placeholder": "Select an category",
-    "register_button_text": "Register"
+    "register_button_text": "Register",
+    "register_message": "Registering ..."
 }

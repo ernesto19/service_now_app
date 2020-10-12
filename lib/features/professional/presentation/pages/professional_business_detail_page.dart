@@ -7,6 +7,8 @@ import 'package:service_now/features/professional/presentation/widgets/header.da
 import 'package:service_now/features/professional/presentation/widgets/service_picker.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:service_now/utils/colors.dart';
 
 class ProfessionalBusinessDetailPage extends StatefulWidget {
   static final routeName = 'professional_services_page';
@@ -45,8 +47,65 @@ class _ProfessionalBusinessDetailPageState extends State<ProfessionalBusinessDet
                   SliverToBoxAdapter(
                     child: Container(
                       padding: EdgeInsets.only(left: 20, right: 20, bottom: 25),
-                      child: Text('Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.')
-                    ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.business.description),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Icon(Icons.web, size: 17, color: secondaryDarkColor),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(widget.business.categoryName, style: TextStyle(fontSize: 13))
+                              )
+                            ]
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/license.svg',
+                                color: secondaryDarkColor,
+                                height: 15
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(widget.business.licenseNumber, style: TextStyle(fontSize: 13))
+                              )
+                            ]
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/address.svg',
+                                color: secondaryDarkColor,
+                                height: 15
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(widget.business.address, style: TextStyle(fontSize: 13))
+                              )
+                            ]
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/facebook-icon.svg',
+                                color: secondaryDarkColor,
+                                height: 15
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(widget.business.fanpage, style: TextStyle(fontSize: 13))
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    )
                   ),
                   SliverToBoxAdapter(
                     child: Container(

@@ -7,6 +7,7 @@ import 'package:service_now/features/professional/data/datasources/professional_
 import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
 import 'package:service_now/features/professional/data/requests/register_business_request.dart';
+import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
@@ -56,6 +57,12 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
       var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage);
       return remoteDataSource.registerBusiness(request);
     });
+  }
+
+  @override
+  Future<Either<Failure, CreateServiceForm>> getCreateServiceForm() {
+    // TODO: implement getCreateServiceForm
+    throw UnimplementedError();
   }
 
   Future<Either<Failure, List<ProfessionalBusiness>>> _getProfessionalBusinessType(_ProfessionalBusinessType getProfessionalBusinessType) async {

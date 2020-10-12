@@ -57,12 +57,12 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                     child: Column(
                       children: [
-                      state.status == ProfessionalStatus.readyIndustries 
+                      state.formStatus == RegisterBusinessFormDataStatus.ready 
                         ? Column(
                           children: [
-                            _buildIndustiesSelect(state.industries.industries),
+                            _buildIndustiesSelect(state.formData.industries),
                             SizedBox(height: 12),
-                            _buildCategoriesSelect(state.industries.categories),
+                            _buildCategoriesSelect(state.formData.categories),
                           ],
                         ) 
                         : Column(
@@ -153,7 +153,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterBusinessForProfessional('', '', 1, 1, '', '', '', '', '', '', context))
+      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '0', '-45.963258', '-10.456321', _addressController.text, _fanpageController.text, context))
     );
   }
 

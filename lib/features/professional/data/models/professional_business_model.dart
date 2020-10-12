@@ -25,11 +25,11 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
       categoryId:   json['category_id']     ?? '',
       categoryName: json['category_name']   ?? '',
       address:      json['address']         ?? '',
-      licenseNumber: json['license_number'] ?? '',
+      licenseNumber: json['license']        ?? '',
       fanpage:      json['fanpage']         ?? '',
       logo:         json['logo']            ?? '',
-      latitude:     json['latitude']        ?? '',
-      longitude:    json['longitude']       ?? '',
+      latitude:     json['lat'].toString()  ?? '',
+      longitude:    json['lng'].toString()  ?? '',
       active:       0
     );
   }

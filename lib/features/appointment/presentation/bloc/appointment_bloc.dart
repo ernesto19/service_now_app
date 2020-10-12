@@ -58,8 +58,10 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     if (event is OnMyLocationUpdate) {
       yield this.state.copyWith(myLocation: event.location, status: BusinessStatus.mapMount);
     } else if (event is GetBusinessForUser) {
-      final failureOrBusiness = await getBusinessByCategory(GetBusinessParams(categoryId: event.categoryId, latitude: event.latitude, longitude: event.longitude));
-      yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
+      if (this.state.status != BusinessStatus.ready) {
+        final failureOrBusiness = await getBusinessByCategory(GetBusinessParams(categoryId: event.categoryId, latitude: event.latitude, longitude: event.longitude));
+        yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
+      }
     } else if (event is GetGalleriesForUser) {
       this.state.copyWith(status: BusinessStatus.loadingGallery, galleries: []);
       final failureOrGalleries = await getGalleriesByBusiness(GetGalleriesParams(businessId: event.businessId));

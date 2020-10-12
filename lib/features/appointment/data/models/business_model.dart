@@ -18,8 +18,10 @@ class BusinessModel extends Business {
       id:           json['id'], 
       name:         json['name'], 
       description:  json['description'], 
-      latitude:     (json['lat'] as double).toStringAsFixed(2),
-      longitude:    (json['lng'] as double).toStringAsFixed(2),
+      // latitude:     (json['lat'] as double).toStringAsFixed(2),
+      // longitude:    (json['lng'] as double).toStringAsFixed(2),
+      latitude:     json['lat'].toString(),
+      longitude:    json['lng'].toString(),
       rating:       json['rating'],
       distance:     json['distance'],
       gallery:      ListBusinessGallery.fromJson(json).galleries
