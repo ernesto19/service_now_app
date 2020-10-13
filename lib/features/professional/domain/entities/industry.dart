@@ -28,3 +28,16 @@ class Category extends Equatable {
   @override
   List<Object> get props => [id, name, industryId];
 }
+
+class Service extends Equatable {
+  final int id;
+  final String name;
+
+  Service({
+    @required this.id, 
+    @required this.name
+  });
+
+  @override
+  List<Object> get props => [id, name];
+}

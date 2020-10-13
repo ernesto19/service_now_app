@@ -7,19 +7,20 @@ import 'package:meta/meta.dart';
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/features/professional/data/models/professional_business_model.dart';
 import 'package:service_now/features/professional/data/models/professional_service_model.dart';
-import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
 import 'package:service_now/features/professional/data/requests/register_business_request.dart';
+import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/get_professional_business_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
 abstract class ProfessionalRemoteDataSource {
-  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness(GetProfessionalBusinessRequest request);
+  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness();
   Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request);
   Future<IndustryCategory> getIndustries();
   Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request);
+  Future<CreateServiceForm> getCreateServiceForm();
 }
 
 class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
@@ -28,7 +29,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   ProfessionalRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness(GetProfessionalBusinessRequest request) => _getProfessionalBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/business_by_professional');
+  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness() => _getProfessionalBusinessFromUrl('https://test.konxulto.com/service_now/public/api/business/business_by_professional');
 
   @override
   Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request) => _getProfessionalServicesFromUrl(request, '');
@@ -39,12 +40,10 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   @override
   Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, null, 'https://test.konxulto.com/service_now/public/api/business/create');
 
-  Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(GetProfessionalBusinessRequest request, String url) async {
-    // List<ProfessionalBusinessModel> listaBusiness = List();
-    // listaBusiness.add(ProfessionalBusinessModel(id: 1, name: 'Negocio 1', description: 'descripcion', categoryId: 1, categoryName: 'Barbershop', address: 'Av. Derby 256', licenseNumber: '987654321', fanpage: '', logo: '', latitude: '', longitude: '', active: 1));
-    // listaBusiness.add(ProfessionalBusinessModel(id: 2, name: 'Negocio 2', description: 'descripcion', categoryId: 1, categoryName: 'Salón de belleza', address: 'Av. Derby 256', licenseNumber: '123456789', fanpage: '', logo: '', latitude: '', longitude: '', active: 0));
+  @override
+  Future<CreateServiceForm> getCreateServiceForm() => _getCreateServiceFormFromUrl('https://test.konxulto.com/service_now/public/api/business/ind_cat_serv');
 
-    // return listaBusiness;
+  Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(String url) async {
     final response = await client.get(
       url,
       headers: {
@@ -129,4 +128,23 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
 
     return RegisterBusinessResponse.fromJson(json.decode(resp.body));
   }
+
+  Future<CreateServiceForm> _getCreateServiceFormFromUrl(String url) async {
+    final response = await client.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final body = GetCreateServiceFormResponse.fromJson(json.decode(response.body));
+      return body.data;
+    } else {
+      throw ServerException();
+    }
+  }
+
 }

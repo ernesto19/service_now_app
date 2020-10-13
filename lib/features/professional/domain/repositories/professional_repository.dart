@@ -7,7 +7,7 @@ import 'package:service_now/features/professional/domain/entities/professional_b
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 
 abstract class ProfessionalRepository {
-  Future<Either<Failure, List<ProfessionalBusiness>>> getProfessionalBusiness(int professionalId);
+  Future<Either<Failure, List<ProfessionalBusiness>>> getProfessionalBusiness();
   Future<Either<Failure, List<ProfessionalService>>> getProfessionalServices(int professionalBusinessId);
   Future<Either<Failure, IndustryCategory>> getIndustries();
   Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage);

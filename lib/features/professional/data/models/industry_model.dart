@@ -30,3 +30,17 @@ class CategoryModel extends Category {
     );
   }
 }
+
+class ServiceModel extends Service {
+  ServiceModel({
+    @required int id, 
+    @required String name
+  }) : super(id: id, name: name);
+
+  factory ServiceModel.fromJson(Map<String, dynamic> json) {
+    return ServiceModel(
+      id:   json['id']    ?? 0, 
+      name: json['name']  ?? ''
+    );
+  }
+}

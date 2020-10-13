@@ -5,11 +5,13 @@ import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/usecases/usecase.dart';
+import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/get_create_service_form.dart';
 import 'package:service_now/features/professional/domain/usecases/get_industries.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
@@ -23,18 +25,21 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   final GetProfessionalServicesByProfessional getServicesByProfessional;
   final GetIndustries getIndustries;
   final RegisterBusinessByProfessional registerBusinessByProfessional;
+  final GetCreateServiceForm getCreateServiceForm;
 
   ProfessionalBloc({
     @required GetProfessionalBusinessByProfessional business,
     @required GetProfessionalServicesByProfessional services,
     @required GetIndustries industries,
-    @required RegisterBusinessByProfessional registerBusiness
+    @required RegisterBusinessByProfessional registerBusiness,
+    @required GetCreateServiceForm createServiceForm
   }) : assert(business != null, services != null),
        getBusinessByProfessional = business,
        getServicesByProfessional = services,
        getIndustries = industries,
-       registerBusinessByProfessional = registerBusiness {
-    add(GetBusinessForProfessional(1));
+       registerBusinessByProfessional = registerBusiness,
+       getCreateServiceForm = createServiceForm {
+    add(GetBusinessForProfessional());
   }
 
   @override
@@ -43,7 +48,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   @override
   Stream<ProfessionalState> mapEventToState(ProfessionalEvent event) async* {
     if (event is GetBusinessForProfessional) {
-      final failureOrBusiness = await getBusinessByProfessional(GetProfessionalBusinessParams(professionalId: event.professionalId));
+      final failureOrBusiness = await getBusinessByProfessional(NoParams());
       yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
     } else if (event is GetServicesForProfessional) {
       this.state.copyWith(status: ProfessionalStatus.loadingServices, services: []);
@@ -55,9 +60,14 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
         final failureOrIndustries = await getIndustries(NoParams());
         yield* _eitherLoadedIndustriesOrErrorState(failureOrIndustries);
       }
-      
     } else if (event is RegisterBusinessForProfessional) {
       yield* this._registerBusiness(event);
+    } else if (event is GetCreateServiceFormForProfessional) {
+      if (this.state.serviceFormStatus != RegisterServiceFormDataStatus.ready) {
+        this.state.copyWith(serviceFormStatus: RegisterServiceFormDataStatus.loading, formData: null);
+        final failureOrFormData = await getCreateServiceForm(NoParams());
+        yield* _eitherLoadedCreateServiceFormOrErrorState(failureOrFormData);
+      }
     } else if (event is OnActiveEvent) {
       yield* this._mapOnFavorites(event);
     }
@@ -142,6 +152,19 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       },
       (response) {
         return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registered, registerBusinessResponse: response);
+      }
+    );
+  }
+
+  Stream<ProfessionalState> _eitherLoadedCreateServiceFormOrErrorState(
+    Either<Failure, CreateServiceForm> failureOrCreateServiceForm
+  ) async * {
+    yield failureOrCreateServiceForm.fold(
+      (failure) {
+        return this.state.copyWith(serviceFormStatus: RegisterServiceFormDataStatus.error, serviceFormData: null);
+      },
+      (formData) {
+        return this.state.copyWith(serviceFormStatus: RegisterServiceFormDataStatus.ready, serviceFormData: formData);
       }
     );
   }

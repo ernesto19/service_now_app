@@ -18,6 +18,7 @@ typedef Future<List<ProfessionalBusiness>> _ProfessionalBusinessType();
 typedef Future<List<ProfessionalService>> _ProfessionalServicesType();
 typedef Future<IndustryCategory> _IndustriesType();
 typedef Future<RegisterBusinessResponse> _RegisterBusinessType();
+typedef Future<CreateServiceForm> _CreateServiceFormType();
 
 class ProfessionalRepositoryImpl implements ProfessionalRepository {
   final ProfessionalRemoteDataSource remoteDataSource;
@@ -29,10 +30,9 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   });
 
   @override
-  Future<Either<Failure, List<ProfessionalBusiness>>> getProfessionalBusiness(int professionalId) async {
+  Future<Either<Failure, List<ProfessionalBusiness>>> getProfessionalBusiness() async {
     return await _getProfessionalBusinessType(() {
-      var request = GetProfessionalBusinessRequest(professionalId: professionalId);
-      return remoteDataSource.getProfessionalBusiness(request);
+      return remoteDataSource.getProfessionalBusiness();
     });
   }
 
@@ -60,9 +60,10 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   }
 
   @override
-  Future<Either<Failure, CreateServiceForm>> getCreateServiceForm() {
-    // TODO: implement getCreateServiceForm
-    throw UnimplementedError();
+  Future<Either<Failure, CreateServiceForm>> getCreateServiceForm() async {
+    return await _getCreateServiceFormType(() {
+      return remoteDataSource.getCreateServiceForm();
+    });
   }
 
   Future<Either<Failure, List<ProfessionalBusiness>>> _getProfessionalBusinessType(_ProfessionalBusinessType getProfessionalBusinessType) async {
@@ -109,6 +110,19 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
       try {
         final response = await registerBusinessType();
         return Right(response);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, CreateServiceForm>> _getCreateServiceFormType(_CreateServiceFormType getCreateServiceFormType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteCreateForm = await getCreateServiceFormType();
+        return Right(remoteCreateForm);
       } on ServerException {
         return Left(ServerFailure());
       }

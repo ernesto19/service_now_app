@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 abstract class ProfessionalEvent { }
 
 class GetBusinessForProfessional extends ProfessionalEvent {
-  final int professionalId;
-
-  GetBusinessForProfessional(this.professionalId);
+  GetBusinessForProfessional();
 }
 
 class GetServicesForProfessional extends ProfessionalEvent {
@@ -17,6 +15,11 @@ class GetServicesForProfessional extends ProfessionalEvent {
 class GetIndustriesForProfessional extends ProfessionalEvent {
 
   GetIndustriesForProfessional();
+}
+
+class GetCreateServiceFormForProfessional extends ProfessionalEvent {
+
+  GetCreateServiceFormForProfessional();
 }
 
 class RegisterBusinessForProfessional extends ProfessionalEvent {

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
@@ -17,17 +18,21 @@ class ProfessionalState extends Equatable {
   final ProfessionalStatus status;
   final RegisterBusinessStatus registerBusinessStatus;
   final RegisterBusinessFormDataStatus formStatus;
+  final RegisterServiceFormDataStatus serviceFormStatus;
+  final CreateServiceForm serviceFormData;
 
-  ProfessionalState({ this.business, this.services, this.status, this.formData, this.registerBusinessResponse, this.registerBusinessStatus, this.formStatus });
+  ProfessionalState({ this.business, this.services, this.status, this.formData, this.registerBusinessResponse, this.registerBusinessStatus, this.formStatus, this.serviceFormStatus, this.serviceFormData });
 
   static ProfessionalState get initialState => ProfessionalState(
     business: const [],
     services: const [],
     formData: null,
+    serviceFormData: null,
     registerBusinessResponse: null,
     status: ProfessionalStatus.loading,
     formStatus: RegisterBusinessFormDataStatus.checking,
-    registerBusinessStatus: RegisterBusinessStatus.checking
+    registerBusinessStatus: RegisterBusinessStatus.checking,
+    serviceFormStatus: RegisterServiceFormDataStatus.checking
   );
 
   ProfessionalState copyWith({ 
@@ -37,7 +42,9 @@ class ProfessionalState extends Equatable {
     RegisterBusinessResponse registerBusinessResponse,
     ProfessionalStatus status,
     RegisterBusinessStatus registerBusinessStatus,
-    RegisterBusinessFormDataStatus formStatus
+    RegisterBusinessFormDataStatus formStatus,
+    RegisterServiceFormDataStatus serviceFormStatus,
+    CreateServiceForm serviceFormData
   }) {
     return ProfessionalState(
       business: business ?? this.business,
@@ -46,10 +53,12 @@ class ProfessionalState extends Equatable {
       registerBusinessResponse: registerBusinessResponse ?? this.registerBusinessResponse,
       status: status ?? this.status,
       registerBusinessStatus: registerBusinessStatus ?? this.registerBusinessStatus,
-      formStatus: formStatus ?? this.formStatus
+      formStatus: formStatus ?? this.formStatus,
+      serviceFormStatus: serviceFormStatus ?? this.serviceFormStatus,
+      serviceFormData: serviceFormData ?? this.serviceFormData
     );
   }
 
   @override
-  List<Object> get props => [business, services, status, formData, registerBusinessResponse, registerBusinessStatus, formStatus];
+  List<Object> get props => [business, services, status, formData, registerBusinessResponse, registerBusinessStatus, formStatus, serviceFormData, serviceFormStatus];
 }

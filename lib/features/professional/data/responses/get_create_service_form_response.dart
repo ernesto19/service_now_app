@@ -17,6 +17,7 @@ class GetCreateServiceFormResponse {
 class CreateServiceForm {
   List<IndustryModel> industries = List();
   List<CategoryModel> categories = List();
+  List<ServiceModel> services = List();
 
   CreateServiceForm.fromJson(dynamic json) {
     if (json == null) return;
@@ -29,6 +30,11 @@ class CreateServiceForm {
     for (var item in json['categories']) {
       final category = CategoryModel.fromJson(item);
       categories.add(category);
+    }
+
+    for (var item in json['serivces']) {
+      final service = ServiceModel.fromJson(item);
+      services.add(service);
     }
   }
 }
