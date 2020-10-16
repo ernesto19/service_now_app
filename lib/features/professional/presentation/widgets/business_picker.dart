@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_detail_page.dart';
@@ -26,7 +25,6 @@ class _BusinessPickerState extends State<BusinessPicker> {
             return GestureDetector(
               child: Container(
                 margin: EdgeInsets.only(bottom: 10, right: 15, left: 15),
-                // height: 150,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(

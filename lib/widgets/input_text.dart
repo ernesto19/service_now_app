@@ -9,7 +9,8 @@ class InputText extends StatelessWidget {
   final Color iconColor;
   final double iconHeight;
   final double iconWidth;
-  const InputText({Key key, @required this.iconPath, @required this.placeholder, @required this.controller, @required this.obscureText, this.iconColor, this.iconHeight, this.iconWidth }) : assert(iconPath != null && placeholder != null) , super(key: key);
+  final Widget suffix;
+  const InputText({Key key, @required this.iconPath, @required this.placeholder, @required this.controller, @required this.obscureText, this.iconColor, this.iconHeight, this.iconWidth, this.suffix }) : assert(iconPath != null && placeholder != null) , super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class InputText extends StatelessWidget {
             color: Color(0xffdddddd)
           )
         )
-      )
+      ),
+      suffix: this.suffix ?? SizedBox(width: 0)
     );
   }
 }

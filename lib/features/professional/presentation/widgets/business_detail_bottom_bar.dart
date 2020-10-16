@@ -5,6 +5,9 @@ import 'package:service_now/utils/colors.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 
 class BusinessDetailBottomBar extends StatelessWidget {
+  final int businessId;
+
+  const BusinessDetailBottomBar({ @required this.businessId });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class BusinessDetailBottomBar extends StatelessWidget {
         label: allTranslations.traslate('add_service_label'),
         backgroundColor: secondaryDarkColor,
         width: double.infinity,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage()))
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage(businessId: businessId)))
       )
     );
   }

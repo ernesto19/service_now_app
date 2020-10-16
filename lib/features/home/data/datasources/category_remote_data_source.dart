@@ -18,7 +18,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<List<CategoryModel>> getCategories(String token) => _getCategoriesFromUrl('https://test.konxulto.com/service_now/public/api/favorite_business_categories');
 
   Future<List<CategoryModel>> _getCategoriesFromUrl(String url) async {
-    final response = await client.get(
+    final response = await client.post(
       url,
       headers: {
         'Authorization': 'Bearer ${UserPreferences.instance.token}',

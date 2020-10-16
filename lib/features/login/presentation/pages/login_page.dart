@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _buildDropdown(),
-                    Welcome(),
+                    Welcome(title: allTranslations.traslate('welcome')),
                     SizedBox(height: 30),
                     LoginForm()
                   ]

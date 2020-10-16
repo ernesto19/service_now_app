@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 
 class Welcome extends StatelessWidget {
-  const Welcome({Key key}) : super(key: key);
+  final String title;
+
+  const Welcome({ @required this.title });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class Welcome extends StatelessWidget {
           )
         ),
         Text(
-          allTranslations.traslate('welcome'),
+          title,
           style: TextStyle(
             fontSize: responsive.ip(2.5),
             fontWeight: FontWeight.bold,

@@ -9,10 +9,13 @@ import 'package:service_now/features/professional/data/models/professional_busin
 import 'package:service_now/features/professional/data/models/professional_service_model.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
 import 'package:service_now/features/professional/data/requests/register_business_request.dart';
+import 'package:service_now/features/professional/data/requests/register_service_request.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/get_professional_business_response.dart';
+import 'package:service_now/features/professional/data/responses/get_professional_services_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
+import 'package:service_now/features/professional/data/responses/register_service_response.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
 abstract class ProfessionalRemoteDataSource {
@@ -21,6 +24,7 @@ abstract class ProfessionalRemoteDataSource {
   Future<IndustryCategory> getIndustries();
   Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request);
   Future<CreateServiceForm> getCreateServiceForm();
+  Future<RegisterServiceResponse> registerService(RegisterServiceRequest request);
 }
 
 class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
@@ -32,7 +36,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   Future<List<ProfessionalBusinessModel>> getProfessionalBusiness() => _getProfessionalBusinessFromUrl('https://test.konxulto.com/service_now/public/api/business/business_by_professional');
 
   @override
-  Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request) => _getProfessionalServicesFromUrl(request, '');
+  Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request) => _getProfessionalServicesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/get_services');
 
   @override
   Future<IndustryCategory> getIndustries() => _getIndustriesFromUrl('https://test.konxulto.com/service_now/public/api/business/industries_categories');
@@ -42,6 +46,9 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
 
   @override
   Future<CreateServiceForm> getCreateServiceForm() => _getCreateServiceFormFromUrl('https://test.konxulto.com/service_now/public/api/business/ind_cat_serv');
+
+  @override
+  Future<RegisterServiceResponse> registerService(RegisterServiceRequest request) => _registerServiceFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/add_service');
 
   Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(String url) async {
     final response = await client.get(
@@ -62,13 +69,21 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   }
 
   Future<List<ProfessionalServiceModel>> _getProfessionalServicesFromUrl(GetProfessionalServicesRequest request, String url) async {
-    List<ProfessionalServiceModel> listaServices = List();
-    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 1', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
-    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 2', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
-    listaServices.add(ProfessionalServiceModel(id: 1, name: 'Servicio 3', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
-    listaServices.add(ProfessionalServiceModel(id: 2, name: 'Servicio 4', description: 'descripcion', industryId: 1, industryName: '', industryTypeId: 1, industryTypeName: '', subServices: []));
+    final response = await client.get(
+      '$url?business_id=${request.professionalBusinessId}',
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    );
 
-    return listaServices;
+    if (response.statusCode == 200) {
+      final body = GetProfessionalServicesResponse.fromJson(json.decode(response.body));
+      return body.data;
+    } else {
+      throw ServerException();
+    }
   }
 
   Future<IndustryCategory> _getIndustriesFromUrl(String url) async {
@@ -147,4 +162,21 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
     }
   }
 
+  Future<RegisterServiceResponse> _registerServiceFromUrl(RegisterServiceRequest request, String url) async {
+    final response = await client.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json.encode(request.toJson())
+    );
+
+    if (response.statusCode == 200) {
+      return RegisterServiceResponse.fromJson(json.decode(response.body));
+    } else {
+      throw ServerException();
+    }
+  }
 }

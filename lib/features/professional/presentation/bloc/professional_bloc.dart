@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/failures.dart';
@@ -8,6 +12,7 @@ import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
+import 'package:service_now/features/professional/data/responses/register_service_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
@@ -15,31 +20,53 @@ import 'package:service_now/features/professional/domain/usecases/get_create_ser
 import 'package:service_now/features/professional/domain/usecases/get_industries.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/register_service_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_event.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_state.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
+import 'package:service_now/models/place.dart';
 import 'package:service_now/utils/all_translations.dart';
 
 class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
+  Geolocator _geolocator = Geolocator();
+  final LocationOptions _locationOptions = LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+  StreamSubscription<Position> _subscription;
   final GetProfessionalBusinessByProfessional getBusinessByProfessional;
   final GetProfessionalServicesByProfessional getServicesByProfessional;
   final GetIndustries getIndustries;
   final RegisterBusinessByProfessional registerBusinessByProfessional;
   final GetCreateServiceForm getCreateServiceForm;
+  final RegisterServiceByProfessional registerServiceByProfessional;
 
   ProfessionalBloc({
     @required GetProfessionalBusinessByProfessional business,
     @required GetProfessionalServicesByProfessional services,
     @required GetIndustries industries,
     @required RegisterBusinessByProfessional registerBusiness,
-    @required GetCreateServiceForm createServiceForm
+    @required GetCreateServiceForm createServiceForm,
+    @required RegisterServiceByProfessional registerService
   }) : assert(business != null, services != null),
        getBusinessByProfessional = business,
        getServicesByProfessional = services,
        getIndustries = industries,
        registerBusinessByProfessional = registerBusiness,
-       getCreateServiceForm = createServiceForm {
+       getCreateServiceForm = createServiceForm,
+       registerServiceByProfessional = registerService {
     add(GetBusinessForProfessional());
+  }
+
+  @override
+  Future<void> close() async {
+    _subscription?.cancel();
+    super.close();
+  }
+
+  _init() async {
+    _subscription = _geolocator.getPositionStream(_locationOptions).listen((position) {
+      if (position != null) {
+        add(OnMyLocationUpdate(LatLng(position.latitude, position.longitude)));
+      }
+    });
   }
 
   @override
@@ -58,6 +85,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       if (this.state.formStatus != RegisterBusinessFormDataStatus.ready) {
         this.state.copyWith(formStatus: RegisterBusinessFormDataStatus.loading, formData: null);
         final failureOrIndustries = await getIndustries(NoParams());
+        _init();
         yield* _eitherLoadedIndustriesOrErrorState(failureOrIndustries);
       }
     } else if (event is RegisterBusinessForProfessional) {
@@ -68,8 +96,12 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
         final failureOrFormData = await getCreateServiceForm(NoParams());
         yield* _eitherLoadedCreateServiceFormOrErrorState(failureOrFormData);
       }
+    } else if (event is RegisterServiceForProfessional) {
+      yield* this._registerService(event);
     } else if (event is OnActiveEvent) {
       yield* this._mapOnFavorites(event);
+    } else if (event is OnMyLocationUpdate) {
+      yield this.state.copyWith(myLocation: event.location, formStatus: RegisterBusinessFormDataStatus.mapMount);
     }
   }
 
@@ -140,6 +172,9 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
 
     if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {
       Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
+    } else if (this.state.registerBusinessStatus == RegisterBusinessStatus.error) {
+      Navigator.pop(event.context);
+      this._showDialog('Importante', this.state.errorMessage, event.context);
     }
   }
 
@@ -148,10 +183,19 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   ) async * {
     yield failureOrSuccessRegister.fold(
       (failure) {
-        return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error, registerBusinessResponse: null);
+        return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error);
       },
       (response) {
-        return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registered, registerBusinessResponse: response);
+        if (response.error == 0) {
+          return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registered, registerBusinessResponse: response);
+        } else if (response.error == 2) {
+          String description = response.data[0]['description'] != null ? response.data[0]['description'][0] + '\n' : '';
+          String address = response.data[0]['address'] != null ? response.data[0]['address'][0] : '';
+          String message = description + address;
+          return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error, errorMessage: message);
+        } else {
+          return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error);
+        }
       }
     );
   }
@@ -169,6 +213,50 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     );
   }
 
+  Stream<ProfessionalState> _registerService(RegisterServiceForProfessional event) async* {
+    showDialog(
+      context: event.context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('register_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+
+    yield this.state.copyWith(registerServiceStatus: RegisterServiceStatus.registering);
+
+    final failureOrSuccess = await registerServiceByProfessional(RegisterServiceParams(businessId: event.businessId, serviceId: event.serviceId, price: event.price));
+    yield* _eitherServiceRegisterOrErrorState(failureOrSuccess);
+
+    if (this.state.registerServiceStatus == RegisterServiceStatus.registered) {
+      Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
+    }
+  }
+
+  Stream<ProfessionalState> _eitherServiceRegisterOrErrorState(
+    Either<Failure, RegisterServiceResponse> failureOrSuccessRegister
+  ) async * {
+    yield failureOrSuccessRegister.fold(
+      (failure) {
+        return this.state.copyWith(registerServiceStatus: RegisterServiceStatus.error, registerServiceResponse: null);
+      },
+      (response) {
+        return this.state.copyWith(registerServiceStatus: RegisterServiceStatus.registered, registerServiceResponse: response);
+      }
+    );
+  }
+
   Stream<ProfessionalState> _mapOnFavorites(OnActiveEvent event) async* {
     final int id = event.id;
     final List<ProfessionalBusiness> tmp = List<ProfessionalBusiness>.from(this.state.business);
@@ -177,6 +265,28 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       tmp[index] = tmp[index].onActive();
       yield this.state.copyWith(status: ProfessionalStatus.ready, business: tmp);
     }
+  }
+
+  void _showDialog(String title, String message, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(context)
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  goToPlace(Place place) {
+    // await Future.delayed(Duration(milliseconds: 300));
   }
 
   static ProfessionalBloc of(BuildContext context) {

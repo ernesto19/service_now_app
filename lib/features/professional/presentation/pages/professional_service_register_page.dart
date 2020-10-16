@@ -12,6 +12,10 @@ import 'package:service_now/widgets/rounded_button.dart';
 class ProfessionalServiceRegisterPage extends StatefulWidget {
   static final routeName = 'professional_service_register_page';
 
+  final int businessId;
+
+  const ProfessionalServiceRegisterPage({ @required this.businessId });
+
   @override
   _ProfessionalServiceRegisterPageState createState() => _ProfessionalServiceRegisterPageState();
 }
@@ -196,7 +200,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => {}
+      onPressed: () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), context))
     );
   }
 }

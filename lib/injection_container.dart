@@ -15,6 +15,7 @@ import 'package:service_now/features/home/presentation/bloc/bloc.dart';
 import 'package:service_now/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:service_now/features/login/data/repositories/login_repository_impl.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
+import 'package:service_now/features/login/domain/usecases/registration.dart';
 import 'package:service_now/features/login/presentation/bloc/login_bloc.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
 import 'package:service_now/features/professional/data/repositories/professional_repository_impl.dart';
@@ -31,6 +32,7 @@ import 'features/login/domain/usecases/authentication.dart';
 import 'features/professional/domain/usecases/get_create_service_form.dart';
 import 'features/professional/domain/usecases/get_industries.dart';
 import 'features/professional/domain/usecases/register_business_by_professional.dart';
+import 'features/professional/domain/usecases/register_service_by_professional.dart';
 
 
 final sl = GetIt.instance;
@@ -54,7 +56,8 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => LoginBloc(
-      login: sl()
+      login: sl(),
+      signin: sl()
     )
   );
 
@@ -64,7 +67,8 @@ Future<void> init() async {
       services: sl(),
       industries: sl(),
       registerBusiness: sl(),
-      createServiceForm: sl()
+      createServiceForm: sl(),
+      registerService: sl()
     )
   );
 
@@ -77,12 +81,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCommentsByBusiness(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
+  sl.registerLazySingleton(() => Registration(sl()));
 
   sl.registerLazySingleton(() => GetProfessionalBusinessByProfessional(sl()));
   sl.registerLazySingleton(() => GetProfessionalServicesByProfessional(sl()));
   sl.registerLazySingleton(() => GetIndustries(sl()));
   sl.registerLazySingleton(() => RegisterBusinessByProfessional(sl()));
   sl.registerLazySingleton(() => GetCreateServiceForm(sl()));
+  sl.registerLazySingleton(() => RegisterServiceByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(

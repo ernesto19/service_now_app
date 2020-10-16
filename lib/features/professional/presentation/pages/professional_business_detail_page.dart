@@ -26,7 +26,7 @@ class _ProfessionalBusinessDetailPageState extends State<ProfessionalBusinessDet
   Widget build(BuildContext context) {
     return Scaffold(
       body: buildBody(context),
-      bottomNavigationBar: BusinessDetailBottomBar()
+      bottomNavigationBar: BusinessDetailBottomBar(businessId: widget.business.id)
     );
   }
 
@@ -125,7 +125,7 @@ class _ProfessionalBusinessDetailPageState extends State<ProfessionalBusinessDet
                     builder: (context, state) {
                       // ignore: close_sinks
                       final bloc = ProfessionalBloc.of(context);
-                      bloc.add(GetServicesForProfessional(1));
+                      bloc.add(GetServicesForProfessional(widget.business.id));
 
                       String text = '';
 

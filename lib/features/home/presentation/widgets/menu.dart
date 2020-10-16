@@ -31,7 +31,7 @@ class Menu extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(UserPreferences.instance.firstName ?? '' + ' ' + UserPreferences.instance.lastName ?? '', style: TextStyle(fontSize: 18)),
+                    Text('${UserPreferences.instance.firstName ?? ''} ${UserPreferences.instance.lastName ?? ''}', style: TextStyle(fontSize: 18)),
                     Text(UserPreferences.instance.email ?? '')
                   ]
                 )

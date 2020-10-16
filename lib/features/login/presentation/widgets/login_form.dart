@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/login/presentation/bloc/bloc.dart';
+import 'package:service_now/features/login/presentation/pages/register_page.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
@@ -12,10 +13,16 @@ import 'package:service_now/widgets/rounded_button.dart';
 
 import '../../../../injection_container.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+  bool _obscureTextPassword = true;
+
   @override
   Widget build(BuildContext context) {
     return buildBody(context);
@@ -49,7 +56,8 @@ class LoginForm extends StatelessWidget {
                     controller: _passwordController,
                     iconPath: 'assets/icons/key.svg', 
                     placeholder: allTranslations.traslate('password'),
-                    obscureText: true
+                    obscureText: _obscureTextPassword,
+                    suffix: _crearVisibilityPassword()
                   ),
                   Container(
                     width: double.infinity,
@@ -107,11 +115,12 @@ class LoginForm extends StatelessWidget {
                         child: Text(
                           allTranslations.traslate('create_account'),
                           style: TextStyle(
-                            fontFamily: 'sans',
-                            fontWeight: FontWeight.w600
+                            fontFamily: 'sans'
                           ),
                         ), 
-                        onPressed: () {}
+                        onPressed: () {
+                          Navigator.pushNamed(context, RegisterPage.routeName);
+                        }
                       )
                     ]
                   )
@@ -121,6 +130,17 @@ class LoginForm extends StatelessWidget {
           );
         }
       )
+    );
+  }
+
+  Widget _crearVisibilityPassword() {
+    return IconButton(
+      icon: _obscureTextPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+      onPressed: () {
+        setState(() {
+          _obscureTextPassword = !_obscureTextPassword;
+        });
+      },
     );
   }
 }

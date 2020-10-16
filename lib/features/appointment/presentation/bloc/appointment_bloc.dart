@@ -82,8 +82,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       (business) {
         final markers = Map<MarkerId, Marker>.from(this.state.markers);
 
-        if (state.status == BusinessStatus.ready) {
-          for (var trade in state.business) {
+        if (state.status == BusinessStatus.mapMount) {
+          for (var trade in business) {
             final markerId = MarkerId(trade.id.toString());
             final marker = Marker(markerId: markerId, position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)));
 

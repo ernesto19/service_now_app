@@ -4,12 +4,13 @@ import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/network/network_info.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
-import 'package:service_now/features/professional/data/requests/get_professional_business_request.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
 import 'package:service_now/features/professional/data/requests/register_business_request.dart';
+import 'package:service_now/features/professional/data/requests/register_service_request.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
+import 'package:service_now/features/professional/data/responses/register_service_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
@@ -19,6 +20,7 @@ typedef Future<List<ProfessionalService>> _ProfessionalServicesType();
 typedef Future<IndustryCategory> _IndustriesType();
 typedef Future<RegisterBusinessResponse> _RegisterBusinessType();
 typedef Future<CreateServiceForm> _CreateServiceFormType();
+typedef Future<RegisterServiceResponse> _RegisterServiceType();
 
 class ProfessionalRepositoryImpl implements ProfessionalRepository {
   final ProfessionalRemoteDataSource remoteDataSource;
@@ -63,6 +65,14 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   Future<Either<Failure, CreateServiceForm>> getCreateServiceForm() async {
     return await _getCreateServiceFormType(() {
       return remoteDataSource.getCreateServiceForm();
+    });
+  }
+
+  @override
+  Future<Either<Failure, RegisterServiceResponse>> registerService(int businessId, int serviceId, double price) async {
+    return await _registerServiceType(() {
+      var request = RegisterServiceRequest(businessId: businessId, serviceId: serviceId, price: price);
+      return remoteDataSource.registerService(request);
     });
   }
 
@@ -123,6 +133,19 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
       try {
         final remoteCreateForm = await getCreateServiceFormType();
         return Right(remoteCreateForm);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, RegisterServiceResponse>> _registerServiceType(_RegisterServiceType registerServiceType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await registerServiceType();
+        return Right(response);
       } on ServerException {
         return Left(ServerFailure());
       }

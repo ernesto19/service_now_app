@@ -28,5 +28,3 @@ class CustomGoogleMap extends StatelessWidget {
     });
   }
 }
-
-// LatLng(-12.135128411564189, -76.94930300116539)

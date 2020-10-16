@@ -7,7 +7,7 @@ class GetProfessionalServicesRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'professional_id': professionalBusinessId
+      'business_id': professionalBusinessId
     };
   }
 }
