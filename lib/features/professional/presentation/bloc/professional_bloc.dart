@@ -1,14 +1,12 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/usecases/usecase.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
@@ -23,14 +21,11 @@ import 'package:service_now/features/professional/domain/usecases/register_busin
 import 'package:service_now/features/professional/domain/usecases/register_service_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_event.dart';
 import 'package:service_now/features/professional/presentation/bloc/professional_state.dart';
-import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
-import 'package:service_now/models/place.dart';
+import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
 import 'package:service_now/utils/all_translations.dart';
+import 'package:service_now/widgets/success_page.dart';
 
 class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
-  Geolocator _geolocator = Geolocator();
-  final LocationOptions _locationOptions = LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
-  StreamSubscription<Position> _subscription;
   final GetProfessionalBusinessByProfessional getBusinessByProfessional;
   final GetProfessionalServicesByProfessional getServicesByProfessional;
   final GetIndustries getIndustries;
@@ -56,20 +51,6 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   }
 
   @override
-  Future<void> close() async {
-    _subscription?.cancel();
-    super.close();
-  }
-
-  _init() async {
-    _subscription = _geolocator.getPositionStream(_locationOptions).listen((position) {
-      if (position != null) {
-        add(OnMyLocationUpdate(LatLng(position.latitude, position.longitude)));
-      }
-    });
-  }
-
-  @override
   ProfessionalState get initialState => ProfessionalState.initialState;
 
   @override
@@ -85,7 +66,6 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       if (this.state.formStatus != RegisterBusinessFormDataStatus.ready) {
         this.state.copyWith(formStatus: RegisterBusinessFormDataStatus.loading, formData: null);
         final failureOrIndustries = await getIndustries(NoParams());
-        _init();
         yield* _eitherLoadedIndustriesOrErrorState(failureOrIndustries);
       }
     } else if (event is RegisterBusinessForProfessional) {
@@ -100,8 +80,6 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       yield* this._registerService(event);
     } else if (event is OnActiveEvent) {
       yield* this._mapOnFavorites(event);
-    } else if (event is OnMyLocationUpdate) {
-      yield this.state.copyWith(myLocation: event.location, formStatus: RegisterBusinessFormDataStatus.mapMount);
     }
   }
 
@@ -171,7 +149,8 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {
-      Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
+      Navigator.of(event.context).pop();
+      Navigator.of(event.context).push(FadeRouteBuilder(page: SuccessPage(message: 'El negocio ${event.name} fue registrado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
     } else if (this.state.registerBusinessStatus == RegisterBusinessStatus.error) {
       Navigator.pop(event.context);
       this._showDialog('Importante', this.state.errorMessage, event.context);
@@ -240,7 +219,9 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     yield* _eitherServiceRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerServiceStatus == RegisterServiceStatus.registered) {
-      Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
+      // Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
+      Navigator.of(event.context).pop();
+      Navigator.of(event.context).push(FadeRouteBuilder(page: SuccessPage(message: 'El servicio fue registrado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
     }
   }
 
@@ -283,10 +264,6 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
         );
       }
     );
-  }
-
-  goToPlace(Place place) {
-    // await Future.delayed(Duration(milliseconds: 300));
   }
 
   static ProfessionalBloc of(BuildContext context) {

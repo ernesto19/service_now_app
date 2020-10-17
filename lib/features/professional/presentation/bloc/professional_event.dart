@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class ProfessionalEvent { }
 
@@ -46,12 +45,6 @@ class RegisterServiceForProfessional extends ProfessionalEvent {
   final BuildContext context;
 
   RegisterServiceForProfessional(this.businessId, this.serviceId, this.price, this.context);
-}
-
-class OnMyLocationUpdate extends ProfessionalEvent {
-  final LatLng location;
-
-  OnMyLocationUpdate(this.location);
 }
 
 class OnActiveEvent extends ProfessionalEvent {

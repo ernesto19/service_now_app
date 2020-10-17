@@ -2,16 +2,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
 class Place {
+  final String id;
   final String title;
   final LatLng position;
   final String vicinity;
 
-  Place({ @required this.title, @required this.position, @required this.vicinity });
+  Place({ @required this.id, @required this.title, @required this.position, @required this.vicinity });
 
   factory Place.fromJson(dynamic json) {
     final coords = List<double>.from(json['position']);
 
     return Place(
+      id: json['id'],
       title: json['title'], 
       position: LatLng(coords[0], coords[1]),
       vicinity: json['vicinity'] ?? ''

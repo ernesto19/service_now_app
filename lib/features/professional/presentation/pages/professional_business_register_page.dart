@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
 import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
-import 'package:service_now/features/professional/presentation/pages/select_address_page.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
@@ -83,11 +81,11 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                         SizedBox(height: 20),
                         _buildLicenseNumber(),
                         SizedBox(height: 20),
-                        // _buildAddress(),
-                        GestureDetector(
-                          child: Text('Adress'),
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAdressPage(initialPosition: CameraPosition(target: state.myLocation, zoom: 15))))
-                        ),
+                        _buildAddress(),
+                        // GestureDetector(
+                        //   child: Text('Adress'),
+                        //   onTap: () => Navigator.pushNamed(context, AddressPage.routeName)
+                        // ),
                         SizedBox(height: 20),
                         _buildFanpage(),
                         SizedBox(height: 40),

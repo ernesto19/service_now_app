@@ -72,6 +72,10 @@ Future<void> init() async {
     )
   );
 
+  // sl.registerFactory(
+  //   () => AddressBloc()
+  // );
+
   // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));

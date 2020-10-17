@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
@@ -26,9 +25,8 @@ class ProfessionalState extends Equatable {
   final RegisterServiceResponse registerServiceResponse;
   final RegisterServiceStatus registerServiceStatus;
   final String errorMessage;
-  final LatLng myLocation;
 
-  ProfessionalState({ this.business, this.services, this.status, this.formData, this.registerBusinessResponse, this.registerBusinessStatus, this.formStatus, this.serviceFormStatus, this.serviceFormData, this.registerServiceResponse, this.registerServiceStatus, this.errorMessage, this.myLocation });
+  ProfessionalState({ this.business, this.services, this.status, this.formData, this.registerBusinessResponse, this.registerBusinessStatus, this.formStatus, this.serviceFormStatus, this.serviceFormData, this.registerServiceResponse, this.registerServiceStatus, this.errorMessage });
 
   static ProfessionalState get initialState => ProfessionalState(
     business: const [],
@@ -42,8 +40,7 @@ class ProfessionalState extends Equatable {
     registerBusinessStatus: RegisterBusinessStatus.checking,
     serviceFormStatus: RegisterServiceFormDataStatus.checking,
     registerServiceStatus: RegisterServiceStatus.checking,
-    errorMessage: '',
-    myLocation: null
+    errorMessage: ''
   );
 
   ProfessionalState copyWith({ 
@@ -58,8 +55,7 @@ class ProfessionalState extends Equatable {
     CreateServiceForm serviceFormData,
     RegisterServiceResponse registerServiceResponse,
     RegisterServiceStatus registerServiceStatus,
-    String errorMessage,
-    LatLng myLocation
+    String errorMessage
   }) {
     return ProfessionalState(
       business: business ?? this.business,
@@ -73,11 +69,10 @@ class ProfessionalState extends Equatable {
       serviceFormData: serviceFormData ?? this.serviceFormData,
       registerServiceResponse: registerServiceResponse ?? this.registerServiceResponse,
       registerServiceStatus: registerServiceStatus ?? this.registerServiceStatus,
-      errorMessage: errorMessage ?? this.errorMessage,
-      myLocation: myLocation ?? this.myLocation
+      errorMessage: errorMessage ?? this.errorMessage
     );
   }
 
   @override
-  List<Object> get props => [business, services, status, formData, registerBusinessResponse, registerBusinessStatus, formStatus, serviceFormData, serviceFormStatus, registerServiceResponse, errorMessage, myLocation];
+  List<Object> get props => [business, services, status, formData, registerBusinessResponse, registerBusinessStatus, formStatus, serviceFormData, serviceFormStatus, registerServiceResponse, errorMessage];
 }
