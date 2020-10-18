@@ -66,7 +66,7 @@ class _BusinessPickerState extends State<BusinessPicker> {
                           children: [
                             Icon(Icons.pin_drop, size: 20),
                             SizedBox(width: 10),
-                            Text(business.address, style: TextStyle(fontSize: 11)),
+                            Expanded(child: Text(business.address, style: TextStyle(fontSize: 11))),
                           ],
                         ),
                         SizedBox(height: 5),

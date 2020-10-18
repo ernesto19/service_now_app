@@ -5,7 +5,7 @@ import 'package:service_now/libs/search_api.dart';
 import 'package:service_now/models/place.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -14,48 +14,45 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return BlocBuilder<AddressBloc, AddressState>(
       builder: (_, state) {
         return Container(
-          child: SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        "Search place ... ",
+          padding: EdgeInsets.only(left: 20),
+          child: Row(
+            children: [
+              Icon(Icons.search, color: Colors.black38, size: 20),
+              SizedBox(width: 10),
+              Expanded(
+                  child: GestureDetector(
+                    child: Container(
+                      child: Text(
+                        'Buscar',
                         style: TextStyle(
-                          color: Colors.black26,
-                        ),
-                      ),
-                      Icon(Icons.search),
-                    ],
-                  ),
-                  onPressed: () async {
-                    final List<Place> history = state.history.values.toList();
-                    SearchPlaceDelegate delegate = SearchPlaceDelegate(
-                      state.myLocation,
-                      history
-                    );
-                    final Place place = await showSearch<Place>(
-                      context: context,
-                      delegate: delegate,
-                    );
+                          color: Colors.black38,
+                          fontSize: 17
+                        )
+                      )
+                    ),
+                    onTap: () async {
+                      final List<Place> history = state.history.values.toList();
+                      SearchPlaceDelegate delegate = SearchPlaceDelegate(
+                        state.myLocation,
+                        history
+                      );
+                      final Place place = await showSearch<Place>(
+                        context: context,
+                        delegate: delegate
+                      );
 
-                    if (place != null) {
-                      bloc.goToPlace(place);
+                      if (place != null) {
+                        bloc.goToPlace(place);
+                      }
                     }
-                  },
-                )
-              ],
-            ),
-          ),
+                  )
+              )
+            ]
+          )
         );
-      },
+      }
     );
   }
-
-  @override
-  Size get preferredSize => Size(double.infinity, 50);
 }
 
 class SearchPlaceDelegate extends SearchDelegate<Place> {

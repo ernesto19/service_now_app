@@ -51,5 +51,6 @@
     "business_category_placeholder": "Seleccione una categoría",
     "business_service_placeholder": "Seleccione un servicio",
     "register_button_text": "Registrar",
-    "register_message": "Registrando ..."
+    "register_message": "Registrando ...",
+    "confirm_address_button_text": "Confirmar dirección"
 }

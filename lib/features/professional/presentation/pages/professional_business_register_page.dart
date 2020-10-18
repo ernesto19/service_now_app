@@ -5,11 +5,13 @@ import 'package:service_now/features/professional/domain/entities/industry.dart'
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/address_page.dart';
 import 'package:service_now/injection_container.dart';
+import 'package:service_now/models/place.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
 import 'package:service_now/widgets/rounded_button.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ProfessionalBusinessRegisterPage extends StatefulWidget {
   static final routeName = 'professional_business_register_page';
@@ -22,10 +24,14 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _licenseNumberController = TextEditingController();
-  final _addressController = TextEditingController();
   final _fanpageController = TextEditingController();
   String _industrySelected;
   String _categorySelected;
+  Place _place;
+  String _addressController = allTranslations.traslate('business_address_placeholder');
+  var _addressColor = Colors.black38;
+  List<Asset> images = List<Asset>();
+  String _error;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +64,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                     child: Column(
                       children: [
-                      state.formStatus == RegisterBusinessFormDataStatus.ready 
+                        state.formStatus == RegisterBusinessFormDataStatus.ready 
                         ? Column(
                           children: [
                             _buildIndustiesSelect(state.formData.industries),
@@ -82,14 +88,21 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                         SizedBox(height: 20),
                         _buildLicenseNumber(),
                         SizedBox(height: 20),
-                        // _buildAddress(),
-                        GestureDetector(
-                          child: Text('Adress'),
-                          // onTap: () => Navigator.pushNamed(context, AddressPage.routeName)
-                          onTap: goToSecondScreen
-                        ),
+                        _buildAddress(),
                         SizedBox(height: 20),
                         _buildFanpage(),
+                        SizedBox(height: 20),
+                        Center(
+                          child: Text('Error: $_error')
+                        ),
+                        RaisedButton(
+                          child: Text("Pick images"),
+                          onPressed: loadAssets,
+                        ),
+                        // Expanded(
+                        //   child: buildGridView(),
+                        // ),
+                        buildGridView(),
                         SizedBox(height: 40),
                         _buildSaveButton(bloc)
                       ]
@@ -104,12 +117,20 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     );
   }
 
-  void goToSecondScreen() async {
+  void goToAddressScreen() async {
     await Navigator.push(context, 
       MaterialPageRoute(
         builder: (BuildContext context) => AddressPage()
       )
-    ).then((value) => print('====== $value ====='));
+    ).then((value) {
+      setState(() {
+        _place = value;
+        if (_place != null) {
+          _addressController = _place.title + ' - ' + _place.vicinity.replaceAll('<br/>', ' - ');
+          _addressColor = Colors.black;
+        }
+      });
+    });
   }
 
   Widget _buildName() {
@@ -143,12 +164,41 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   }
 
   Widget _buildAddress() {
-    return InputFormField(
-      hint: allTranslations.traslate('business_address_placeholder'),
-      label: allTranslations.traslate('business_address_label'),
-      inputType: TextInputType.text,
-      controller: _addressController,
-      maxLength: 100
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.bottomLeft, 
+            child: Text(
+              allTranslations.traslate('business_address_label'), 
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.black, 
+                fontWeight: 
+                FontWeight.bold
+              )
+            )
+          ),
+          SizedBox(height: 15.0),
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: InkWell(
+              child: Text(
+                _addressController, 
+                style: TextStyle(fontSize: 15.0, color: _addressColor)
+              ),
+              onTap: goToAddressScreen
+            )
+          ),
+          SizedBox(height: 9.0),
+          Container(
+            child: Divider(
+              height: 1,
+              color: Colors.black
+            )
+          )
+        ]
+      )
     );
   }
 
@@ -167,7 +217,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '0', '-45.963258', '-10.456321', _addressController.text, _fanpageController.text, context))
+      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, context))
     );
   }
 
@@ -203,6 +253,14 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   }
 
   Widget _buildCategoriesSelect(List<Category> categories) {
+    List<Category> localCategories = List();
+
+    if (_industrySelected != null) {
+      localCategories = categories.where((element) => element.industryId == int.parse(_industrySelected)).toList();
+    }
+
+    localCategories = categories;
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -215,7 +273,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
               height: 0.0,
               color: Colors.black87
             ),
-            items: categories.map((Category item) {
+            items: localCategories.map((Category item) {
               return DropdownMenuItem<String>(
                 value: '${item.id}',
                 child: Text(item.name),
@@ -231,5 +289,51 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
         ]
       )
     );
+  }
+
+  Widget buildGridView() {
+    if (images != null)
+      return GridView.count(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        crossAxisCount: 3,
+        children: List.generate(images.length, (index) {
+          Asset asset = images[index];
+          return AssetThumb(
+            asset: asset,
+            width: 300,
+            height: 300,
+          );
+        }),
+      );
+    else
+      return Container(color: Colors.white);
+  }
+
+  Future<void> loadAssets() async {
+    setState(() {
+      images = List<Asset>();
+    });
+
+    List<Asset> resultList;
+    String error;
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      if (error == null) _error = 'No Error Dectected';
+    });
   }
 }
