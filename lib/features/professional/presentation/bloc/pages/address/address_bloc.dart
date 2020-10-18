@@ -3,14 +3,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:bloc/bloc.dart';
-import 'package:service_now/blocs/pages/home/bloc.dart';
 import 'package:service_now/models/place.dart';
 import 'package:service_now/utils/extras_image.dart';
-import 'home_events.dart';
-import 'home_state.dart';
+import 'address_events.dart';
+import 'address_state.dart';
 import 'package:geolocator/geolocator.dart';
 
-class HomeBloc extends Bloc<HomeEvents, HomeState> {
+class AddressBloc extends Bloc<AddressEvents, AddressState> {
   Geolocator _geolocator = Geolocator();
   final LocationOptions _locationOptions = LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
   Completer<GoogleMapController> _completer = Completer();
@@ -20,7 +19,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     return await _completer.future;
   }
 
-  HomeBloc() {
+  AddressBloc() {
     this._init();
   }
 
@@ -36,9 +35,6 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
         if (position != null) {
           final newPosition = LatLng(position.latitude, position.longitude);
           add(OnMyLocationUpdate(newPosition));
-
-          // final CameraUpdate cameraUpdate = CameraUpdate.newLatLng(newPosition);
-          // await (await _mapController).animateCamera(cameraUpdate);
         }
       }
     );
@@ -66,10 +62,10 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   }
 
   @override
-  HomeState get initialState => HomeState.initialState;
+  AddressState get initialState => AddressState.initialState;
 
   @override
-  Stream<HomeState> mapEventToState(HomeEvents event) async* {
+  Stream<AddressState> mapEventToState(AddressEvents event) async* {
     if (event is OnMyLocationUpdate) {
       yield this.state.copyWith(loading: false, myLocation: event.location);
     } else if (event is GoToPlace) {
@@ -85,9 +81,9 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
 
       if (history[event.place.id] == null) {
         history[event.place.id] = event.place;
-        yield this.state.copyWith(history: history, markers: markers);
+        yield this.state.copyWith(history: history, markers: markers, place: event.place);
       } else {
-        yield this.state.copyWith(markers: markers);
+        yield this.state.copyWith(markers: markers, place: event.place);
       }
     }
   }

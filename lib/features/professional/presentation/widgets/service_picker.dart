@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
-import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 
 class ServicePicker extends StatefulWidget {
 

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
-import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_detail_page.dart';
 
 class BusinessPicker extends StatefulWidget {

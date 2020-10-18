@@ -19,8 +19,8 @@ import 'package:service_now/features/professional/domain/usecases/get_industries
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_service_by_professional.dart';
-import 'package:service_now/features/professional/presentation/bloc/professional_event.dart';
-import 'package:service_now/features/professional/presentation/bloc/professional_state.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_event.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_state.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/widgets/success_page.dart';

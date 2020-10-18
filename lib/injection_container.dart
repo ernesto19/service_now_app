@@ -22,7 +22,7 @@ import 'package:service_now/features/professional/data/repositories/professional
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
-import 'package:service_now/features/professional/presentation/bloc/professional_bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'features/appointment/presentation/bloc/bloc.dart';

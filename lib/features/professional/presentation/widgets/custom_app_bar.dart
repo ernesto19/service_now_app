@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/blocs/pages/home/bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/address/bloc.dart';
 import 'package:service_now/libs/search_api.dart';
 import 'package:service_now/models/place.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,9 +9,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
-    final bloc = BlocProvider.of<HomeBloc>(context);
+    final bloc = BlocProvider.of<AddressBloc>(context);
 
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<AddressBloc, AddressState>(
       builder: (_, state) {
         return Container(
           child: SafeArea(

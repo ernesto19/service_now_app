@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
-import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/widgets/business_detail_bottom_bar.dart';
 import 'package:service_now/features/professional/presentation/widgets/header.dart';
 import 'package:service_now/features/professional/presentation/widgets/service_picker.dart';

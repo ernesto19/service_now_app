@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/professional/presentation/bloc/bloc.dart';
+import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/widgets/business_picker.dart';
 import 'package:service_now/features/professional/presentation/widgets/header.dart';
 import 'package:service_now/injection_container.dart';

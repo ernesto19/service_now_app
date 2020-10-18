@@ -1,19 +1,20 @@
-import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:service_now/custom_app_bar.dart';
-import 'blocs/pages/home/bloc.dart';
+import 'package:service_now/features/professional/presentation/widgets/custom_app_bar.dart';
 
-class HomePage extends StatefulWidget {
-  static const routeName = 'home-page';
+import '../bloc/pages/address/bloc.dart';
+
+class AddressPage extends StatefulWidget {
+  static const routeName = 'address-page';
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _AddressPageState createState() => _AddressPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final HomeBloc _bloc = HomeBloc();
+class _AddressPageState extends State<AddressPage> {
+  final AddressBloc _bloc = AddressBloc();
+  String locationString = 'sin place';
 
   @override
   void initState() {
@@ -32,10 +33,16 @@ class _HomePageState extends State<HomePage> {
       value: this._bloc,
       child: Scaffold(
         appBar: CustomAppBar(),
+        bottomNavigationBar: RaisedButton(
+          child: Text('Confirmar dirección'),
+          onPressed: () {
+            Navigator.pop(context, locationString);
+          }
+        ),
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          child: BlocBuilder<HomeBloc, HomeState>(
+          child: BlocBuilder<AddressBloc, AddressState>(
             builder: (_, state) {
               if (state.loading) {
                 return Center(
@@ -44,6 +51,10 @@ class _HomePageState extends State<HomePage> {
               }
 
               final CameraPosition initialPosition = CameraPosition(target: state.myLocation, zoom: 15);
+
+              if (state.place != null) {
+                locationString = state.place.title + ', ' + state.place.vicinity;
+              }
 
               return Stack(
                 children: [
