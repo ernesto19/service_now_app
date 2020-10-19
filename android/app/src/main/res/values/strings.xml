@@ -2,6 +2,8 @@
     <string name="app_name">"ServiceNow"</string>
     <!--<string name="facebook_app_id">263294411318746</string>
     <string name="fb_login_protocol_scheme">fb263294411318746</string>-->
-    <string name="facebook_app_id">624749711453580</string>
-    <string name="fb_login_protocol_scheme">fb624749711453580</string>
+    <string name="facebook_app_id">764427827451697</string>
+    <string name="fb_login_protocol_scheme">fb764427827451697</string>
+    <!--<string name="facebook_app_id">624749711453580</string>
+    <string name="fb_login_protocol_scheme">fb624749711453580</string>-->
 </resources>
