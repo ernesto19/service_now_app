@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/login/presentation/bloc/bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/register/bloc.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:service_now/widgets/input_text.dart';
@@ -28,15 +28,15 @@ class _RegisterFormState extends State<RegisterForm> {
     return buildBody(context);
   }
 
-  BlocProvider<LoginBloc> buildBody(BuildContext context) {
+  BlocProvider<SignUpBloc> buildBody(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
 
     return BlocProvider(
-      create: (_) => sl<LoginBloc>(),
-      child: BlocBuilder<LoginBloc, LoginState>(
+      create: (_) => sl<SignUpBloc>(),
+      child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
           // ignore: close_sinks
-          final bloc = LoginBloc.of(context);
+          final bloc = SignUpBloc.of(context);
 
           return SafeArea(
             top: false,

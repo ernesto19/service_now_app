@@ -3,13 +3,14 @@ import 'package:service_now/core/network/network_info.dart';
 import 'package:service_now/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:service_now/features/login/data/requests/login_request.dart';
 import 'package:service_now/features/login/data/requests/signin_request.dart';
+import 'package:service_now/features/login/data/responses/login_response.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 import 'package:meta/meta.dart';
 
-typedef Future<User> _LoginType();
+typedef Future<LoginResponse> _LoginType();
 typedef Future<User> _SigninType();
 
 class LoginRepositoryImpl implements LoginRepository {
@@ -22,7 +23,7 @@ class LoginRepositoryImpl implements LoginRepository {
   });
 
   @override
-  Future<Either<Failure, User>> login(String email, String password) async {
+  Future<Either<Failure, LoginResponse>> login(String email, String password) async {
     return await _loginType(() {
       var request = LoginRequest(email: email, password: password);
       return remoteDataSource.login(request);
@@ -37,7 +38,7 @@ class LoginRepositoryImpl implements LoginRepository {
     });
   }
 
-  Future<Either<Failure, User>> _loginType(_LoginType loginType) async {
+  Future<Either<Failure, LoginResponse>> _loginType(_LoginType loginType) async {
     if (await networkInfo.isConnected) {
       try {
         final login = await loginType();

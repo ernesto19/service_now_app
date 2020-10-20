@@ -9,7 +9,7 @@ import 'package:service_now/features/login/data/responses/login_response.dart';
 import 'package:service_now/features/login/data/responses/register_response.dart';
 
 abstract class LoginRemoteDataSource {
-  Future<UserModel> login(LoginRequest request);
+  Future<LoginResponse> login(LoginRequest request);
   Future<UserModel> signin(SigninRequest request);
 }
 
@@ -19,12 +19,12 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
   LoginRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<UserModel> login(LoginRequest request) => _loginFromUrl(request, 'https://test.konxulto.com/service_now/public/api/login');
+  Future<LoginResponse> login(LoginRequest request) => _loginFromUrl(request, 'https://test.konxulto.com/service_now/public/api/login');
 
   @override
   Future<UserModel> signin(SigninRequest request) => _signinFromUrl(request, 'https://test.konxulto.com/service_now/public/api/register');
 
-  Future<UserModel> _loginFromUrl(LoginRequest request, String url) async {
+  Future<LoginResponse> _loginFromUrl(LoginRequest request, String url) async {
     final response = await client.post(
       url,
       headers: {
@@ -35,8 +35,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      final body = LoginResponse.fromJson(json.decode(response.body));
-      return body.data;
+      return LoginResponse.fromJson(json.decode(response.body));
     } else {
       throw ServerException();
     }

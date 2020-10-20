@@ -168,12 +168,12 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
         if (response.error == 0) {
           return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registered, registerBusinessResponse: response);
         } else if (response.error == 2) {
-          String description = response.data[0]['description'] != null ? response.data[0]['description'][0] + '\n' : '';
-          String address = response.data[0]['address'] != null ? response.data[0]['address'][0] : '';
+          String description = response.validation[0]['description'] != null ? response.validation[0]['description'][0] + '\n' : '';
+          String address = response.validation[0]['address'] != null ? response.validation[0]['address'][0] : '';
           String message = description + address;
           return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error, errorMessage: message);
         } else {
-          return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error);
+          return this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.error, errorMessage: response.message);
         }
       }
     );

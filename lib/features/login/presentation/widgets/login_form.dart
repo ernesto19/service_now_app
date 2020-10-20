@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
-import 'package:service_now/features/login/presentation/bloc/bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/login/bloc.dart';
 import 'package:service_now/features/login/presentation/pages/register_page.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/utils/all_translations.dart';

@@ -16,7 +16,8 @@ import 'package:service_now/features/login/data/datasources/login_remote_data_so
 import 'package:service_now/features/login/data/repositories/login_repository_impl.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 import 'package:service_now/features/login/domain/usecases/registration.dart';
-import 'package:service_now/features/login/presentation/bloc/login_bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/login/login_bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/register/bloc.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
 import 'package:service_now/features/professional/data/repositories/professional_repository_impl.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
@@ -56,7 +57,12 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => LoginBloc(
-      login: sl(),
+      login: sl()
+    )
+  );
+
+  sl.registerFactory(
+    () => SignUpBloc(
       signin: sl()
     )
   );

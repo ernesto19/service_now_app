@@ -4,6 +4,7 @@ class LoginResponse {
   int error;
   String message;
   UserModel data;
+  var validation;
 
   LoginResponse.fromJson(dynamic json) {
     if (json == null) return;
@@ -12,7 +13,9 @@ class LoginResponse {
     message = json['message'];
 
     if (error == 0) {
-      data = new UserModel.fromJson(json['data']);
+      data = UserModel.fromJson(json['data']);
+    } else if (error == 2) {
+      validation = json['data'];
     }
   }
 }
