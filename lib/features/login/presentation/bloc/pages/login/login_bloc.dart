@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/login/data/responses/login_response.dart';
+import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/login/domain/usecases/authentication.dart';
+import 'package:service_now/features/login/domain/usecases/authentication_by_facebook.dart';
 import 'package:service_now/features/login/presentation/bloc/pages/login/bloc.dart';
 import 'package:service_now/features/login/presentation/bloc/pages/login/login_event.dart';
 import 'package:service_now/preferences/user_preferences.dart';
@@ -14,11 +16,14 @@ import 'package:service_now/utils/all_translations.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final Authentication authentication;
+  final AuthenticationByFacebook authenticationByFacebook;
 
   LoginBloc({
     @required Authentication login,
-  }) : assert(login != null),
-       authentication = login;
+    @required AuthenticationByFacebook loginFB
+  }) : assert(login != null, loginFB != null),
+       authentication = login,
+       authenticationByFacebook = loginFB;
 
   @override
   LoginState get initialState => LoginState.initialState;
@@ -28,44 +33,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is AuthenticationByPasswordEvent) {
       yield* _loginByPassword(event);
     } else if (event is AuthenticationByFacebookEvent) {
-
+      yield* _loginByFacebook(event);
     } else if (event is AuthenticationByGoogleEvent) {
 
     }
   }
 
   Stream<LoginState> _loginByPassword(AuthenticationByPasswordEvent event) async* {
-    showDialog(
-      context: event.context,
-      builder: (context) {
-        return Container(
-          child: AlertDialog(
-            content: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                CircularProgressIndicator(),
-                Container(
-                  padding: EdgeInsets.only(left: 20.0),
-                  child: Text(allTranslations.traslate('authenticating_message'), style: TextStyle(fontSize: 15.0)),
-                )
-              ],
-            ),
-          ),
-        );
-      }
-    );
+    this._showProgressDialog(event.context);
 
     yield this.state.copyWith(status: LoginStatus.authenticating, user: null);
 
     final failureOrUser = await authentication(Params(email: event.email, password: event.password));
-    yield* _eitherLoadedOrErrorState(failureOrUser);
+    yield* _eitherLogInOrErrorState(failureOrUser);
 
     if (this.state.status == LoginStatus.logIn) {
-      UserPreferences.instance.userId   = state.user.id;
-      UserPreferences.instance.email    = state.user.email;
-      UserPreferences.instance.firstName = state.user.firstName;
-      UserPreferences.instance.lastName = state.user.lastName;
-      UserPreferences.instance.token    = state.user.token;
+      this._storeDataUser(state.user);
       Navigator.pushNamed(event.context, HomePage.routeName, arguments: state.user);
     } else if (this.state.status == LoginStatus.error) {
       Navigator.pop(event.context);
@@ -73,7 +56,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> _eitherLoadedOrErrorState(
+  Stream<LoginState> _eitherLogInOrErrorState(
     Either<Failure, LoginResponse> failureOrUser
   ) async * {
     yield failureOrUser.fold(
@@ -91,6 +74,59 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else {
           return this.state.copyWith(status: LoginStatus.error, errorMessage: response.message);
         }
+      }
+    );
+  }
+
+  Stream<LoginState> _loginByFacebook(AuthenticationByFacebookEvent event) async* {
+    if (event.token == '500') {
+      this._showDialog('Importante', 'Ocurrió un error inesperado. Vuelva a intentar más tarde.', event.context);
+    } else if(event.token == '403') {
+      this._showDialog('Importante', 'La autenticación vía Facebook fue cancelada.', event.context);
+    } else {
+      this._showProgressDialog(event.context);
+
+      yield this.state.copyWith(status: LoginStatus.authenticating, user: null);
+
+      final failureOrUser = await authenticationByFacebook(LoginFBParams(token: event.token));
+      yield* _eitherLogInOrErrorState(failureOrUser);
+
+      if (this.state.status == LoginStatus.logIn) {
+        this._storeDataUser(state.user);
+        Navigator.pushNamed(event.context, HomePage.routeName, arguments: state.user);
+      } else if (this.state.status == LoginStatus.error) {
+        Navigator.pop(event.context);
+        this._showDialog('Importante', this.state.errorMessage, event.context);
+      }
+    }
+  }
+
+  void _storeDataUser(User user) {
+    UserPreferences.instance.userId   = user.id;
+    UserPreferences.instance.email    = user.email;
+    UserPreferences.instance.firstName = user.firstName;
+    UserPreferences.instance.lastName = user.lastName;
+    UserPreferences.instance.token    = user.token;
+  }
+
+  void _showProgressDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('authenticating_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
       }
     );
   }

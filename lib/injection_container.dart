@@ -17,7 +17,7 @@ import 'package:service_now/features/login/data/repositories/login_repository_im
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 import 'package:service_now/features/login/domain/usecases/registration.dart';
 import 'package:service_now/features/login/presentation/bloc/pages/login/login_bloc.dart';
-import 'package:service_now/features/login/presentation/bloc/pages/register/bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/sign_up/bloc.dart';
 import 'package:service_now/features/professional/data/datasources/professional_remote_data_source.dart';
 import 'package:service_now/features/professional/data/repositories/professional_repository_impl.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
@@ -30,6 +30,7 @@ import 'features/appointment/presentation/bloc/bloc.dart';
 import 'features/home/data/datasources/category_local_data_source.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
 import 'features/login/domain/usecases/authentication.dart';
+import 'features/login/domain/usecases/authentication_by_facebook.dart';
 import 'features/professional/domain/usecases/get_create_service_form.dart';
 import 'features/professional/domain/usecases/get_industries.dart';
 import 'features/professional/domain/usecases/register_business_by_professional.dart';
@@ -57,7 +58,8 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => LoginBloc(
-      login: sl()
+      login: sl(),
+      loginFB: sl()
     )
   );
 
@@ -78,9 +80,6 @@ Future<void> init() async {
     )
   );
 
-  // sl.registerFactory(
-  //   () => AddressBloc()
-  // );
 
   // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
@@ -91,6 +90,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCommentsByBusiness(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
+  sl.registerLazySingleton(() => AuthenticationByFacebook(sl()));
   sl.registerLazySingleton(() => Registration(sl()));
 
   sl.registerLazySingleton(() => GetProfessionalBusinessByProfessional(sl()));

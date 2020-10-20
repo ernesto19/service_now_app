@@ -6,23 +6,22 @@ import 'package:equatable/equatable.dart';
 import 'package:service_now/features/login/data/responses/login_response.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 
-class Authentication implements UseCase<LoginResponse, Params> {
+class AuthenticationByFacebook implements UseCase<LoginResponse, LoginFBParams> {
   final LoginRepository repository;
 
-  Authentication(this.repository);
+  AuthenticationByFacebook(this.repository);
 
   @override
-  Future<Either<Failure, LoginResponse>> call(Params params) async {
-    return await repository.logIn(params.email, params.password);
+  Future<Either<Failure, LoginResponse>> call(LoginFBParams params) async {
+    return await repository.logInByFacebook(params.token);
   }
 }
 
-class Params extends Equatable {
-  final String email;
-  final String password;
+class LoginFBParams extends Equatable {
+  final String token;
 
-  Params({ @required this.email, @required this.password });
+  LoginFBParams({ @required this.token });
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [token];
 }

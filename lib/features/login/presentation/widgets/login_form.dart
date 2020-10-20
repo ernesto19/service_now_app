@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/login/presentation/bloc/pages/login/bloc.dart';
-import 'package:service_now/features/login/presentation/pages/register_page.dart';
+import 'package:service_now/features/login/presentation/pages/sign_up_page.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
@@ -78,7 +77,9 @@ class _LoginFormState extends State<LoginForm> {
                     label: allTranslations.traslate('log_in'),
                     width: responsive.wp(50),
                     onPressed: () {
-                      bloc.add(AuthenticationByPasswordEvent(_emailController.text, _passwordController.text, context, 'Autenticando ...'));
+                      String email      = _emailController.text;
+                      String password   = _passwordController.text;
+                      bloc.add(AuthenticationByPasswordEvent(email, password, context));
                     }
                   ),
                   SizedBox(height: responsive.ip(3)),
@@ -92,7 +93,8 @@ class _LoginFormState extends State<LoginForm> {
                         backgroundColor: Color(0xff448AFF),
                         size: 55,
                         onPressed: () async {
-                          User user = await Auth.instance.facebook();
+                          String token = await Auth.instance.facebook();
+                          bloc.add(AuthenticationByFacebookEvent(token, context));
                         }
                       ),
                       SizedBox(width: 20),
@@ -101,7 +103,7 @@ class _LoginFormState extends State<LoginForm> {
                         backgroundColor: Color(0xffFF1744),
                         size: 55,
                         onPressed: () async {
-                          User user = await Auth.instance.google();
+                          // User user = await Auth.instance.google();
                         }
                       )
                     ]
@@ -119,7 +121,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ), 
                         onPressed: () {
-                          Navigator.pushNamed(context, RegisterPage.routeName);
+                          Navigator.pushNamed(context, SignUpPage.routeName);
                         }
                       )
                     ]
@@ -135,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
 
   Widget _crearVisibilityPassword() {
     return IconButton(
-      icon: _obscureTextPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+      icon: _obscureTextPassword ? Icon(Icons.visibility_off, color: Color(0xffcccccc)) : Icon(Icons.visibility, color: Color(0xffcccccc)),
       onPressed: () {
         setState(() {
           _obscureTextPassword = !_obscureTextPassword;

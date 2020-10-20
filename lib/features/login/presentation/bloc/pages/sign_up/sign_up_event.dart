@@ -9,7 +9,6 @@ class RegisterByPasswordEvent extends SignUpEvent {
   final String password;
   final String confirmPassword;
   final BuildContext context;
-  final String message;
 
-  RegisterByPasswordEvent(this.firstName, this.lastName, this.email, this.password, this.confirmPassword, this.context, this.message);
+  RegisterByPasswordEvent(this.firstName, this.lastName, this.email, this.password, this.confirmPassword, this.context);
 }

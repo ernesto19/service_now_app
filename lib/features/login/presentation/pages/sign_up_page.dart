@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/features/login/presentation/widgets/register_form.dart';
+import 'package:service_now/features/login/presentation/widgets/sign_up_form.dart';
 import 'package:service_now/utils/all_translations.dart';
 import '../widgets/welcome.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   static final routeName = 'register_page';
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
@@ -33,9 +33,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    SizedBox(height: 30),
                     Welcome(title: allTranslations.traslate('register')),
                     SizedBox(height: 30),
-                    RegisterForm()
+                    SignUpForm()
                   ]
                 ),
               )

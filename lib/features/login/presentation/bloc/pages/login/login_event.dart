@@ -6,23 +6,15 @@ class AuthenticationByPasswordEvent extends LoginEvent {
   final String email;
   final String password;
   final BuildContext context;
-  final String message;
 
-  AuthenticationByPasswordEvent(this.email, this.password, this.context, this.message);
+  AuthenticationByPasswordEvent(this.email, this.password, this.context);
 }
 
-class RegisterByPasswordEvent extends LoginEvent {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String password;
-  final String confirmPassword;
+class AuthenticationByFacebookEvent extends LoginEvent {
+  final String token;
   final BuildContext context;
-  final String message;
 
-  RegisterByPasswordEvent(this.firstName, this.lastName, this.email, this.password, this.confirmPassword, this.context, this.message);
+  AuthenticationByFacebookEvent(this.token, this.context);
 }
-
-class AuthenticationByFacebookEvent extends LoginEvent {}
 
 class AuthenticationByGoogleEvent extends LoginEvent {}

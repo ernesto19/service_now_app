@@ -4,10 +4,10 @@ import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/core/error/failures.dart';
-import 'package:service_now/features/login/domain/entities/user.dart';
+import 'package:service_now/features/login/data/responses/sign_up_response.dart';
 import 'package:service_now/features/login/domain/usecases/registration.dart';
-import 'package:service_now/features/login/presentation/bloc/pages/register/sign_up_event.dart';
-import 'package:service_now/features/login/presentation/bloc/pages/register/sign_up_state.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/sign_up/sign_up_event.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/sign_up/sign_up_state.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
 
@@ -57,18 +57,32 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
     if (this.state.status == SignUpStatus.signIn) {
       Navigator.pushNamed(event.context, LoginPage.routeName, arguments: state.user);
+    } else if (this.state.status == SignUpStatus.error) {
+      Navigator.pop(event.context);
+      this._showDialog('Importante', this.state.errorMessage, event.context);
     }
   }
 
   Stream<SignUpState> _eitherLoadedRegisterOrErrorState(
-    Either<Failure, User> failureOrUser
+    Either<Failure, SignUpResponse> failureOrUser
   ) async * {
     yield failureOrUser.fold(
       (failure) {
         return this.state.copyWith(status: SignUpStatus.error, user: null);
       },
-      (user) {
-        return this.state.copyWith(status: SignUpStatus.signIn, user: user);
+      (response) {
+        if (response.error == 0) {
+          return this.state.copyWith(status: SignUpStatus.signIn, user: response.data);
+        } else if (response.error == 2) {
+          String firstName = response.validation[0]['first_name'] != null ? response.validation[0]['first_name'][0] + '\n' : '';
+          String lastName = response.validation[0]['last_name'] != null ? response.validation[0]['last_name'][0] + '\n' : '';
+          String email = response.validation[0]['email'] != null ? response.validation[0]['email'][0] + '\n' : '';
+          String password = response.validation[0]['password'] != null ? response.validation[0]['password'][0] : '';
+          String message = firstName + lastName + email + password;
+          return this.state.copyWith(status: SignUpStatus.error, errorMessage: message);
+        } else {
+          return this.state.copyWith(status: SignUpStatus.error, errorMessage: response.message);
+        }
       }
     );
   }

@@ -91,18 +91,18 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                         _buildAddress(),
                         SizedBox(height: 20),
                         _buildFanpage(),
-                        SizedBox(height: 20),
-                        Center(
-                          child: Text('Error: $_error')
-                        ),
-                        RaisedButton(
-                          child: Text("Pick images"),
-                          onPressed: loadAssets,
-                        ),
+                        // SizedBox(height: 20),
+                        // Center(
+                        //   child: Text('Error: $_error')
+                        // ),
+                        // RaisedButton(
+                        //   child: Text("Pick images"),
+                        //   onPressed: loadAssets,
+                        // ),
                         // Expanded(
                         //   child: buildGridView(),
                         // ),
-                        buildGridView(),
+                        // buildGridView(),
                         SizedBox(height: 40),
                         _buildSaveButton(bloc)
                       ]

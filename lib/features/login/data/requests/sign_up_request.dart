@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-class SigninRequest {
-  const SigninRequest({ @required this.firstName, @required this.lastName, @required this.email, @required this.password, @required this.confirmPassword });
+class SignUpRequest {
+  const SignUpRequest({ @required this.firstName, @required this.lastName, @required this.email, @required this.password, @required this.confirmPassword });
 
   final String firstName;
   final String lastName;

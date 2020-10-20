@@ -13,14 +13,14 @@ class Welcome extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: 50, bottom: 30),
+          padding: EdgeInsets.only(top: 30, bottom: 20),
           child: Container(
             child: Stack(
               children: <Widget>[
                 Center(
                   child: Image.asset(
                     'assets/images/logo.jpeg',
-                    width: 110
+                    width: 100
                   )
                 )
               ]
@@ -35,7 +35,7 @@ class Welcome extends StatelessWidget {
             fontFamily: 'raleway'
           )
         ),
-        SizedBox(height: 40)
+        SizedBox(height: 30)
       ]
     );
   }

@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     _buildDropdown(),
                     Welcome(title: allTranslations.traslate('welcome')),
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
                     LoginForm()
                   ]
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/login/presentation/bloc/pages/register/bloc.dart';
+import 'package:service_now/features/login/presentation/bloc/pages/sign_up/bloc.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'package:service_now/widgets/input_text.dart';
@@ -9,19 +9,17 @@ import 'package:service_now/widgets/rounded_button.dart';
 
 import '../../../../injection_container.dart';
 
-class RegisterForm extends StatefulWidget {
+class SignUpForm extends StatefulWidget {
   @override
-  _RegisterFormState createState() => _RegisterFormState();
+  _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _SignUpFormState extends State<SignUpForm> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _passwordConfirmController = TextEditingController();
   bool _obscureTextPassword = true;
-  bool _obscureTextPasswordConfirm = true;
 
   @override
   Widget build(BuildContext context) {
@@ -73,20 +71,16 @@ class _RegisterFormState extends State<RegisterForm> {
                     obscureText: _obscureTextPassword,
                     suffix: _crearVisibilityPassword()
                   ),
-                  SizedBox(height: responsive.ip(1)),
-                  InputText(
-                    controller: _passwordConfirmController,
-                    iconPath: 'assets/icons/key.svg', 
-                    placeholder: allTranslations.traslate('confirm_password'),
-                    obscureText: _obscureTextPasswordConfirm,
-                    suffix: _crearVisibilityPasswordConfirm()
-                  ),
                   SizedBox(height: responsive.ip(5)),
                   RoundedButton(
                     label: allTranslations.traslate('create_account'),
                     width: responsive.wp(50),
                     onPressed: () {
-                      bloc.add(RegisterByPasswordEvent(_firstNameController.text, _lastNameController.text, _emailController.text, _passwordController.text, _passwordConfirmController.text, context, 'Registrando ...'));
+                      String firstName  = _firstNameController.text;
+                      String lastName   = _lastNameController.text;
+                      String email      = _emailController.text;
+                      String password   = _passwordController.text;
+                      bloc.add(RegisterByPasswordEvent(firstName, lastName, email, password, password, context));
                     }
                   ),
                   SizedBox(height: responsive.ip(3)),
@@ -101,21 +95,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   Widget _crearVisibilityPassword() {
     return IconButton(
-      icon: _obscureTextPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+      icon: _obscureTextPassword ? Icon(Icons.visibility_off, color: Color(0xffcccccc)) : Icon(Icons.visibility, color: Color(0xffcccccc)),
       onPressed: () {
         setState(() {
           _obscureTextPassword = !_obscureTextPassword;
-        });
-      },
-    );
-  }
-
-  Widget _crearVisibilityPasswordConfirm() {
-    return IconButton(
-      icon: _obscureTextPasswordConfirm ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-      onPressed: () {
-        setState(() {
-          _obscureTextPasswordConfirm = !_obscureTextPasswordConfirm;
         });
       },
     );
