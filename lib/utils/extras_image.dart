@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
+import 'package:service_now/widgets/my_custom_marker.dart';
 
 Future<Uint8List> loadAsset(String path, {int width = 50, int height = 50}) async {
   ByteData data = await rootBundle.load(path);
@@ -10,4 +11,22 @@ Future<Uint8List> loadAsset(String path, {int width = 50, int height = 50}) asyn
   final ui.FrameInfo frame = await codec.getNextFrame();
   data = await frame.image.toByteData(format: ui.ImageByteFormat.png);
   return data.buffer.asUint8List();
+}
+
+Future<Uint8List> placeToMarker(String title) async {
+  ui.PictureRecorder recorder = ui.PictureRecorder();
+  ui.Canvas canvas = ui.Canvas(recorder);
+  final ui.Size size = ui.Size(450, 150);
+  MyCustomMarker customMarker = MyCustomMarker(title);
+  customMarker.paint(canvas, size);
+  ui.Picture picture = recorder.endRecording();
+  final ui.Image image = await picture.toImage(
+    size.width.toInt(),
+    size.height.toInt(),
+  );
+
+  final ByteData byteData = await image.toByteData(
+    format: ui.ImageByteFormat.png,
+  );
+  return byteData.buffer.asUint8List();
 }

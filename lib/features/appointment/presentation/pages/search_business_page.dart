@@ -42,7 +42,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
                 } else {
                   // ignore: close_sinks
                   final bloc = AppointmentBloc.of(context);
-                  bloc.add(GetBusinessForUser(widget.category.id, state.myLocation.latitude.toString(), state.myLocation.longitude.toString()));
+                  bloc.add(GetBusinessForUser(widget.category.id, state.myLocation.latitude.toString(), state.myLocation.longitude.toString(), context));
                   return CustomGoogleMap(initialPosition: CameraPosition(target: state.myLocation, zoom: 15));
                 }
               }

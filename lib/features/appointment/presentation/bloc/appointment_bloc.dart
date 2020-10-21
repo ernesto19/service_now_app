@@ -66,7 +66,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     } else if (event is GetBusinessForUser) {
       if (this.state.status != BusinessStatus.ready) {
         final failureOrBusiness = await getBusinessByCategory(GetBusinessParams(categoryId: event.categoryId, latitude: event.latitude, longitude: event.longitude));
-        yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
+        yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness, event.context);
       }
     } else if (event is GetGalleriesForUser) {
       this.state.copyWith(status: BusinessStatus.loadingGallery, galleries: []);
@@ -79,7 +79,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   }
 
   Stream<AppointmentState> _eitherLoadedBusinessOrErrorState(
-    Either<Failure, List<Business>> failureOrBusiness
+    Either<Failure, List<Business>> failureOrBusiness, BuildContext context
   ) async * {
     final Uint8List activeIcon = await loadAsset('assets/icons/marker_active.png', width: 130, height: 130);
     final Uint8List inactiveIcon = await loadAsset('assets/icons/marker_inactive.png', width: 130, height: 130);
@@ -92,9 +92,35 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
         if (state.status == BusinessStatus.mapMount) {
           for (var trade in business) {
+            final info = InfoWindow(title: trade.name, snippet: trade.distance.toStringAsFixed(4) + ' km');
             final customIcon = BitmapDescriptor.fromBytes(trade.active == 1 ? activeIcon : inactiveIcon);
             final markerId = MarkerId(trade.id.toString());
-            final marker = Marker(markerId: markerId, position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)), icon: customIcon, anchor: Offset(0.5, 1));
+            final marker = Marker(
+              markerId: markerId, 
+              position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)), 
+              icon: customIcon, 
+              anchor: Offset(0.5, 1),
+              infoWindow: info,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      child: AlertDialog(
+                        title: Text(trade.name, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+                        content: Text(trade.distance.toString(), style: TextStyle(fontSize: 16.0),),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+                            onPressed: () => Navigator.pop(context)
+                          )
+                        ]
+                      )
+                    );
+                  }
+                );
+              }
+            );
 
             markers[markerId] = marker;
           }

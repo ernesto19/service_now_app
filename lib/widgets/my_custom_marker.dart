@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/models/place.dart';
 
 class MyCustomMarker extends CustomPainter {
-  final Place place;
+  final String title;
 
-  MyCustomMarker(this.place);
+  MyCustomMarker(this.title);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,13 +35,13 @@ class MyCustomMarker extends CustomPainter {
 
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: this.place.title,
+        text: title,
         style: TextStyle(
-          fontSize: 17,
+          fontSize: 35,
           color: Colors.white,
         ),
       ),
-      maxLines: 2,
+      maxLines: 3,
       textDirection: TextDirection.ltr,
     );
 
@@ -50,7 +49,7 @@ class MyCustomMarker extends CustomPainter {
 
     textPainter.paint(
       canvas,
-      Offset(50, height / 2 - textPainter.height / 2),
+      Offset(60, height / 2 - textPainter.height / 2),
     );
   }
 
