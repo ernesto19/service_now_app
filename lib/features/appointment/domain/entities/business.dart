@@ -9,6 +9,7 @@ class Business extends Equatable {
   final String longitude;
   final String rating;
   final double distance;
+  final int active;
   final List<BusinessGallery> gallery;
 
   Business({
@@ -19,6 +20,7 @@ class Business extends Equatable {
     @required this.longitude, 
     @required this.rating, 
     @required this.distance,
+    @required this.active,
     @required this.gallery
   });
 

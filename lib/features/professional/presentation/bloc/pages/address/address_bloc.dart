@@ -72,10 +72,10 @@ class AddressBloc extends Bloc<AddressEvents, AddressState> {
       final history = Map<String, Place>.from(this.state.history);
       final MarkerId markerId = MarkerId('place');
 
-      final Uint8List bytes = await loadAsset('assets/images/location.png', width: 130, height: 130);
+      final Uint8List bytes = await loadAsset('assets/icons/marker_active.png', width: 130, height: 130);
       final customIcon = BitmapDescriptor.fromBytes(bytes);
 
-      final Marker marker = Marker(markerId: markerId, position: event.place.position, icon: customIcon, anchor: Offset(0.5, 0.7));
+      final Marker marker = Marker(markerId: markerId, position: event.place.position, icon: customIcon, anchor: Offset(0.5, 1));
       final markers = Map<MarkerId, Marker>.from(this.state.markers);
       markers[markerId] = marker;
 

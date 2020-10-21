@@ -4,6 +4,7 @@ import 'package:mime_type/mime_type.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/features/professional/data/models/professional_business_model.dart';
 import 'package:service_now/features/professional/data/models/professional_service_model.dart';
@@ -16,6 +17,7 @@ import 'package:service_now/features/professional/data/responses/get_professiona
 import 'package:service_now/features/professional/data/responses/get_professional_services_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/data/responses/register_service_response.dart';
+import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
 abstract class ProfessionalRemoteDataSource {
@@ -25,6 +27,7 @@ abstract class ProfessionalRemoteDataSource {
   Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request);
   Future<CreateServiceForm> getCreateServiceForm();
   Future<RegisterServiceResponse> registerService(RegisterServiceRequest request);
+  Future<void> updateBusinessStatus(ProfessionalBusiness business);
 }
 
 class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
@@ -49,6 +52,9 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
 
   @override
   Future<RegisterServiceResponse> registerService(RegisterServiceRequest request) => _registerServiceFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/add_service');
+
+  @override
+  Future<void> updateBusinessStatus(ProfessionalBusiness business) => _updateBusinessStatusFromUrl(business, 'https://test.konxulto.com/service_now/public/api/business/active');
 
   Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(String url) async {
     final response = await client.get(
@@ -175,6 +181,24 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
 
     if (response.statusCode == 200) {
       return RegisterServiceResponse.fromJson(json.decode(response.body));
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<void> _updateBusinessStatusFromUrl(ProfessionalBusiness business, String url) async {
+    final response = await client.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json.encode({ 'business_id': business.id } )
+    );
+
+    if (response.statusCode == 200) {
+      return Right(response.body);
     } else {
       throw ServerException();
     }

@@ -76,6 +76,16 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
     });
   }
 
+  @override
+  Future<Either<Failure, void>> updateBusinessStatus(ProfessionalBusiness business) async {
+    try {
+      var update = await remoteDataSource.updateBusinessStatus(business);
+      return Right(update);
+    } on LocalException {
+      return Left(NetworkFailure());
+    }
+  }
+
   Future<Either<Failure, List<ProfessionalBusiness>>> _getProfessionalBusinessType(_ProfessionalBusinessType getProfessionalBusinessType) async {
     if (await networkInfo.isConnected) {
       try {

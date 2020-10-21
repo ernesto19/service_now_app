@@ -14,4 +14,5 @@ abstract class ProfessionalRepository {
   Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage);
   Future<Either<Failure, CreateServiceForm>> getCreateServiceForm();
   Future<Either<Failure, RegisterServiceResponse>> registerService(int businessId, int serviceId, double price);
+  Future<Either<Failure, void>> updateBusinessStatus(ProfessionalBusiness business);
 }

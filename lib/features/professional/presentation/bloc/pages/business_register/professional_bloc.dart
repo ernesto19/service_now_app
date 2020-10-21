@@ -19,6 +19,7 @@ import 'package:service_now/features/professional/domain/usecases/get_industries
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_service_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/update_business_status_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_event.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_state.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
@@ -32,6 +33,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   final RegisterBusinessByProfessional registerBusinessByProfessional;
   final GetCreateServiceForm getCreateServiceForm;
   final RegisterServiceByProfessional registerServiceByProfessional;
+  final UpdateBusinessByProfessional updateBusinessStatus;
 
   ProfessionalBloc({
     @required GetProfessionalBusinessByProfessional business,
@@ -39,14 +41,16 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     @required GetIndustries industries,
     @required RegisterBusinessByProfessional registerBusiness,
     @required GetCreateServiceForm createServiceForm,
-    @required RegisterServiceByProfessional registerService
+    @required RegisterServiceByProfessional registerService,
+    @required UpdateBusinessByProfessional updateBusiness
   }) : assert(business != null, services != null),
        getBusinessByProfessional = business,
        getServicesByProfessional = services,
        getIndustries = industries,
        registerBusinessByProfessional = registerBusiness,
        getCreateServiceForm = createServiceForm,
-       registerServiceByProfessional = registerService {
+       registerServiceByProfessional = registerService,
+       updateBusinessStatus = updateBusiness {
     add(GetBusinessForProfessional());
   }
 
@@ -79,7 +83,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     } else if (event is RegisterServiceForProfessional) {
       yield* this._registerService(event);
     } else if (event is OnActiveEvent) {
-      yield* this._mapOnFavorites(event);
+      yield* this._mapOnActive(event);
     }
   }
 
@@ -238,12 +242,13 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     );
   }
 
-  Stream<ProfessionalState> _mapOnFavorites(OnActiveEvent event) async* {
+  Stream<ProfessionalState> _mapOnActive(OnActiveEvent event) async* {
     final int id = event.id;
     final List<ProfessionalBusiness> tmp = List<ProfessionalBusiness>.from(this.state.business);
     final int index = tmp.indexWhere((element) => element.id == id);
     if (index != -1) {
       tmp[index] = tmp[index].onActive();
+      updateBusinessStatus(UpdateBusinessParams(business: tmp[index]));
       yield this.state.copyWith(status: ProfessionalStatus.ready, business: tmp);
     }
   }

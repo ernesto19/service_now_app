@@ -23,6 +23,7 @@ import 'package:service_now/features/professional/data/repositories/professional
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/update_business_status_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
@@ -76,7 +77,8 @@ Future<void> init() async {
       industries: sl(),
       registerBusiness: sl(),
       createServiceForm: sl(),
-      registerService: sl()
+      registerService: sl(),
+      updateBusiness: sl()
     )
   );
 
@@ -99,6 +101,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RegisterBusinessByProfessional(sl()));
   sl.registerLazySingleton(() => GetCreateServiceForm(sl()));
   sl.registerLazySingleton(() => RegisterServiceByProfessional(sl()));
+  sl.registerLazySingleton(() => UpdateBusinessByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<CategoryRepository>(

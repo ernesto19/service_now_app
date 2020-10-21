@@ -31,7 +31,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   String _addressController = allTranslations.traslate('business_address_placeholder');
   var _addressColor = Colors.black38;
   List<Asset> images = List<Asset>();
-  String _error;
+  // String _error;
 
   @override
   Widget build(BuildContext context) {
@@ -316,14 +316,15 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     });
 
     List<Asset> resultList;
-    String error;
+    // String error;
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
       );
     } on Exception catch (e) {
-      error = e.toString();
+      print(e.toString());
+      // error = e.toString();
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -333,7 +334,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
 
     setState(() {
       images = resultList;
-      if (error == null) _error = 'No Error Dectected';
+      // if (error == null) _error = 'No Error Dectected';
     });
   }
 }

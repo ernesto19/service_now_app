@@ -13,7 +13,7 @@ class ProfessionalBusiness extends Equatable {
   final String logo;
   final String latitude;
   final String longitude;
-  int active;
+  final int active;
 
   ProfessionalBusiness({
     @required this.id, 

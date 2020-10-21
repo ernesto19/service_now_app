@@ -10,21 +10,45 @@ class CustomGoogleMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppointmentBloc, AppointmentState> (builder: (_, state) {
-      return Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: GoogleMap(
-          initialCameraPosition: _initialPosition,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomControlsEnabled: false,
-          markers: state.markers.values.toSet(),
-          onTap: (location) {
-            print('$location');
-          },
-        )
-      );
-    });
+    return BlocBuilder<AppointmentBloc, AppointmentState> (
+      builder: (context, state) {
+        // ignore: close_sinks
+        final bloc = AppointmentBloc.of(context);
+
+        return Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: _initialPosition,
+                zoomControlsEnabled: false,
+                compassEnabled: false,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                markers: state.markers.values.toSet(),
+                onTap: (location) {
+                  print('$location');
+                },
+                onMapCreated: (GoogleMapController controller) {
+                  bloc.setMapController(controller);
+                }
+              ),
+              Positioned(
+                bottom: 130,
+                right: 15,
+                child: FloatingActionButton(
+                  child: Icon(Icons.gps_fixed, color: Colors.black),
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    bloc.goToMyPosition();
+                  }
+                )
+              )
+            ]
+          )
+        );
+      }
+    );
   }
 }

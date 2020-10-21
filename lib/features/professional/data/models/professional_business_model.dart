@@ -30,7 +30,7 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
       logo:         json['logo']            ?? '',
       latitude:     json['lat'].toString()  ?? '',
       longitude:    json['lng'].toString()  ?? '',
-      active:       0
+      active:       json['active']          ?? 0
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ import 'package:service_now/features/appointment/presentation/bloc/appointment_e
 import 'package:service_now/features/appointment/presentation/bloc/appointment_state.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
+import 'package:service_now/utils/extras_image.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   Geolocator _geolocator = Geolocator();
@@ -24,6 +25,11 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   final GetBusinessByCategory getBusinessByCategory;
   final GetGalleriesByBusiness getGalleriesByBusiness;
   final GetCommentsByBusiness getCommentsByBusiness;
+  Completer<GoogleMapController> _completer = Completer();
+
+  Future<GoogleMapController> get _mapController async {
+    return await _completer.future;
+  }
 
   AppointmentBloc({
     @required GetBusinessByCategory business,
@@ -75,6 +81,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   Stream<AppointmentState> _eitherLoadedBusinessOrErrorState(
     Either<Failure, List<Business>> failureOrBusiness
   ) async * {
+    final Uint8List activeIcon = await loadAsset('assets/icons/marker_active.png', width: 130, height: 130);
+    final Uint8List inactiveIcon = await loadAsset('assets/icons/marker_inactive.png', width: 130, height: 130);
     yield failureOrBusiness.fold(
       (failure) {
         return this.state.copyWith(status: BusinessStatus.error, business: []);
@@ -84,8 +92,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
         if (state.status == BusinessStatus.mapMount) {
           for (var trade in business) {
+            final customIcon = BitmapDescriptor.fromBytes(trade.active == 1 ? activeIcon : inactiveIcon);
             final markerId = MarkerId(trade.id.toString());
-            final marker = Marker(markerId: markerId, position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)));
+            final marker = Marker(markerId: markerId, position: LatLng(double.parse(trade.latitude), double.parse(trade.longitude)), icon: customIcon, anchor: Offset(0.5, 1));
 
             markers[markerId] = marker;
           }
@@ -120,6 +129,21 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         return this.state.copyWith(status: BusinessStatus.readyComments, comments: comments);
       }
     );
+  }
+
+  goToMyPosition() async {
+    if (this.state.myLocation != null) {
+      final CameraUpdate cameraUpdate = CameraUpdate.newLatLng(this.state.myLocation);
+      await (await _mapController).animateCamera(cameraUpdate);
+    }
+  }
+
+  void setMapController(GoogleMapController controller) {
+    if (_completer.isCompleted) {
+      _completer = Completer();
+    }
+
+    _completer.complete(controller);
   }
 
   static AppointmentBloc of(BuildContext context) {
