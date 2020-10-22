@@ -31,14 +31,19 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   String _addressController = allTranslations.traslate('business_address_placeholder');
   var _addressColor = Colors.black38;
   List<Asset> images = List<Asset>();
-  // String _error;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(allTranslations.traslate('register_business_title'), style: labelTitleForm),
-        backgroundColor: primaryColor
+        backgroundColor: primaryColor,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.attach_file), 
+            onPressed: loadAssets
+          )
+        ]
       ),
       body: SafeArea(
         child: _buildBody(context)
@@ -56,61 +61,60 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
           bloc.add(GetIndustriesForProfessional());
           String text = allTranslations.traslate('loading_message');
 
-          return Container(
-            child: Stack(
-              children: <Widget>[
-                SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    child: Column(
-                      children: [
-                        state.formStatus == RegisterBusinessFormDataStatus.ready 
-                        ? Column(
-                          children: [
-                            _buildIndustiesSelect(state.formData.industries),
-                            SizedBox(height: 12),
-                            _buildCategoriesSelect(state.formData.categories),
-                          ],
-                        ) 
-                        : Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: LinearProgressIndicator(),
-                            ),
-                            Text(text)
-                          ]
-                        ),
-                        SizedBox(height: 10),
-                        _buildName(),
-                        SizedBox(height: 20),
-                        _buildDescription(),
-                        SizedBox(height: 20),
-                        _buildLicenseNumber(),
-                        SizedBox(height: 20),
-                        _buildAddress(),
-                        SizedBox(height: 20),
-                        _buildFanpage(),
-                        // SizedBox(height: 20),
-                        // Center(
-                        //   child: Text('Error: $_error')
-                        // ),
-                        // RaisedButton(
-                        //   child: Text("Pick images"),
-                        //   onPressed: loadAssets,
-                        // ),
-                        // Expanded(
-                        //   child: buildGridView(),
-                        // ),
-                        // buildGridView(),
-                        SizedBox(height: 40),
-                        _buildSaveButton(bloc)
-                      ]
-                    )
-                  ),
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: [
+                      state.formStatus == RegisterBusinessFormDataStatus.ready 
+                      ? Column(
+                        children: [
+                          _buildIndustiesSelect(state.formData.industries),
+                          SizedBox(height: 12),
+                          _buildCategoriesSelect(state.formData.categories),
+                        ],
+                      ) 
+                      : Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: LinearProgressIndicator(),
+                          ),
+                          Text(text)
+                        ]
+                      ),
+                      SizedBox(height: 10),
+                      _buildName(),
+                      SizedBox(height: 20),
+                      _buildDescription(),
+                      SizedBox(height: 20),
+                      _buildLicenseNumber(),
+                      SizedBox(height: 20),
+                      _buildAddress(),
+                      SizedBox(height: 20),
+                      _buildFanpage(),
+                      SizedBox(height: 10)
+                    ]
+                  )
                 )
-              ]
-            )
+              ),
+              SliverToBoxAdapter(
+                child: images != null && images.length > 0 
+                  ? Container(
+                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), 
+                    child: buildGridView()
+                  ) 
+                  : Container()
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 10),
+                  child: _buildSaveButton(bloc)
+                )
+              )
+            ]
           );
         }
       )
@@ -253,13 +257,11 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   }
 
   Widget _buildCategoriesSelect(List<Category> categories) {
-    List<Category> localCategories = List();
+    List<Category> categoriesList = List();
 
     if (_industrySelected != null) {
-      localCategories = categories.where((element) => element.industryId == int.parse(_industrySelected)).toList();
+      categoriesList = categories.where((element) => element.industryId == int.parse(_industrySelected)).toList();
     }
-
-    localCategories = categories;
 
     return Container(
       child: Column(
@@ -273,7 +275,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
               height: 0.0,
               color: Colors.black87
             ),
-            items: localCategories.map((Category item) {
+            items: categoriesList.map((Category item) {
               return DropdownMenuItem<String>(
                 value: '${item.id}',
                 child: Text(item.name),
@@ -292,8 +294,9 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   }
 
   Widget buildGridView() {
-    if (images != null)
+    if (images != null) {
       return GridView.count(
+        primary: false,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         crossAxisCount: 3,
@@ -306,8 +309,9 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
           );
         }),
       );
-    else
+    } else {
       return Container(color: Colors.white);
+    }
   }
 
   Future<void> loadAssets() async {
@@ -316,25 +320,30 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     });
 
     List<Asset> resultList;
-    // String error;
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
+        maxImages: 5,
+        materialOptions: MaterialOptions(
+          actionBarTitle: "Seleccionadas",
+          allViewTitle: "Seleccionadas",
+          actionBarColor: "#E2C662",
+          actionBarTitleColor: "#FFFFFF",
+          lightStatusBar: false,
+          statusBarColor: '#B3993B',
+          startInAllView: true,
+          selectCircleStrokeColor: "#000000",
+          selectionLimitReachedText: "No puede seleccionar más",
+        )
       );
     } on Exception catch (e) {
       print(e.toString());
-      // error = e.toString();
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
       images = resultList;
-      // if (error == null) _error = 'No Error Dectected';
     });
   }
 }

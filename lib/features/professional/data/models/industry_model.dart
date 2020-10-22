@@ -26,7 +26,7 @@ class CategoryModel extends Category {
     return CategoryModel(
       id:   json['id']    ?? 0, 
       name: json['name']  ?? '',
-      industryId: json['industry_id']  ?? 0,
+      industryId: json['industry_id'] ?? 0,
     );
   }
 }
@@ -34,13 +34,15 @@ class CategoryModel extends Category {
 class ServiceModel extends Service {
   ServiceModel({
     @required int id, 
-    @required String name
-  }) : super(id: id, name: name);
+    @required String name,
+    @required int categoryId
+  }) : super(id: id, name: name, categoryId: categoryId);
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       id:   json['id']    ?? 0, 
-      name: json['name']  ?? ''
+      name: json['name']  ?? '',
+      categoryId: json['category_id'] ?? 0
     );
   }
 }

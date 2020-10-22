@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/injection_container.dart';
@@ -25,13 +26,20 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   String _industrySelected;
   String _categorySelected;
   String _serviceSelected;
+  List<Asset> images = List<Asset>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(allTranslations.traslate('register_service_title'), style: labelTitleForm),
-        backgroundColor: primaryColor
+        backgroundColor: primaryColor,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.attach_file), 
+            onPressed: loadAssets
+          )
+        ]
       ),
       body: SafeArea(
         child: _buildBody(context)
@@ -49,43 +57,54 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
           bloc.add(GetCreateServiceFormForProfessional());
           String text = allTranslations.traslate('loading_message');
 
-          return Container(
-            child: Stack(
-              children: <Widget>[
-                SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    child: Column(
-                      children: [
-                      state.serviceFormStatus == RegisterServiceFormDataStatus.ready 
-                        ? Column(
-                          children: [
-                            _buildIndustiesSelect(state.serviceFormData.industries),
-                            SizedBox(height: 12),
-                            _buildCategoriesSelect(state.serviceFormData.categories),
-                            SizedBox(height: 12),
-                            _buildServicesSelect(state.serviceFormData.services)
-                          ],
-                        ) 
-                        : Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: LinearProgressIndicator(),
-                            ),
-                            Text(text)
-                          ]
-                        ),
-                        SizedBox(height: 10),
-                        _buildPrice(),
-                        SizedBox(height: 40),
-                        _buildSaveButton(bloc)
-                      ]
-                    )
-                  ),
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: [
+                    state.serviceFormStatus == RegisterServiceFormDataStatus.ready 
+                      ? Column(
+                        children: [
+                          _buildIndustiesSelect(state.serviceFormData.industries),
+                          SizedBox(height: 12),
+                          _buildCategoriesSelect(state.serviceFormData.categories),
+                          SizedBox(height: 12),
+                          _buildServicesSelect(state.serviceFormData.services)
+                        ],
+                      ) 
+                      : Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: LinearProgressIndicator(),
+                          ),
+                          Text(text)
+                        ]
+                      ),
+                      SizedBox(height: 10),
+                      _buildPrice(),
+                      SizedBox(height: 10)
+                    ]
+                  )
                 )
-              ]
-            )
+              ),
+              SliverToBoxAdapter(
+                child: images != null && images.length > 0 
+                  ? Container(
+                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), 
+                    child: buildGridView()
+                  ) 
+                  : Container()
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 10),
+                  child: _buildSaveButton(bloc)
+                ),
+              )
+            ]
           );
         }
       )
@@ -134,6 +153,12 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   }
 
   Widget _buildCategoriesSelect(List<Category> categories) {
+    List<Category> categoriesList = List();
+
+    if (_industrySelected != null) {
+      categoriesList = categories.where((element) => element.industryId == int.parse(_industrySelected)).toList();
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -146,7 +171,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
               height: 0.0,
               color: Colors.black87
             ),
-            items: categories.map((Category item) {
+            items: categoriesList.map((Category item) {
               return DropdownMenuItem<String>(
                 value: '${item.id}',
                 child: Text(item.name),
@@ -165,6 +190,12 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   }
 
   Widget _buildServicesSelect(List<Service> services) {
+    List<Service> servicesList = List();
+
+    if (_categorySelected != null) {
+      servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -177,7 +208,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
               height: 0.0,
               color: Colors.black87
             ),
-            items: services.map((Service item) {
+            items: servicesList.map((Service item) {
               return DropdownMenuItem<String>(
                 value: '${item.id}',
                 child: Text(item.name),
@@ -202,5 +233,59 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
       width: double.infinity,
       onPressed: () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), context))
     );
+  }
+
+  Widget buildGridView() {
+    if (images != null) {
+      return GridView.count(
+        primary: false,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        crossAxisCount: 3,
+        children: List.generate(images.length, (index) {
+          Asset asset = images[index];
+          return AssetThumb(
+            asset: asset,
+            width: 300,
+            height: 300,
+          );
+        }),
+      );
+    } else {
+      return Container(color: Colors.white);
+    }
+  }
+
+  Future<void> loadAssets() async {
+    setState(() {
+      images = List<Asset>();
+    });
+
+    List<Asset> resultList;
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 10,
+        materialOptions: MaterialOptions(
+          actionBarTitle: "Seleccionadas",
+          allViewTitle: "Seleccionadas",
+          actionBarColor: "#E2C662",
+          actionBarTitleColor: "#FFFFFF",
+          lightStatusBar: false,
+          statusBarColor: '#B3993B',
+          startInAllView: true,
+          selectCircleStrokeColor: "#000000",
+          selectionLimitReachedText: "No puede seleccionar más",
+        )
+      );
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+    });
   }
 }

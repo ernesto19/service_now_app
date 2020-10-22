@@ -32,12 +32,14 @@ class Category extends Equatable {
 class Service extends Equatable {
   final int id;
   final String name;
+  final int categoryId;
 
   Service({
     @required this.id, 
-    @required this.name
+    @required this.name,
+    @required this.categoryId
   });
 
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [id, name, categoryId];
 }

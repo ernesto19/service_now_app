@@ -101,25 +101,25 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
               icon: customIcon, 
               anchor: Offset(0.5, 1),
               infoWindow: info,
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      child: AlertDialog(
-                        title: Text(trade.name, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
-                        content: Text(trade.distance.toString(), style: TextStyle(fontSize: 16.0),),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
-                            onPressed: () => Navigator.pop(context)
-                          )
-                        ]
-                      )
-                    );
-                  }
-                );
-              }
+              // onTap: () {
+              //   showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return Container(
+              //         child: AlertDialog(
+              //           title: Text(trade.name, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+              //           content: Text(trade.distance.toString(), style: TextStyle(fontSize: 16.0),),
+              //           actions: <Widget>[
+              //             FlatButton(
+              //               child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              //               onPressed: () => Navigator.pop(context)
+              //             )
+              //           ]
+              //         )
+              //       );
+              //     }
+              //   );
+              // }
             );
 
             markers[markerId] = marker;
