@@ -221,7 +221,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, context))
+      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context))
     );
   }
 

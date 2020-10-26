@@ -10,11 +10,14 @@ class Auth {
       if (result.status == 200) {
         return result.accessToken.token;
       } else if (result.status == 403) {
+        print('======Error 403 -> ${result.toJson().toString()} =======');
         return '403';
       } else {
+        print('===== Error 500 ======');
         return '500';
       }
     } catch(e) {
+      print('====== ${e.toString()} =======');
       return '500';
     }
   }

@@ -191,10 +191,12 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
 
   Widget _buildServicesSelect(List<Service> services) {
     List<Service> servicesList = List();
+    servicesList.addAll(services);
+    // List<Service> servicesList = List();
 
-    if (_categorySelected != null) {
-      servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
-    }
+    // if (_categorySelected != null) {
+    //   servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
+    // }
 
     return Container(
       child: Column(
@@ -231,7 +233,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
       label: allTranslations.traslate('register_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), context))
+      onPressed: () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), images, context))
     );
   }
 

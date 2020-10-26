@@ -149,7 +149,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
 
     yield this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registering);
 
-    final failureOrSuccess = await registerBusinessByProfessional(RegisterBusinessParams(name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage));
+    final failureOrSuccess = await registerBusinessByProfessional(RegisterBusinessParams(name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage, images: event.images));
     yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {
@@ -219,11 +219,10 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
 
     yield this.state.copyWith(registerServiceStatus: RegisterServiceStatus.registering);
 
-    final failureOrSuccess = await registerServiceByProfessional(RegisterServiceParams(businessId: event.businessId, serviceId: event.serviceId, price: event.price));
+    final failureOrSuccess = await registerServiceByProfessional(RegisterServiceParams(businessId: event.businessId, serviceId: event.serviceId, price: event.price, images: event.images));
     yield* _eitherServiceRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerServiceStatus == RegisterServiceStatus.registered) {
-      // Navigator.pushNamed(event.context, ProfessionalBusinessPage.routeName);
       Navigator.of(event.context).pop();
       Navigator.of(event.context).push(FadeRouteBuilder(page: SuccessPage(message: 'El servicio fue registrado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
     }

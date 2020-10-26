@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:mime_type/mime_type.dart';
+import 'dart:typed_data';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -19,6 +18,7 @@ import 'package:service_now/features/professional/data/responses/register_busine
 import 'package:service_now/features/professional/data/responses/register_service_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/preferences/user_preferences.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 abstract class ProfessionalRemoteDataSource {
   Future<List<ProfessionalBusinessModel>> getProfessionalBusiness();
@@ -45,7 +45,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   Future<IndustryCategory> getIndustries() => _getIndustriesFromUrl('https://test.konxulto.com/service_now/public/api/business/industries_categories');
 
   @override
-  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, null, 'https://test.konxulto.com/service_now/public/api/business/create');
+  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/create');
 
   @override
   Future<CreateServiceForm> getCreateServiceForm() => _getCreateServiceFormFromUrl('https://test.konxulto.com/service_now/public/api/business/ind_cat_serv');
@@ -110,7 +110,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
     }
   }
 
-  Future<RegisterBusinessResponse> _registerBusinessFromUrl(RegisterBusinessRequest request, File logo, String url) async {
+  Future<RegisterBusinessResponse> _registerBusinessFromUrl(RegisterBusinessRequest request, String url) async {
     final uri = Uri.parse(url 
       + '?'
       + 'name=${request.name}&'
@@ -124,7 +124,6 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
       + 'address=${request.address}&'
       + 'fanpage=${request.fanpage}');
 
-    var mimeType;
     Map<String, String> headers = {
       'Authorization': 'Bearer ${UserPreferences.instance.token}',
       'Content-Type': 'application/json',
@@ -134,17 +133,28 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
     final multipartRequest = http.MultipartRequest('POST', uri);
     multipartRequest.headers.addAll(headers);
 
-    if (logo != null ) {
-      mimeType = mime(logo.path).split('/');
-      final file = await http.MultipartFile.fromPath('file', logo.path, contentType: MediaType(mimeType[0], mimeType[1]));
-      multipartRequest.files.add(file);
+    if (request.images != null ) {
+      for (int i = 0; i < request.images.length; i++) {
+        Asset asset = request.images[i];
+        ByteData byteData = await asset.getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+
+        final multipartFile = http.MultipartFile.fromBytes(
+          'files[]',
+          imageData,
+          filename: 'name.jpg',
+          contentType: MediaType("image", "jpg"),
+        );
+
+        multipartRequest.files.add(multipartFile);
+      }
     }
 
     final streamResponse = await multipartRequest.send();
     final resp = await http.Response.fromStream(streamResponse);
 
     if (resp.statusCode != 200 && resp.statusCode != 201) {
-      return null;
+      throw ServerException();
     }
 
     return RegisterBusinessResponse.fromJson(json.decode(resp.body));
@@ -169,21 +179,61 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   }
 
   Future<RegisterServiceResponse> _registerServiceFromUrl(RegisterServiceRequest request, String url) async {
-    final response = await client.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer ${UserPreferences.instance.token}',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: json.encode(request.toJson())
-    );
+    final uri = Uri.parse(url 
+      + '?'
+      + 'service_id=${request.serviceId}&'
+      + 'price=${request.price}&'
+      + 'business_id=${request.businessId}');
 
-    if (response.statusCode == 200) {
-      return RegisterServiceResponse.fromJson(json.decode(response.body));
-    } else {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${UserPreferences.instance.token}',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final multipartRequest = http.MultipartRequest('POST', uri);
+    multipartRequest.headers.addAll(headers);
+
+    if (request.images != null ) {
+      for (int i = 0; i < request.images.length; i++) {
+        Asset asset = request.images[i];
+        ByteData byteData = await asset.getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+
+        final multipartFile = http.MultipartFile.fromBytes(
+          'files[]',
+          imageData,
+          filename: 'name.jpg',
+          contentType: MediaType("image", "jpg"),
+        );
+
+        multipartRequest.files.add(multipartFile);
+      }
+    }
+
+    final streamResponse = await multipartRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
       throw ServerException();
     }
+
+    return RegisterServiceResponse.fromJson(json.decode(resp.body));
+    // final response = await client.post(
+    //   url,
+    //   headers: {
+    //     'Authorization': 'Bearer ${UserPreferences.instance.token}',
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //   },
+    //   body: json.encode(request.toJson())
+    // );
+
+    // if (response.statusCode == 200) {
+    //   return RegisterServiceResponse.fromJson(json.decode(response.body));
+    // } else {
+    //   throw ServerException();
+    // }
   }
 
   Future<void> _updateBusinessStatusFromUrl(ProfessionalBusiness business, String url) async {

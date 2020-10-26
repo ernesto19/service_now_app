@@ -49,7 +49,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
             ),
             CustomHeader(),
             DraggableScrollableSheet(
-              initialChildSize: 0.30,
+              initialChildSize: 0.15,
               minChildSize: 0.15,
               builder: (BuildContext context, ScrollController scrollController) {
                 return Card(

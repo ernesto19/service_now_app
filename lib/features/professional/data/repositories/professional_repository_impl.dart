@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/network/network_info.dart';
@@ -54,9 +55,9 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   }
 
   @override
-  Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage) async {
+  Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage, List<Asset> images) async {
     return await _registerBusinessType(() {
-      var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage);
+      var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage, images: images);
       return remoteDataSource.registerBusiness(request);
     });
   }
@@ -69,9 +70,9 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   }
 
   @override
-  Future<Either<Failure, RegisterServiceResponse>> registerService(int businessId, int serviceId, double price) async {
+  Future<Either<Failure, RegisterServiceResponse>> registerService(int businessId, int serviceId, double price, List<Asset> images) async {
     return await _registerServiceType(() {
-      var request = RegisterServiceRequest(businessId: businessId, serviceId: serviceId, price: price);
+      var request = RegisterServiceRequest(businessId: businessId, serviceId: serviceId, price: price, images: images);
       return remoteDataSource.registerService(request);
     });
   }

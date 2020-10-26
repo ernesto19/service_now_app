@@ -153,7 +153,6 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
               ),
               onTap: () {
                 _category = lista[index];
-                print(lista[index].id);
                 _request();
               }
             );

@@ -1,3 +1,5 @@
+import 'package:multi_image_picker/multi_image_picker.dart';
+
 class RegisterBusinessRequest {
   final String name;
   final String description;
@@ -9,6 +11,7 @@ class RegisterBusinessRequest {
   final String longitude;
   final String address;
   final String fanpage;
+  final List<Asset> images;
 
-  RegisterBusinessRequest({ this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage });
+  RegisterBusinessRequest({ this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.images });
 }
