@@ -191,12 +191,10 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
 
   Widget _buildServicesSelect(List<Service> services) {
     List<Service> servicesList = List();
-    servicesList.addAll(services);
-    // List<Service> servicesList = List();
 
-    // if (_categorySelected != null) {
-    //   servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
-    // }
+    if (_categorySelected != null) {
+      servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
+    }
 
     return Container(
       child: Column(

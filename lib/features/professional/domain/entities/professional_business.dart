@@ -14,6 +14,7 @@ class ProfessionalBusiness extends Equatable {
   final String latitude;
   final String longitude;
   final int active;
+  final List<ProfessionalBusinessGallery> gallery;
 
   ProfessionalBusiness({
     @required this.id, 
@@ -27,7 +28,8 @@ class ProfessionalBusiness extends Equatable {
     @required this.logo,
     @required this.latitude,
     @required this.longitude,
-    @required this.active
+    @required this.active,
+    @required this.gallery
   });
 
   ProfessionalBusiness onActive() {
@@ -43,10 +45,21 @@ class ProfessionalBusiness extends Equatable {
       logo: this.logo, 
       latitude: this.latitude,
       longitude: this.longitude,
-      active: this.active == 1 ? 0 : 1
+      active: this.active == 1 ? 0 : 1,
+      gallery: this.gallery
     );
   }
 
   @override
-  List<Object> get props => [id, name, description, categoryId, categoryName, address, licenseNumber, fanpage, logo, latitude, longitude, active];
+  List<Object> get props => [id, name, description, categoryId, categoryName, address, licenseNumber, fanpage, logo, latitude, longitude, active, gallery];
+}
+
+class ProfessionalBusinessGallery {
+  int id;
+  String url;
+
+  ProfessionalBusinessGallery.fromJson(dynamic json) {
+    id  = json['id'];
+    url = 'https://archivosprestape.s3.amazonaws.com/' + json['url'];
+  }
 }

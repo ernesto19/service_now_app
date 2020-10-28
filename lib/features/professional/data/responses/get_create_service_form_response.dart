@@ -32,7 +32,7 @@ class CreateServiceForm {
       categories.add(category);
     }
 
-    for (var item in json['serivces']) {
+    for (var item in json['services']) {
       final service = ServiceModel.fromJson(item);
       services.add(service);
     }

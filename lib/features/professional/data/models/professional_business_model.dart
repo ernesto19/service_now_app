@@ -14,8 +14,9 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
     @required String logo,
     @required String latitude,
     @required String longitude,
-    @required int active
-  }) : super(id: id, name: name, description: description, categoryId: categoryId, categoryName: categoryName, address: address, licenseNumber: licenseNumber, fanpage: fanpage, logo: logo, latitude: latitude, longitude: longitude, active: active);
+    @required int active,
+    @required List<ProfessionalBusinessGallery> gallery
+  }) : super(id: id, name: name, description: description, categoryId: categoryId, categoryName: categoryName, address: address, licenseNumber: licenseNumber, fanpage: fanpage, logo: logo, latitude: latitude, longitude: longitude, active: active, gallery: gallery);
 
   factory ProfessionalBusinessModel.fromJson(Map<String, dynamic> json) {
     return ProfessionalBusinessModel(
@@ -30,7 +31,20 @@ class ProfessionalBusinessModel extends ProfessionalBusiness {
       logo:         json['logo']            ?? '',
       latitude:     json['lat'].toString()  ?? '',
       longitude:    json['lng'].toString()  ?? '',
-      active:       json['active']          ?? 0
+      active:       json['active']          ?? 0,
+      gallery:      ListProfessionalBusinessGallery.fromJson(json).galleries
     );
+  }
+}
+
+class ListProfessionalBusinessGallery {
+  List<ProfessionalBusinessGallery> galleries;
+
+  ListProfessionalBusinessGallery.fromJson(dynamic json) {
+    galleries = List();
+    for (var item in json['gallery']) {
+      final businessGallery = ProfessionalBusinessGallery.fromJson(item);
+      galleries.add(businessGallery);
+    }
   }
 }

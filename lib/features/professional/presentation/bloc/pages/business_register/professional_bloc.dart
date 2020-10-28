@@ -63,9 +63,11 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       final failureOrBusiness = await getBusinessByProfessional(NoParams());
       yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness);
     } else if (event is GetServicesForProfessional) {
-      this.state.copyWith(status: ProfessionalStatus.loadingServices, services: []);
-      final failureOrServices = await getServicesByProfessional(GetProfessionalServicesParams(professionalBusinessId: event.professionalBusinessId));
-      yield* _eitherLoadedServicesOrErrorState(failureOrServices);
+      if (this.state.status != ProfessionalStatus.readyServices) {
+        this.state.copyWith(status: ProfessionalStatus.loadingServices, services: []);
+        final failureOrServices = await getServicesByProfessional(GetProfessionalServicesParams(professionalBusinessId: event.professionalBusinessId));
+        yield* _eitherLoadedServicesOrErrorState(failureOrServices);
+      }
     } else if (event is GetIndustriesForProfessional) {
       if (this.state.formStatus != RegisterBusinessFormDataStatus.ready) {
         this.state.copyWith(formStatus: RegisterBusinessFormDataStatus.loading, formData: null);

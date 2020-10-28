@@ -20,46 +20,70 @@ class _ServicePickerState extends State<ServicePicker> {
           (BuildContext context, int index) {
             ProfessionalService service = state.services[index];
 
-            return GestureDetector(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 10, right: 15, left: 15),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(service.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10),
-                        Row(
+            return Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text('SERVICIO: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                          Text(service.name.toUpperCase(), style: TextStyle(fontSize: 16))
+                        ]
+                      ),
+                      Row(
+                        children: [
+                          Text('PRECIO: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                          Text('S/ ${service.price}', style: TextStyle(fontSize: 16))
+                        ]
+                      ),
+                      SizedBox(height: 10),
+                      service.gallery.length > 0 
+                      ? Container(
+                        height: 150,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: service.gallery.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(right: 10),
+                              height: 150,
+                              width: 150,
+                              child: Image.network(
+                                service.gallery[index].url, 
+                                fit: BoxFit.cover
+                              )
+                            );
+                          }
+                        )
+                      ) 
+                      : Container(
+                        height: 150,
+                        width: 150,
+                        color: Colors.black26,
+                        child: Column(
                           children: [
-                            Icon(Icons.web, size: 20),
-                            SizedBox(width: 5),
-                            Text('Precio:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                            SizedBox(width: 10),
-                            Text('S/ ', style: TextStyle(fontSize: 13)),
-                            Text(service.price, style: TextStyle(fontSize: 15, fontFamily: 'sans'))
+                            Expanded(
+                              child: Center(
+                                child: Icon(Icons.image, size: 60),
+                              ),
+                            ),
+                            Text('No image')
                           ]
                         )
-                      ]
-                    )
+                      )
+                    ]
                   )
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                      offset: Offset(2, 2)
-                    )
-                  ]
-                )
-              ),
-              onTap: () {}
+                SizedBox(height: 20),
+                Divider(
+                  color: Colors.black45,
+                  height: 1
+                ),
+                SizedBox(height: 20)
+              ],
             );
           },
           childCount: state.services.length
