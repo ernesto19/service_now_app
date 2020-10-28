@@ -49,8 +49,10 @@ class BusinessPhotosPage extends StatelessWidget {
                                       margin: EdgeInsets.only(right: 10),
                                       height: 200,
                                       width: 200,
-                                      child: Image.network(
-                                        gallery.photos[index], 
+                                      child: FadeInImage(
+                                        image: NetworkImage(gallery.photos[index] ?? ''),
+                                        placeholder: AssetImage('assets/images/loader.gif'),
+                                        fadeInDuration: Duration(milliseconds: 200),
                                         fit: BoxFit.cover
                                       )
                                     );

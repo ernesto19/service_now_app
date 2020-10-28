@@ -51,8 +51,10 @@ class _ServicePickerState extends State<ServicePicker> {
                               margin: EdgeInsets.only(right: 10),
                               height: 150,
                               width: 150,
-                              child: Image.network(
-                                service.gallery[index].url, 
+                              child: FadeInImage(
+                                image: NetworkImage(service.gallery[index].url ?? ''),
+                                placeholder: AssetImage('assets/images/loader.gif'),
+                                fadeInDuration: Duration(milliseconds: 200),
                                 fit: BoxFit.cover
                               )
                             );
@@ -62,15 +64,16 @@ class _ServicePickerState extends State<ServicePicker> {
                       : Container(
                         height: 150,
                         width: 150,
-                        color: Colors.black26,
+                        color: Colors.black12,
                         child: Column(
                           children: [
                             Expanded(
                               child: Center(
-                                child: Icon(Icons.image, size: 60),
+                                child: Icon(Icons.image, size: 60, color: Colors.black38),
                               ),
                             ),
-                            Text('No image')
+                            Text('No image'),
+                            SizedBox(height: 10)
                           ]
                         )
                       )
@@ -79,7 +82,7 @@ class _ServicePickerState extends State<ServicePicker> {
                 ),
                 SizedBox(height: 20),
                 Divider(
-                  color: Colors.black45,
+                  color: Colors.black26,
                   height: 1
                 ),
                 SizedBox(height: 20)

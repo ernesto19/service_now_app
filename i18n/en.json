@@ -32,6 +32,7 @@
     "my_services_title": "Services",
     "add_service_label": "Add service",
     "register_business_title": "Register business",
+    "update_business_title": "Update business",
     "register_service_title": "Register service",
     "business_name_label": "Name",
     "business_description_label": "Description",
@@ -52,6 +53,7 @@
     "business_category_placeholder": "Select an category",
     "business_service_placeholder": "Select an service",
     "register_button_text": "Register",
+    "update_button_text": "Update",
     "register_message": "Registering ...",
     "confirm_address_button_text": "Confirm address"
 }

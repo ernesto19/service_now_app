@@ -47,8 +47,10 @@ class BusinessList extends StatelessWidget {
                                 margin: EdgeInsets.only(right: 10),
                                 height: 200,
                                 width: 200,
-                                child: Image.network(
-                                  business.gallery[index].url, 
+                                child: FadeInImage(
+                                  image: NetworkImage(business.gallery[index].url ?? ''),
+                                  placeholder: AssetImage('assets/images/loader.gif'),
+                                  fadeInDuration: Duration(milliseconds: 200),
                                   fit: BoxFit.cover
                                 )
                               );

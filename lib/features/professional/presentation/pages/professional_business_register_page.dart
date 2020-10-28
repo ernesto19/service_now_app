@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
+import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/address_page.dart';
 import 'package:service_now/injection_container.dart';
@@ -15,6 +16,9 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ProfessionalBusinessRegisterPage extends StatefulWidget {
   static final routeName = 'professional_business_register_page';
+  final ProfessionalBusiness business;
+
+  const ProfessionalBusinessRegisterPage({ @required this.business });
 
   @override
   _ProfessionalBusinessRegisterPageState createState() => _ProfessionalBusinessRegisterPageState();
@@ -33,10 +37,23 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   List<Asset> images = List<Asset>();
 
   @override
+  void initState() {
+    if (widget.business != null) {
+      _nameController.text          = widget.business.name;
+      _descriptionController.text   = widget.business.description;
+      _licenseNumberController.text = widget.business.licenseNumber;
+      _addressController            = widget.business.address;
+      _fanpageController.text       = widget.business.fanpage;
+      _addressColor                 = Colors.black;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(allTranslations.traslate('register_business_title'), style: labelTitleForm),
+        title: Text(widget.business == null ? allTranslations.traslate('register_business_title') : allTranslations.traslate('update_business_title'), style: labelTitleForm),
         backgroundColor: primaryColor,
         actions: [
           IconButton(
@@ -167,6 +184,16 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     );
   }
 
+  Widget _buildFanpage() {
+    return InputFormField(
+      hint: allTranslations.traslate('business_fanpage_placeholder'),
+      label: allTranslations.traslate('business_fanpage_label'),
+      inputType: TextInputType.text,
+      controller: _fanpageController,
+      maxLength: 100
+    );
+  }
+
   Widget _buildAddress() {
     return Container(
       child: Column(
@@ -206,22 +233,12 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     );
   }
 
-  Widget _buildFanpage() {
-    return InputFormField(
-      hint: allTranslations.traslate('business_fanpage_placeholder'),
-      label: allTranslations.traslate('business_fanpage_label'),
-      inputType: TextInputType.text,
-      controller: _fanpageController,
-      maxLength: 100
-    );
-  }
-
   Widget _buildSaveButton(ProfessionalBloc bloc) {
     return RoundedButton(
-      label: allTranslations.traslate('register_button_text'),
+      label: widget.business == null ? allTranslations.traslate('register_button_text') : allTranslations.traslate('update_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context))
+      onPressed: widget.business == null ? () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context)) : null
     );
   }
 

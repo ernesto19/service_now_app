@@ -23,8 +23,7 @@ class _ProfessionalBusinessDetailPageState extends State<ProfessionalBusinessDet
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildBody(context),
-      // bottomNavigationBar: BusinessDetailBottomBar(businessId: widget.business.id)
+      body: buildBody(context)
     );
   }
 
@@ -38,13 +37,14 @@ class _ProfessionalBusinessDetailPageState extends State<ProfessionalBusinessDet
             return <Widget>[
               SliverAppBar(
                 backgroundColor: primaryColor,
-                title: Text(widget.business.name)
+                title: Text(widget.business.name),
               ),
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
                   TabBar(
-                    labelColor: Colors.black87,
-                    unselectedLabelColor: Colors.grey,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white70,
+                    indicatorColor: secondaryDarkColor,
                     tabs: [
                       Tab(text: allTranslations.traslate('information_tab_title')),
                       Tab(text: allTranslations.traslate('services_tab_title'))
@@ -79,6 +79,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      color: primaryColor,
       child: _tabBar
     );
   }

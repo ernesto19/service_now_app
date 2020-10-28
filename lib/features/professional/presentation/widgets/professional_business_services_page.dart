@@ -30,7 +30,22 @@ class ProfessionalBusinessServicesPage extends StatelessWidget {
                 String text = '';
 
                 if (state.status == ProfessionalStatus.readyServices) {
-                  return ServicePicker();
+                  if (state.services.length > 0) {
+                    return ServicePicker();
+                  } else {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 50),
+                            Icon(Icons.mood_bad, size: 60, color: Colors.black38),
+                            SizedBox(height: 10),
+                            Text('Aún no tiene servicios registrados'),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                 } else if (state.status == ProfessionalStatus.error) {
                   text = 'Error';
                 } else {

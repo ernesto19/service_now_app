@@ -27,7 +27,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: secondaryDarkColor,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage()))
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: null)))
       )
     );
   }
