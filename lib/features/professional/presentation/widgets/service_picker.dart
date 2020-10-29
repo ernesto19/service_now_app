@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
+import 'package:service_now/utils/colors.dart';
 
 class ServicePicker extends StatefulWidget {
 
@@ -23,20 +24,49 @@ class _ServicePickerState extends State<ServicePicker> {
             return Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(left: 20, right: 10),
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  margin: EdgeInsets.only(bottom: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Text('SERVICIO: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                          Text(service.name.toUpperCase(), style: TextStyle(fontSize: 16))
-                        ]
-                      ),
-                      Row(
-                        children: [
-                          Text('PRECIO: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                          Text('S/ ${service.price}', style: TextStyle(fontSize: 16))
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Row(
+                                    children: [
+                                      Text('Servicio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      Text(service.name.toUpperCase(), style: TextStyle(fontSize: 16))
+                                    ]
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text('Precio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      Text('S/ ', style: TextStyle(fontSize: 13)),
+                                      Text(service.price, style: TextStyle(fontSize: 16))
+                                    ]
+                                  ),
+                                )
+                              ]
+                            )
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FloatingActionButton(
+                              backgroundColor: secondaryColor,
+                              child: Icon(Icons.edit, size: 20),
+                              mini: true,
+                              onPressed: () => {}
+                            ),
+                          )
                         ]
                       ),
                       SizedBox(height: 10),
@@ -79,18 +109,12 @@ class _ServicePickerState extends State<ServicePicker> {
                       )
                     ]
                   )
-                ),
-                SizedBox(height: 20),
-                Divider(
-                  color: Colors.black26,
-                  height: 1
-                ),
-                SizedBox(height: 20)
-              ],
+                )
+              ]
             );
           },
           childCount: state.services.length
-        ),
+        )
       );
     });
   }

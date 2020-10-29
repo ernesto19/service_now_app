@@ -16,6 +16,7 @@ import 'package:service_now/features/appointment/presentation/bloc/appointment_e
 import 'package:service_now/features/appointment/presentation/bloc/appointment_state.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
+import 'package:service_now/features/appointment/presentation/pages/business_detail_page.dart';
 import 'package:service_now/utils/extras_image.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
@@ -92,7 +93,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
         if (state.status == BusinessStatus.mapMount) {
           for (var trade in business) {
-            final info = InfoWindow(title: trade.name, snippet: trade.distance.toStringAsFixed(4) + ' km');
+            final info = InfoWindow(title: trade.name);
             final customIcon = BitmapDescriptor.fromBytes(trade.active == 1 ? activeIcon : inactiveIcon);
             final markerId = MarkerId(trade.id.toString());
             final marker = Marker(
@@ -101,25 +102,42 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
               icon: customIcon, 
               anchor: Offset(0.5, 1),
               infoWindow: info,
-              // onTap: () {
-              //   showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return Container(
-              //         child: AlertDialog(
-              //           title: Text(trade.name, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
-              //           content: Text(trade.distance.toString(), style: TextStyle(fontSize: 16.0),),
-              //           actions: <Widget>[
-              //             FlatButton(
-              //               child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
-              //               onPressed: () => Navigator.pop(context)
-              //             )
-              //           ]
-              //         )
-              //       );
-              //     }
-              //   );
-              // }
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      child: AlertDialog(
+                        title: Text(trade.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Descripción', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                            Text(trade.description + trade.description + trade.description + trade.description, style: TextStyle(fontSize: 13)),
+                            SizedBox(height: 8),
+                            Text('Distancia', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                            Text(trade.distance.toStringAsFixed(3) + ' km.', style: TextStyle(fontSize: 13)),
+                            SizedBox(height: 8),
+                            Text('Estado', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                            Text(trade.active == 1 ? 'Activo' : 'Inactivo', style: TextStyle(fontSize: 13)),
+                          ]
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('CANCELAR', style: TextStyle(fontSize: 14.0)),
+                            onPressed: () => Navigator.pop(context)
+                          ),
+                          FlatButton(
+                            child: Text('DETALLE', style: TextStyle(fontSize: 14.0)),
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)))
+                          )
+                        ]
+                      )
+                    );
+                  }
+                );
+              }
             );
 
             markers[markerId] = marker;

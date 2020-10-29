@@ -16,11 +16,9 @@ class ProfessionalBusinessServicesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.grey[100],
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(height: 20),
-            ),
             BlocBuilder<ProfessionalBloc, ProfessionalState>(
               builder: (context, state) {
                 // ignore: close_sinks
