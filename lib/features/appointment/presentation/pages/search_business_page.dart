@@ -47,7 +47,6 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
                 }
               }
             ),
-            CustomHeader(),
             DraggableScrollableSheet(
               initialChildSize: 0.15,
               minChildSize: 0.15,

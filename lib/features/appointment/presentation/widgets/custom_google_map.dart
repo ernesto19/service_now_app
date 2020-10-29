@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 
+import 'custom_search.dart';
+
 class CustomGoogleMap extends StatelessWidget {
   const CustomGoogleMap({ @required CameraPosition initialPosition }) : _initialPosition = initialPosition;
 
@@ -44,6 +46,9 @@ class CustomGoogleMap extends StatelessWidget {
                     bloc.goToMyPosition();
                   }
                 )
+              ),
+              Container(
+                child: CustomSearch()
               )
             ]
           )

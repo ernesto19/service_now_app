@@ -25,49 +25,62 @@ class BusinessPhotosPage extends StatelessWidget {
             if (state.status == BusinessStatus.readyGallery) {
               List<Gallery> galleries = state.galleries;
 
-              return CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        Gallery gallery = galleries[index];
+              if (galleries.length > 0) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          Gallery gallery = galleries[index];
 
-                        return Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(gallery.name),
-                              SizedBox(height: 10),
-                              Container(
-                                height: 200.0,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: gallery.photos.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      height: 200,
-                                      width: 200,
-                                      child: FadeInImage(
-                                        image: NetworkImage(gallery.photos[index] ?? ''),
-                                        placeholder: AssetImage('assets/images/loader.gif'),
-                                        fadeInDuration: Duration(milliseconds: 200),
-                                        fit: BoxFit.cover
-                                      )
-                                    );
-                                  }
+                          return Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(gallery.name),
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 200.0,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: gallery.photos.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 200,
+                                        width: 200,
+                                        child: FadeInImage(
+                                          image: NetworkImage(gallery.photos[index] ?? ''),
+                                          placeholder: AssetImage('assets/images/loader.gif'),
+                                          fadeInDuration: Duration(milliseconds: 200),
+                                          fit: BoxFit.cover
+                                        )
+                                      );
+                                    }
+                                  )
                                 )
-                              )
-                            ]
-                          )
-                        );
-                      },
-                      childCount: galleries.length
+                              ]
+                            )
+                          );
+                        },
+                        childCount: galleries.length
+                      )
                     )
-                  )
-                ],
-              );
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 50),
+                      Icon(Icons.mood_bad, size: 60, color: Colors.black38),
+                      SizedBox(height: 10),
+                      Text('No hay información disponible para mostrar'),
+                    ],
+                  ),
+                );
+              }
             }
 
             return Center(

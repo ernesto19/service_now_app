@@ -13,8 +13,10 @@ class AppointmentState extends Equatable {
   final List<Comment> comments;
   final Map<MarkerId, Marker> markers;
   final BusinessStatus status;
+  final Map<String, Business> history;
+  final Business trade;
 
-  AppointmentState({ this.myLocation, this.business, this.galleries, this.comments, this.markers, this.status });
+  AppointmentState({ this.myLocation, this.business, this.galleries, this.comments, this.markers, this.status, this.history, this.trade });
 
   static AppointmentState get initialState => AppointmentState(
     myLocation: null,
@@ -22,7 +24,9 @@ class AppointmentState extends Equatable {
     galleries: const[],
     comments: const[],
     markers: Map(),
-    status: BusinessStatus.loading
+    status: BusinessStatus.loading,
+    history: Map(),
+    trade: null
   );
 
   AppointmentState copyWith({ 
@@ -31,7 +35,9 @@ class AppointmentState extends Equatable {
     List<Gallery> galleries,
     List<Comment> comments,
     Map<MarkerId, Marker> markers,
-    BusinessStatus status
+    Map<String, Business> history,
+    BusinessStatus status,
+    Business trade
   }) {
     return AppointmentState(
       myLocation: myLocation ?? this.myLocation,
@@ -39,10 +45,12 @@ class AppointmentState extends Equatable {
       galleries: galleries ?? this.galleries,
       comments: comments ?? this.comments,
       markers: markers ?? this.markers,
-      status: status ?? this.status
+      history: history ?? this.history,
+      status: status ?? this.status,
+      trade: trade ?? this.trade
     );
   }
 
   @override
-  List<Object> get props => [myLocation, business, galleries, comments, markers, status];
+  List<Object> get props => [myLocation, business, galleries, comments, markers, history, status, trade];
 }

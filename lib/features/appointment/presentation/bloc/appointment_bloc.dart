@@ -76,6 +76,33 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     } else if (event is GetCommentsForUser) {
       final failureOrComments = await getCommentsByBusiness(GetCommentsParams(businessId: event.businessId));
       yield* _eitherLoadedCommentsOrErrorState(failureOrComments);
+    } else if (event is GoToPlace) {
+      final history = Map<String, Business>.from(this.state.history);
+      final MarkerId markerId = MarkerId('place');
+
+      final Uint8List bytes = await loadAsset('assets/icons/marker_active.png', width: 130, height: 130);
+      final customIcon = BitmapDescriptor.fromBytes(bytes);
+
+      final info = InfoWindow(title: event.trade.name);
+
+      final Marker marker = Marker(
+        markerId: markerId, 
+        position: LatLng(double.parse(event.trade.latitude), double.parse(event.trade.longitude)),
+        icon: customIcon, 
+        anchor: Offset(0.5, 1), 
+        infoWindow: info,
+        onTap: () => this._showMarkerDialog(event.trade, event.context)
+      );
+
+      final markers = Map<MarkerId, Marker>.from(this.state.markers);
+      markers[markerId] = marker;
+
+      if (history[event.trade.id.toString()] == null) {
+        history[event.trade.id.toString()] = event.trade;
+        yield this.state.copyWith(history: history, markers: markers, trade: event.trade);
+      } else {
+        yield this.state.copyWith(markers: markers, trade: event.trade);
+      }
     }
   }
 
@@ -102,42 +129,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
               icon: customIcon, 
               anchor: Offset(0.5, 1),
               infoWindow: info,
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      child: AlertDialog(
-                        title: Text(trade.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Descripción', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                            Text(trade.description + trade.description + trade.description + trade.description, style: TextStyle(fontSize: 13)),
-                            SizedBox(height: 8),
-                            Text('Distancia', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                            Text(trade.distance.toStringAsFixed(3) + ' km.', style: TextStyle(fontSize: 13)),
-                            SizedBox(height: 8),
-                            Text('Estado', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                            Text(trade.active == 1 ? 'Activo' : 'Inactivo', style: TextStyle(fontSize: 13)),
-                          ]
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('CANCELAR', style: TextStyle(fontSize: 14.0)),
-                            onPressed: () => Navigator.pop(context)
-                          ),
-                          FlatButton(
-                            child: Text('DETALLE', style: TextStyle(fontSize: 14.0)),
-                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)))
-                          )
-                        ]
-                      )
-                    );
-                  }
-                );
-              }
+              onTap: () => this._showMarkerDialog(trade, context)
             );
 
             markers[markerId] = marker;
@@ -182,12 +174,55 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     }
   }
 
+  goToPlace(Business trade, BuildContext context) async {
+    add(GoToPlace(trade, context));
+    final CameraUpdate cameraUpdate = CameraUpdate.newLatLng(LatLng(double.parse(trade.latitude), double.parse(trade.longitude)));
+    await (await _mapController).animateCamera(cameraUpdate);
+  }
+
   void setMapController(GoogleMapController controller) {
     if (_completer.isCompleted) {
       _completer = Completer();
     }
 
     _completer.complete(controller);
+  }
+
+  void _showMarkerDialog(Business trade, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            title: Text(trade.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Descripción', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text(trade.description, style: TextStyle(fontSize: 13)),
+                SizedBox(height: 8),
+                Text('Distancia', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text(trade.distance.toStringAsFixed(3) + ' km.', style: TextStyle(fontSize: 13)),
+                SizedBox(height: 8),
+                Text('Estado', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text(trade.active == 1 ? 'Activo' : 'Inactivo', style: TextStyle(fontSize: 13)),
+              ]
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCELAR', style: TextStyle(fontSize: 14.0)),
+                onPressed: () => Navigator.pop(context)
+              ),
+              FlatButton(
+                child: Text('DETALLE', style: TextStyle(fontSize: 14.0)),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)))
+              )
+            ]
+          )
+        );
+      }
+    );
   }
 
   static AppointmentBloc of(BuildContext context) {
