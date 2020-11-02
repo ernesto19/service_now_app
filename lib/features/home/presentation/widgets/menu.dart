@@ -28,15 +28,15 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<MenuBloc>(),
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocBuilder<MenuBloc, MenuState>(
-            builder: (context, state) {
-              // ignore: close_sinks
-              final bloc = MenuBloc.of(context);
+      child: BlocBuilder<MenuBloc, MenuState>(
+        builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = MenuBloc.of(context);
 
-              if (state.status == MenuStatus.ready) {
-                Container(
+          if (state.status == MenuStatus.ready) {
+            return Scaffold(
+              body: SafeArea(
+                child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class _MenuState extends State<Menu> {
                           }
                         )
                       ),
-                      Container(
+                      UserPreferences.instance.rol == 3 ? Container(
                         padding: EdgeInsets.all(10),
                         child: RoundedButton(
                           onPressed: () => Navigator.pushNamed(context, PaymentGatewayPage.routeName), 
@@ -80,18 +80,20 @@ class _MenuState extends State<Menu> {
                             child: Icon(Icons.person_add, color: Colors.white, size: 18)
                           )
                         )
-                      )
+                      ) : Container()
                     ]
                   )
-                );
-              }
+                )
+              )
+            );
+          }
 
-              return Center(
-                child: Text('Cargando ...'),
-              );
-            }
-          )
-        )
+          return Scaffold(
+            body: Center(
+              child: Text('Cargando ...'),
+            ),
+          );
+        }
       )
     );
   }

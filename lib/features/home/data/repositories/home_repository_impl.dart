@@ -52,8 +52,8 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<Permission>>> getPermissions() async {
     try {
-      var create = await localDataSource.getAllPermissions();
-      return Right(create);
+      var permissions = await localDataSource.getAllPermissions();
+      return Right(permissions);
     } on LocalException {
       return Left(LocalFailure());
     }
@@ -99,6 +99,8 @@ class HomeRepositoryImpl implements HomeRepository {
         final response = await _acquireMembershipType();
         if (response.data != null) {
           if (response.data.rol != null) {
+            UserPreferences.instance.rol = response.data.rol.id;
+
             if (response.data.rol.permissions != null) {
               localDataSource.createPermissions(response.data.rol.permissions);
             }

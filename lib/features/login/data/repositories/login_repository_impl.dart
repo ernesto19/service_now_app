@@ -10,6 +10,7 @@ import 'package:service_now/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
 import 'package:meta/meta.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 
 typedef Future<LoginResponse> _LoginType();
 typedef Future<SignUpResponse> _SignUpType();
@@ -54,6 +55,8 @@ class LoginRepositoryImpl implements LoginRepository {
         final login = await loginType();
         if (login.data != null) {
           if (login.data.rol != null) {
+            UserPreferences.instance.rol = login.data.rol.id;
+
             if (login.data.rol.permissions != null) {
               localDataSource.createPermissions(login.data.rol.permissions);
             }

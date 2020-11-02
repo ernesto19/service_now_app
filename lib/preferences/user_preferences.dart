@@ -75,4 +75,12 @@ class UserPreferences {
   set fcmToken(String value) {
     _preferences.setString('fcmToken', value);
   }
+
+  get rol {
+    return _preferences.getInt('rol' ?? '');
+  }
+
+  set rol(int value) {
+    _preferences.setInt('rol', value);
+  }
 }
