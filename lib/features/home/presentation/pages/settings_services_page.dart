@@ -29,19 +29,19 @@ class _SettingsCategoriesState extends State<SettingsCategories> {
     );
   }
 
-  BlocProvider<CategoryBloc> buildBody(BuildContext context) {
+  BlocProvider<HomeBloc> buildBody(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<CategoryBloc>(),
+      create: (_) => sl<HomeBloc>(),
       child: Container(
         child: Stack(
           children: <Widget>[
             Container(
               child: CustomScrollView(
                 slivers: [
-                  BlocBuilder<CategoryBloc, CategoryState>(
+                  BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       // ignore: close_sinks
-                      final bloc = CategoryBloc.of(context);
+                      final bloc = HomeBloc.of(context);
 
                       return SliverList(
                         delegate: SliverChildBuilderDelegate(

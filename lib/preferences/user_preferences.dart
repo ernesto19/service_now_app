@@ -67,4 +67,12 @@ class UserPreferences {
   set firstUseApp(int value) {
     _preferences.setInt('firstUseApp', value);
   }
+
+  get fcmToken {
+    return _preferences.getString('fcmToken' ?? '');
+  }
+
+  set fcmToken(String value) {
+    _preferences.setString('fcmToken', value);
+  }
 }

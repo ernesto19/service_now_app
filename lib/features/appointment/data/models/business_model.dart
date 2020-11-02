@@ -11,8 +11,9 @@ class BusinessModel extends Business {
     @required String rating, 
     @required double distance,
     @required int active,
+    @required String address,
     @required List<BusinessGallery> gallery
-  }) : super(id: id, name: name, description: description, latitude: latitude, longitude: longitude, rating: rating, distance: distance, active: active, gallery: gallery);
+  }) : super(id: id, name: name, description: description, latitude: latitude, longitude: longitude, rating: rating, distance: distance, active: active, address: address, gallery: gallery);
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
     return BusinessModel(
@@ -24,6 +25,7 @@ class BusinessModel extends Business {
       rating:       json['rating'],
       distance:     json['distance'],
       active:       json['active'],
+      address:      json['address'] ?? '',
       gallery:      ListBusinessGallery.fromJson(json).galleries
     );
   }

@@ -48,9 +48,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BlocProvider<CategoryBloc> buildBody(BuildContext context) {
+  BlocProvider<HomeBloc> buildBody(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<CategoryBloc>(),
+      create: (_) => sl<HomeBloc>(),
       child: Container(
         child: Stack(
           children: <Widget>[
@@ -61,15 +61,15 @@ class _HomePageState extends State<HomePage> {
                     name: _iniciales,
                     drawerKey: this._drawerKey
                   ),
-                  BlocBuilder<CategoryBloc, CategoryState>(
+                  BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       String text = '';
 
-                      if (state.status == CategoryStatus.ready) {
+                      if (state.status == HomeStatus.ready) {
                         return CategoryPicker();
-                      } else if (state.status == CategoryStatus.checking) {
+                      } else if (state.status == HomeStatus.checking) {
                         text = allTranslations.traslate('loading_message');
-                      } else if (state.status == CategoryStatus.selecting) {
+                      } else if (state.status == HomeStatus.selecting) {
                         return SettingsCategories();
                       } else {
                         text = 'Error';

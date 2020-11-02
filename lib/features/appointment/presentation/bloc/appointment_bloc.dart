@@ -216,7 +216,10 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
               ),
               FlatButton(
                 child: Text('DETALLE', style: TextStyle(fontSize: 14.0)),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)))
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)));
+                }
               )
             ]
           )

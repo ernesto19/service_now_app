@@ -1,74 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/menu/menu_state.dart';
+import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
+import 'package:service_now/injection_container.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 
-class Menu extends StatelessWidget {
+class Menu extends StatefulWidget {
+  @override
+  _MenuState createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<OptionMenu> options = List();
-    options.add(OptionMenu(id: 1, title: allTranslations.traslate('menu_profile'), icon: 'assets/icons/profile.svg'));
-    options.add(OptionMenu(id: 2, title: allTranslations.traslate('menu_services'), icon: 'assets/icons/services.svg'));
-    options.add(OptionMenu(id: 3, title: allTranslations.traslate('menu_terms'), icon: 'assets/icons/terms.svg'));
-    options.add(OptionMenu(id: 4, title: allTranslations.traslate('menu_support'), icon: 'assets/icons/support.svg'));
-    options.add(OptionMenu(id: 5, title: allTranslations.traslate('menu_business'), icon: 'assets/icons/work.svg'));
-    options.add(OptionMenu(id: 10, title: allTranslations.traslate('log_out'), icon: 'assets/icons/log_out.svg'));
+    // List<OptionMenu> options = List();
+    // options.add(OptionMenu(id: 1, title: allTranslations.traslate('menu_profile'), icon: 'assets/icons/profile.svg'));
+    // options.add(OptionMenu(id: 2, title: allTranslations.traslate('menu_services'), icon: 'assets/icons/services.svg'));
+    // options.add(OptionMenu(id: 3, title: allTranslations.traslate('menu_terms'), icon: 'assets/icons/terms.svg'));
+    // options.add(OptionMenu(id: 4, title: allTranslations.traslate('menu_support'), icon: 'assets/icons/support.svg'));
+    // options.add(OptionMenu(id: 5, title: allTranslations.traslate('menu_business'), icon: 'assets/icons/work.svg'));
+    // options.add(OptionMenu(id: 10, title: allTranslations.traslate('log_out'), icon: 'assets/icons/log_out.svg'));
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${UserPreferences.instance.firstName ?? ''} ${UserPreferences.instance.lastName ?? ''}', style: TextStyle(fontSize: 18)),
-                    Text(UserPreferences.instance.email ?? '')
-                  ]
-                )
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: options.length,
-                  itemBuilder: (_, index) {
-                    return ListTile(
-                      leading: SvgPicture.asset(
-                        options[index].icon,
-                        height: 23
+    return BlocProvider(
+      create: (_) => sl<MenuBloc>(),
+      child: BlocBuilder<MenuBloc, MenuState>(
+        builder: (context, state) {
+          if (state.status == MenuStatus.ready) {
+            return Scaffold(
+              body: SafeArea(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${UserPreferences.instance.firstName ?? ''} ${UserPreferences.instance.lastName ?? ''}', style: TextStyle(fontSize: 18)),
+                            Text(UserPreferences.instance.email ?? '')
+                          ]
+                        )
                       ),
-                      title: Text(options[index].title),
-                      onTap: () => _onTap(options[index].id, context)
-                    );
-                  }
-                )
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: RoundedButton(
-                  onPressed: () {}, 
-                  label: allTranslations.traslate('acquire_membership'),
-                  backgroundColor: secondaryDarkColor,
-                  width: double.infinity,
-                  fontSize: 14,
-                  icon: Container(
-                    padding: EdgeInsets.only(right: 8),
-                    child: Icon(Icons.person_add, color: Colors.white, size: 18)
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: state.permissions.length,
+                          itemBuilder: (_, index) {
+                            return ListTile(
+                              leading: SvgPicture.asset(
+                                state.permissions[index].icon,
+                                height: 23
+                              ),
+                              title: Text(allTranslations.traslate(state.permissions[index].translateName)),
+                              onTap: () => _onTap(state.permissions[index].id, context)
+                            );
+                          }
+                        )
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: RoundedButton(
+                          onPressed: () => Navigator.pushNamed(context, PaymentGatewayPage.routeName), 
+                          label: allTranslations.traslate('acquire_membership'),
+                          backgroundColor: secondaryDarkColor,
+                          width: double.infinity,
+                          fontSize: 14,
+                          icon: Container(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Icon(Icons.person_add, color: Colors.white, size: 18)
+                          )
+                        )
+                      )
+                    ]
                   )
                 )
               )
-            ]
-          )
-        )
+            );
+          }
+
+          return Center(
+            child: Text('Cargando ...'),
+          );
+        }
       )
     );
   }

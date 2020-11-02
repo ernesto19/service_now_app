@@ -2,24 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 
-enum CategoryStatus { checking, loading, selecting, downloading, ready, error }
+enum HomeStatus { checking, loading, selecting, downloading, ready, error }
 
-class CategoryState extends Equatable {
+class HomeState extends Equatable {
   final List<Category> categories;
-  final CategoryStatus status;
+  final HomeStatus status;
 
-  CategoryState({ @required this.categories, @required this.status });
+  HomeState({ @required this.categories, @required this.status });
 
-  static CategoryState get inititalState => CategoryState(
-    status: CategoryStatus.checking,
+  static HomeState get inititalState => HomeState(
+    status: HomeStatus.checking,
     categories: const []
   );
 
-  CategoryState copyWith({
+  HomeState copyWith({
     List<Category> categories,
-    CategoryStatus status,
+    HomeStatus status,
   }) {
-    return CategoryState(
+    return HomeState(
       categories: categories ?? this.categories,
       status: status ?? this.status
     );

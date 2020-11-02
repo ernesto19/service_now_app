@@ -7,11 +7,14 @@ import 'package:service_now/features/appointment/domain/repositories/appointment
 import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_comments_by_business.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_galleries_by_business.dart';
-import 'package:service_now/features/home/data/datasources/category_remote_data_source.dart';
-import 'package:service_now/features/home/data/repositories/category_repository_impl.dart';
-import 'package:service_now/features/home/domain/repositories/category_repository.dart';
+import 'package:service_now/features/home/data/datasources/home_remote_data_source.dart';
+import 'package:service_now/features/home/data/repositories/home_repository_impl.dart';
+import 'package:service_now/features/home/domain/repositories/home_repository.dart';
+import 'package:service_now/features/home/domain/usecases/get_permissions_by_user.dart';
 import 'package:service_now/features/home/domain/usecases/update_local_category.dart';
 import 'package:service_now/features/home/presentation/bloc/bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/membership/bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
 import 'package:service_now/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:service_now/features/login/data/repositories/login_repository_impl.dart';
 import 'package:service_now/features/login/domain/repositories/login_repository.dart';
@@ -28,7 +31,8 @@ import 'package:service_now/features/professional/presentation/bloc/pages/busine
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'features/appointment/presentation/bloc/bloc.dart';
-import 'features/home/data/datasources/category_local_data_source.dart';
+import 'features/home/data/datasources/home_local_data_source.dart';
+import 'features/home/domain/usecases/acquire_membership_by_user.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
 import 'features/login/domain/usecases/authentication.dart';
 import 'features/login/domain/usecases/authentication_by_facebook.dart';
@@ -43,9 +47,21 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // [ Blocs ]
   sl.registerFactory(
-    () => CategoryBloc(
+    () => HomeBloc(
       categories: sl(),
       updateCategory: sl()
+    )
+  );
+
+  sl.registerFactory(
+    () => MembershipBloc(
+      acquireMembership: sl()
+    )
+  );
+  
+  sl.registerFactory(
+    () => MenuBloc(
+      permissions: sl()
     )
   );
 
@@ -86,6 +102,8 @@ Future<void> init() async {
   // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
+  sl.registerLazySingleton(() => AcquireMembershipByUser(sl()));
+  sl.registerLazySingleton(() => GetPermissionsByUser(sl()));
 
   sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
   sl.registerLazySingleton(() => GetGalleriesByBusiness(sl()));
@@ -104,8 +122,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateBusinessByProfessional(sl()));
 
   // [ Repository ]
-  sl.registerLazySingleton<CategoryRepository>(
-    () => CategoryRepositoryImpl(
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(
       networkInfo: sl(), 
       remoteDataSource: sl(), 
       localDataSource: sl()
@@ -134,12 +152,12 @@ Future<void> init() async {
   );
 
   // [ Data sources ]
-  sl.registerLazySingleton<CategoryRemoteDataSource>(
+  sl.registerLazySingleton<HomeRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(client: sl())
   );
 
-  sl.registerLazySingleton<CategoryLocalDataSource>(
-    () => CategoryLocalDataSourceImpl(sharedPreferences: sl())
+  sl.registerLazySingleton<HomeLocalDataSource>(
+    () => HomeLocalDataSourceImpl(sharedPreferences: sl())
   );
 
   sl.registerLazySingleton<AppointmentRemoteDataSource>(

@@ -69,9 +69,9 @@ class _CategoryPickerState extends State<CategoryPicker> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoryBloc, CategoryState> (builder: (_, state) {
+    return BlocBuilder<HomeBloc, HomeState> (builder: (_, state) {
       List<Category> lista = List();
-      if (state.status == CategoryStatus.ready) {
+      if (state.status == HomeStatus.ready) {
         lista = state.categories.where((element) => element.favorite == 1).toList();
       }
 

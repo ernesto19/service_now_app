@@ -4,10 +4,10 @@ import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:service_now/features/home/domain/repositories/category_repository.dart';
+import 'package:service_now/features/home/domain/repositories/home_repository.dart';
 
 class UpdateLocalCategory implements UseCase<void, UpdateParams> {
-  final CategoryRepository repository;
+  final HomeRepository repository;
 
   UpdateLocalCategory(this.repository);
 

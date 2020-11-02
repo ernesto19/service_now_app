@@ -55,5 +55,6 @@
     "register_button_text": "Registrar",
     "update_button_text": "Actualizar",
     "register_message": "Registrando ...",
-    "confirm_address_button_text": "Confirmar dirección"
+    "confirm_address_button_text": "Confirmar dirección",
+    "acquiring_membership_message": "Adquiriendo membresía ..."
 }

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:service_now/core/db/db.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
@@ -24,10 +28,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+  final _firebaseMessaging = FirebaseMessaging();
+  final flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+
+  var initializationSettingsAndroid;
+  var initializationSettingsIOS;
+  var initializationSettings;
 
   @override
   void initState() {
     super.initState();
+
+    registerNotification();
+    configLocalNotification();
 
     allTranslations.onLocaleChangedCallback = _onLocaleChanged;
 
@@ -44,6 +59,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       title: 'Service Now',
       supportedLocales: allTranslations.supportedLocales(),
       localizationsDelegates: [
@@ -56,6 +72,79 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: UserPreferences.instance.token == null || UserPreferences.instance.token == '' ? LoginPage.routeName : HomePage.routeName,
       routes: getApplicationRoutes()
+    );
+  }
+
+  void registerNotification() {
+    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.configure(
+      // ignore: missing_return
+      onMessage: (Map<String, dynamic> message) {
+        _showNotification(message);
+      },
+      // ignore: missing_return
+      onResume: (Map<String, dynamic> message) {
+        if (message['data']['screen'] != 'no-screen') {
+          navigatorKey.currentState.pushNamed(message['data']['screen']);
+        }
+      },
+      // ignore: missing_return
+      onLaunch: (Map<String, dynamic> message) {
+        if (message['data']['screen'] != 'no-screen') {
+          navigatorKey.currentState.pushNamed(message['data']['screen']);
+        }
+      }
+    );
+
+    _firebaseMessaging.getToken().then((token) {
+      print('===== FCM TOKEN: $token ====');
+      UserPreferences.instance.fcmToken = token;
+    });
+  }
+
+  void configLocalNotification() {
+    initializationSettingsAndroid = new AndroidInitializationSettings('app_icon');
+    initializationSettingsIOS = new IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+  }
+
+  void _showNotification(message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      Platform.isAndroid ? 'pe.com.service_now': 'pe.com.service_now',
+      'Service Now',
+      'Aplicacion Service Now',
+      playSound: true,
+      enableVibration: true,
+      importance: Importance.Max,
+      priority: Priority.High,
+      ticker: message['notification']['title'].toString()
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0, 
+      message['notification']['title'].toString(), 
+      message['notification']['body'].toString(), 
+      platformChannelSpecifics,
+      // payload: json.encode(message)
+      payload: message['data']['screen'].toString()
+    );
+  }
+
+  Future onSelectNotification(String message) async {
+    if (message != 'no-screen') {
+      navigatorKey.currentState.pushNamed(message);
+    }
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(body)
+      )
     );
   }
 }

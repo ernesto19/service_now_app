@@ -96,7 +96,7 @@ class SearchPlaceDelegate extends SearchDelegate<Business> {
                 final Business business = snapshot.data[index];
                 return ListTile(
                   title: Text(business.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                  // subtitle: Text(place.vicinity.replaceAll('<br/>', ' - '), style: TextStyle(fontSize: 12)),
+                  subtitle: Text(business.address, style: TextStyle(fontSize: 12)),
                   onTap: () => this.close(context, business)
                 );
               },
@@ -127,9 +127,9 @@ class SearchPlaceDelegate extends SearchDelegate<Business> {
       history = history.where((element) {
         if (element.name.toLowerCase().contains(tmp)) {
           return true;
-        } /*else if (element.vicinity.toLowerCase().contains(tmp)) {
+        } else if (element.address.toLowerCase().contains(tmp)) {
           return true;
-        }*/
+        }
 
         return false;
       }).toList();
@@ -145,7 +145,7 @@ class SearchPlaceDelegate extends SearchDelegate<Business> {
             place.name,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          // subtitle: Text(place.vicinity.replaceAll('<br/>', ' - ')),
+          subtitle: Text(place.address),
         );
       },
       itemCount: history.length,
