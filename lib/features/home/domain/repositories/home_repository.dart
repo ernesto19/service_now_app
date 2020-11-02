@@ -9,4 +9,5 @@ abstract class HomeRepository {
   Future<Either<Failure, void>> updateLocalCategory(Category category);
   Future<Either<Failure, LoginResponse>> acquireMembership();
   Future<Either<Failure, List<Permission>>> getPermissions();
+  Future<Either<Failure, int>> logOut();
 }

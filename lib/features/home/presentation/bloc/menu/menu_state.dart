@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
 
-enum MenuStatus { checking, loading, selecting, downloading, ready, error }
+enum MenuStatus { checking, loading, selecting, downloading, ready, error, logOut }
 
 class MenuState extends Equatable {
   final List<Permission> permissions;

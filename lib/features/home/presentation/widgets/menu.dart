@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
+import 'package:service_now/features/home/presentation/bloc/menu/menu_event.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_state.dart';
 import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
-import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
 import 'package:service_now/injection_container.dart';
@@ -26,22 +26,17 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-    // List<OptionMenu> options = List();
-    // options.add(OptionMenu(id: 1, title: allTranslations.traslate('menu_profile'), icon: 'assets/icons/profile.svg'));
-    // options.add(OptionMenu(id: 2, title: allTranslations.traslate('menu_services'), icon: 'assets/icons/services.svg'));
-    // options.add(OptionMenu(id: 3, title: allTranslations.traslate('menu_terms'), icon: 'assets/icons/terms.svg'));
-    // options.add(OptionMenu(id: 4, title: allTranslations.traslate('menu_support'), icon: 'assets/icons/support.svg'));
-    // options.add(OptionMenu(id: 5, title: allTranslations.traslate('menu_business'), icon: 'assets/icons/work.svg'));
-    // options.add(OptionMenu(id: 10, title: allTranslations.traslate('log_out'), icon: 'assets/icons/log_out.svg'));
-
     return BlocProvider(
       create: (_) => sl<MenuBloc>(),
-      child: BlocBuilder<MenuBloc, MenuState>(
-        builder: (context, state) {
-          if (state.status == MenuStatus.ready) {
-            return Scaffold(
-              body: SafeArea(
-                child: Container(
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocBuilder<MenuBloc, MenuState>(
+            builder: (context, state) {
+              // ignore: close_sinks
+              final bloc = MenuBloc.of(context);
+
+              if (state.status == MenuStatus.ready) {
+                Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +62,7 @@ class _MenuState extends State<Menu> {
                                 height: 23
                               ),
                               title: Text(allTranslations.traslate(state.permissions[index].translateName)),
-                              onTap: () => _onTap(state.permissions[index].id, context)
+                              onTap: () => _onTap(state.permissions[index].id, context, bloc)
                             );
                           }
                         )
@@ -88,51 +83,31 @@ class _MenuState extends State<Menu> {
                       )
                     ]
                   )
-                )
-              )
-            );
-          }
+                );
+              }
 
-          return Center(
-            child: Text('Cargando ...'),
-          );
-        }
+              return Center(
+                child: Text('Cargando ...'),
+              );
+            }
+          )
+        )
       )
     );
   }
 
-  void _onTap(int id, BuildContext context) {
+  void _onTap(int id, BuildContext context, MenuBloc bloc) {
     switch (id) {
       case 2:
         Navigator.pushNamed(context, SettingsCategories.routeName);
         break;
-      case 5:
+      case 1:
         Navigator.pushNamed(context, ProfessionalBusinessPage.routeName);
         break;
-      case 10:
-        _clearData();
-        Navigator.pushNamed(context, LoginPage.routeName);
+      case 6:
+        bloc.add(LogOutForUser(context));
         break;
       default:
     }
   }
-
-  void _clearData() {
-    UserPreferences.instance.token = '';
-    UserPreferences.instance.email = '';
-    UserPreferences.instance.firstName = '';
-    UserPreferences.instance.lastName = '';
-  }
-}
-
-class OptionMenu {
-  int id;
-  String title;
-  String icon;
-
-  OptionMenu({
-    this.id,
-    this.title,
-    this.icon
-  });
 }

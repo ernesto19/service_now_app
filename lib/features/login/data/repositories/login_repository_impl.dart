@@ -1,5 +1,6 @@
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:service_now/core/network/network_info.dart';
+import 'package:service_now/features/home/data/datasources/home_local_data_source.dart';
 import 'package:service_now/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:service_now/features/login/data/requests/login_request.dart';
 import 'package:service_now/features/login/data/requests/sign_up_request.dart';
@@ -15,10 +16,12 @@ typedef Future<SignUpResponse> _SignUpType();
 
 class LoginRepositoryImpl implements LoginRepository {
   final LoginRemoteDataSource remoteDataSource;
+  final HomeLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   LoginRepositoryImpl({
     @required this.remoteDataSource, 
+    @required this.localDataSource,
     @required this.networkInfo
   });
 
@@ -49,6 +52,14 @@ class LoginRepositoryImpl implements LoginRepository {
     if (await networkInfo.isConnected) {
       try {
         final login = await loginType();
+        if (login.data != null) {
+          if (login.data.rol != null) {
+            if (login.data.rol.permissions != null) {
+              localDataSource.createPermissions(login.data.rol.permissions);
+            }
+          }
+        }
+
         return Right(login);
       } on ServerException {
         return Left(ServerFailure());

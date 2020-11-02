@@ -34,6 +34,7 @@ import 'features/appointment/presentation/bloc/bloc.dart';
 import 'features/home/data/datasources/home_local_data_source.dart';
 import 'features/home/domain/usecases/acquire_membership_by_user.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
+import 'features/home/domain/usecases/log_out_by_user.dart';
 import 'features/login/domain/usecases/authentication.dart';
 import 'features/login/domain/usecases/authentication_by_facebook.dart';
 import 'features/professional/domain/usecases/get_create_service_form.dart';
@@ -61,7 +62,8 @@ Future<void> init() async {
   
   sl.registerFactory(
     () => MenuBloc(
-      permissions: sl()
+      permissions: sl(),
+      logOut: sl()
     )
   );
 
@@ -104,6 +106,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateLocalCategory(sl()));
   sl.registerLazySingleton(() => AcquireMembershipByUser(sl()));
   sl.registerLazySingleton(() => GetPermissionsByUser(sl()));
+  sl.registerLazySingleton(() => LogOutByUser(sl()));
 
   sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
   sl.registerLazySingleton(() => GetGalleriesByBusiness(sl()));
@@ -140,6 +143,7 @@ Future<void> init() async {
   sl.registerLazySingleton<LoginRepository>(
     () => LoginRepositoryImpl(
       remoteDataSource: sl(), 
+      localDataSource: sl(),
       networkInfo: sl()
     )
   );

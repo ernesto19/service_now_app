@@ -59,6 +59,16 @@ class HomeRepositoryImpl implements HomeRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, int>> logOut() async {
+    try {
+      await localDataSource.deletePermissions();
+      return Right(1);
+    } on LocalException {
+      return Left(LocalFailure());
+    }
+  }
+
   Future<Either<Failure, List<Category>>> _getCategoriesType(_CategoriesType getCategoriesType) async {
     if (await networkInfo.isConnected) {
       try {
