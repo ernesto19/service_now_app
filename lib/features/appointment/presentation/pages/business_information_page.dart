@@ -27,18 +27,7 @@ class BusinessInformationPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(business.name, style: TextStyle(fontSize: 19))
-                      ),
-                      // RawMaterialButton(
-                      //   elevation: 2.0,
-                      //   fillColor: secondaryColor,
-                      //   child: Icon(
-                      //     Icons.favorite_border,
-                      //     size: 20,
-                      //     color: Colors.white
-                      //   ),
-                      //   shape: CircleBorder(),
-                      //   onPressed: () {},
-                      // )
+                      )
                     ]
                   ),
                   SizedBox(height: 10),

@@ -7,6 +7,7 @@ import 'package:service_now/features/appointment/domain/repositories/appointment
 import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_comments_by_business.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_galleries_by_business.dart';
+import 'package:service_now/features/appointment/presentation/bloc/select_business/bloc.dart';
 import 'package:service_now/features/home/data/datasources/home_remote_data_source.dart';
 import 'package:service_now/features/home/data/repositories/home_repository_impl.dart';
 import 'package:service_now/features/home/domain/repositories/home_repository.dart';
@@ -30,6 +31,7 @@ import 'package:service_now/features/professional/domain/usecases/update_busines
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
+import 'features/appointment/domain/usecases/request_business_by_user.dart';
 import 'features/appointment/presentation/bloc/bloc.dart';
 import 'features/home/data/datasources/home_local_data_source.dart';
 import 'features/home/domain/usecases/acquire_membership_by_user.dart';
@@ -76,6 +78,12 @@ Future<void> init() async {
   );
 
   sl.registerFactory(
+    () => SelectBusinessBloc(
+      requestBusiness: sl()
+    )
+  );
+
+  sl.registerFactory(
     () => LoginBloc(
       login: sl(),
       loginFB: sl()
@@ -111,6 +119,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
   sl.registerLazySingleton(() => GetGalleriesByBusiness(sl()));
   sl.registerLazySingleton(() => GetCommentsByBusiness(sl()));
+  sl.registerLazySingleton(() => RequestBusinessByUser(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
   sl.registerLazySingleton(() => AuthenticationByFacebook(sl()));

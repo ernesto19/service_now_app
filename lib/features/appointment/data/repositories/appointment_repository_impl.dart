@@ -6,6 +6,8 @@ import 'package:service_now/features/appointment/data/datasources/appointment_re
 import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_comments_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_galleries_request.dart';
+import 'package:service_now/features/appointment/data/requests/request_business_request.dart';
+import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/entities/comment.dart';
 import 'package:service_now/features/appointment/domain/entities/gallery.dart';
@@ -15,6 +17,7 @@ import 'package:meta/meta.dart';
 typedef Future<List<Business>> _BusinessType();
 typedef Future<List<Comment>> _CommentsType();
 typedef Future<List<Gallery>> _GalleriesType();
+typedef Future<RequestBusinessResponse> _RequestBusinessType();
 
 class AppointmentRepositoryImpl implements AppointmentRepository {
   final AppointmentRemoteDataSource remoteDataSource;
@@ -49,6 +52,14 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
     });
   }
 
+  @override
+  Future<Either<Failure, RequestBusinessResponse>> requestBusiness(int businessId) async {
+    return await _requestBusinessType(() {
+      var request = RequestBusinessRequest(businessId: businessId);
+      return remoteDataSource.requestBusiness(request);
+    });
+  }
+
   Future<Either<Failure, List<Business>>> _getBusinessType(_BusinessType getBusinessType) async {
     if (await networkInfo.isConnected) {
       try {
@@ -80,6 +91,19 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       try {
         final remoteGalleries = await getGalleriesType();
         return Right(remoteGalleries);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, RequestBusinessResponse>> _requestBusinessType(_RequestBusinessType requestBusinessType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final requestBusiness = await requestBusinessType();
+        return Right(requestBusiness);
       } on ServerException {
         return Left(ServerFailure());
       }

@@ -7,9 +7,11 @@ import 'package:service_now/features/appointment/data/models/gallery_model.dart'
 import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_comments_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_galleries_request.dart';
+import 'package:service_now/features/appointment/data/requests/request_business_request.dart';
 import 'package:service_now/features/appointment/data/responses/get_business_response.dart';
 import 'package:service_now/features/appointment/data/responses/get_comments_response.dart';
 import 'package:service_now/features/appointment/data/responses/get_galleries_response.dart';
+import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'dart:convert';
 
 import 'package:service_now/preferences/user_preferences.dart';
@@ -18,6 +20,7 @@ abstract class AppointmentRemoteDataSource {
   Future<List<BusinessModel>> getBusiness(GetBusinessRequest request);
   Future<List<CommentModel>> getComments(GetCommentsRequest request);
   Future<List<GalleryModel>> getGalleries(GetGalleriesRequest request);
+  Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request);
 }
 
 class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
@@ -33,6 +36,9 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
 
   @override
   Future<List<GalleryModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_all_galleries');
+
+  @override
+  Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request) => _requestBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_request_service');
 
   Future<List<BusinessModel>> _getBusinessFromUrl(GetBusinessRequest request, String url) async {
     final response = await client.post(
@@ -85,6 +91,24 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
     if (response.statusCode == 200) {
       final body = GetGalleriesResponse.fromJson(json.decode(response.body));
       return body.data;
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<RequestBusinessResponse> _requestBusinessFromUrl(RequestBusinessRequest request, String url) async {
+    final response = await client.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json.encode(request.toJson())
+    );
+
+    if (response.statusCode == 200) {
+      return RequestBusinessResponse.fromJson(json.decode(response.body));
     } else {
       throw ServerException();
     }
