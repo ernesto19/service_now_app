@@ -14,10 +14,15 @@ class SearchAPI {
 
   Future<List<Place>> searchPlace(String query, LatLng at) async {
     final response = await client.get(
-      'https://places.ls.hereapi.com/places/v1/autosuggest'
-      + '?q=$query'
-      + '&at=${at.latitude},${at.longitude}'
-      + '&apiKey=e8lPt1YPrnGBKhlf2IZHLqxXX7mvRT5qD2GnHiLc8UQ'
+      // 'https://places.ls.hereapi.com/places/v1/autosuggest'
+      // + '?q=$query'
+      // + '&at=${at.latitude},${at.longitude}'
+      // + '&apiKey=e8lPt1YPrnGBKhlf2IZHLqxXX7mvRT5qD2GnHiLc8UQ'
+      'https://maps.googleapis.com/maps/api/place/textsearch/json'
+      + '?query=$query'
+      + '&location=${at.latitude},${at.longitude}'
+      + '&radius=10000'
+      + '&key=AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc'
     );
 
     if (response.statusCode == 200) {

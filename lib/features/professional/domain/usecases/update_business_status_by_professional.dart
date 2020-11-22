@@ -6,21 +6,21 @@ import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/repositories/professional_repository.dart';
 
-class UpdateBusinessByProfessional implements UseCase<void, UpdateBusinessParams> {
+class UpdateBusinessStatusByProfessional implements UseCase<void, UpdateBusinessStatusParams> {
   final ProfessionalRepository repository;
 
-  UpdateBusinessByProfessional(this.repository);
+  UpdateBusinessStatusByProfessional(this.repository);
 
   @override
-  Future<Either<Failure, void>> call(UpdateBusinessParams params) async {
+  Future<Either<Failure, void>> call(UpdateBusinessStatusParams params) async {
     return await repository.updateBusinessStatus(params.business);
   }
 }
 
-class UpdateBusinessParams extends Equatable {
+class UpdateBusinessStatusParams extends Equatable {
   final ProfessionalBusiness business;
 
-  UpdateBusinessParams({ @required this.business });
+  UpdateBusinessStatusParams({ @required this.business });
 
   @override
   List<Object> get props => [business];

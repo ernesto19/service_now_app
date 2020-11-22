@@ -7,3 +7,7 @@ class AcquireMembershipForUser extends MembershipEvent {
 
   AcquireMembershipForUser(this.context);
 }
+
+class GetMembershipForUser extends MembershipEvent {
+  GetMembershipForUser();
+}

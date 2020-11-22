@@ -5,7 +5,6 @@ import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/responsive.dart';
 import 'business_information_page.dart';
 import 'business_photos_page.dart';
-import 'business_select_page.dart';
 
 class BusinessDetailPage extends StatefulWidget {
   static final routeName = 'business_detail_page';
@@ -24,7 +23,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
 
     return Scaffold(
       body: DefaultTabController(
-        length: 3,
+        length: 2,
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -50,8 +49,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: allTranslations.traslate('information_tab_title')),
-                      Tab(text: allTranslations.traslate('photos_tab_title')),
-                      Tab(text: allTranslations.traslate('select_tab_title'))
+                      Tab(text: allTranslations.traslate('photos_tab_title'))
                     ]
                   )
                 )
@@ -62,7 +60,6 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
             children: [
               BusinessInformationPage(business: widget.business),
               BusinessPhotosPage(business: widget.business),
-              BusinessSelectPage(business: widget.business)
             ]
           )
         )

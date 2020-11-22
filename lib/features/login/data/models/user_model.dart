@@ -18,7 +18,7 @@ class UserModel extends User {
       lastName:   json['last_name']   ?? '',
       email:      json['email']       ?? '',
       token:      json['token']       ?? '',
-      rol:        RolModel.fromJson(json['roles'][0])
+      rol:        json['roles'] == null ? null : RolModel.fromJson(json['roles'][0])
     );
   }
 }

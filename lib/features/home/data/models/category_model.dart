@@ -14,7 +14,7 @@ class CategoryModel extends Category {
       id: json['id'], 
       name: json['name'], 
       logo: json['logo'], 
-      favorite: json['favorite']
+      favorite: int.parse(json['favorite'].toString())
     );
   }
 

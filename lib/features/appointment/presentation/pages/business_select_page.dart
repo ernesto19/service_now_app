@@ -72,7 +72,7 @@ class _BusinessSelectPageState extends State<BusinessSelectPage> {
   }
 
   void onPressedCustomButton(SelectBusinessBloc bloc) {
-    bloc.add(RequestBusinessForUser(widget.business.id));
+    bloc.add(RequestBusinessForUser(widget.business.id, context));
 
     setState(() {
       switch (stateOnlyText) {

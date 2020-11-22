@@ -32,7 +32,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
     );
   }
 
-  BlocProvider<ProfessionalBloc>  buildBody(BuildContext context) {
+  BlocProvider<ProfessionalBloc> buildBody(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<ProfessionalBloc>(),
       child: Container(

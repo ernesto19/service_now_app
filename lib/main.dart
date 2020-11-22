@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -7,7 +7,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:service_now/core/db/db.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
+import 'features/appointment/presentation/pages/client_request.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/professional/presentation/pages/professional_request.dart';
 import 'preferences/user_preferences.dart';
 import 'routes/routes.dart';
 import 'injection_container.dart' as di;
@@ -80,16 +82,19 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
       // ignore: missing_return
       onMessage: (Map<String, dynamic> message) {
+        print('======== $message ========');
         _showNotification(message);
       },
       // ignore: missing_return
       onResume: (Map<String, dynamic> message) {
+        print('======== $message ========');
         if (message['data']['screen'] != 'no-screen') {
           navigatorKey.currentState.pushNamed(message['data']['screen']);
         }
       },
       // ignore: missing_return
       onLaunch: (Map<String, dynamic> message) {
+        print('======== $message ========');
         if (message['data']['screen'] != 'no-screen') {
           navigatorKey.currentState.pushNamed(message['data']['screen']);
         }
@@ -127,14 +132,18 @@ class _MyAppState extends State<MyApp> {
       message['notification']['title'].toString(), 
       message['notification']['body'].toString(), 
       platformChannelSpecifics,
-      // payload: json.encode(message)
-      payload: message['data']['screen'].toString()
+      payload: message['data']['datos'].toString()
+      // payload: message['data']['services'].toString()
     );
   }
 
   Future onSelectNotification(String message) async {
-    if (message != 'no-screen') {
-      navigatorKey.currentState.pushNamed(message);
+    Map<String, dynamic> messageJson = json.decode(message);
+
+    if (messageJson['tipo'] == 'pnRequestService') {
+      navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => ProfessionalRequest(notification: message)));
+    } else if (messageJson['tipo'] == 'pnResponseService') {
+      navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => ClientRequest(notification: message)));
     }
   }
 

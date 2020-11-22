@@ -17,6 +17,8 @@
     "menu_terms": "Condiciones",
     "menu_support": "Soporte",
     "menu_business": "Negocios",
+    "menu_message": "Mensajes",
+    "menu_membership": "Membresía",
     "log_out": "Cerrar sesión",
     "authenticating_message": "Autenticando ...",
     "registering_message": "Registrando ...",
@@ -55,6 +57,9 @@
     "register_button_text": "Registrar",
     "update_button_text": "Actualizar",
     "register_message": "Registrando ...",
+    "updating_message": "Actualizando ...",
     "confirm_address_button_text": "Confirmar dirección",
-    "acquiring_membership_message": "Adquiriendo membresía ..."
+    "acquiring_membership_message": "Adquiriendo membresía ...",
+    "confirm_request_button_text": "Confirmar solicitud",
+    "payment_services": "Pagar servicios"
 }

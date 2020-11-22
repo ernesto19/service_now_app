@@ -31,18 +31,28 @@ import 'package:service_now/features/professional/domain/usecases/update_busines
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
+import 'features/appointment/domain/usecases/payment_services_by_user.dart';
 import 'features/appointment/domain/usecases/request_business_by_user.dart';
 import 'features/appointment/presentation/bloc/bloc.dart';
+import 'features/appointment/presentation/bloc/payment_services/bloc.dart';
 import 'features/home/data/datasources/home_local_data_source.dart';
 import 'features/home/domain/usecases/acquire_membership_by_user.dart';
 import 'features/home/domain/usecases/get_categories_by_user.dart';
+import 'features/home/domain/usecases/get_membership_by_user.dart';
+import 'features/home/domain/usecases/get_messages_by_user.dart';
 import 'features/home/domain/usecases/log_out_by_user.dart';
+import 'features/home/presentation/bloc/message/bloc.dart';
 import 'features/login/domain/usecases/authentication.dart';
 import 'features/login/domain/usecases/authentication_by_facebook.dart';
+import 'features/professional/domain/usecases/delete_image_by_professional.dart';
 import 'features/professional/domain/usecases/get_create_service_form.dart';
 import 'features/professional/domain/usecases/get_industries.dart';
 import 'features/professional/domain/usecases/register_business_by_professional.dart';
 import 'features/professional/domain/usecases/register_service_by_professional.dart';
+import 'features/professional/domain/usecases/request_response_by_professional.dart';
+import 'features/professional/domain/usecases/update_business_by_professional.dart';
+import 'features/professional/domain/usecases/update_service_by_professional.dart';
+import 'features/professional/presentation/bloc/pages/gallery/bloc.dart';
 
 
 final sl = GetIt.instance;
@@ -58,7 +68,14 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => MembershipBloc(
-      acquireMembership: sl()
+      acquireMembership: sl(),
+      getMembership: sl()
+    )
+  );
+
+  sl.registerFactory(
+    () => MessageBloc(
+      getMessages: sl()
     )
   );
   
@@ -73,13 +90,20 @@ Future<void> init() async {
     () => AppointmentBloc(
       business: sl(),
       galleries: sl(),
-      comments: sl()
+      comments: sl(),
+      requestBusiness: sl()
     )
   );
 
   sl.registerFactory(
     () => SelectBusinessBloc(
       requestBusiness: sl()
+    )
+  );
+
+  sl.registerFactory(
+    () => PaymentServicesBloc(
+      paymentServices: sl()
     )
   );
 
@@ -102,12 +126,21 @@ Future<void> init() async {
       services: sl(),
       industries: sl(),
       registerBusiness: sl(),
+      updateBusiness: sl(),
       createServiceForm: sl(),
       registerService: sl(),
-      updateBusiness: sl()
+      updateService: sl(),
+      updateBusinessStatus: sl(),
+      responseRequest: sl(),
+      deleteImage: sl()
     )
   );
 
+  sl.registerFactory(
+    () => GalleryBloc(
+      deleteImage: sl()
+    )
+  );
 
   // [ Use cases ]
   sl.registerLazySingleton(() => GetCategoriesByUser(sl()));
@@ -115,11 +148,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AcquireMembershipByUser(sl()));
   sl.registerLazySingleton(() => GetPermissionsByUser(sl()));
   sl.registerLazySingleton(() => LogOutByUser(sl()));
+  sl.registerLazySingleton(() => GetMessagesByUser(sl()));
+  sl.registerLazySingleton(() => GetMembershipByUser(sl()));
 
   sl.registerLazySingleton(() => GetBusinessByCategory(sl()));
   sl.registerLazySingleton(() => GetGalleriesByBusiness(sl()));
   sl.registerLazySingleton(() => GetCommentsByBusiness(sl()));
   sl.registerLazySingleton(() => RequestBusinessByUser(sl()));
+  sl.registerLazySingleton(() => PaymentServicesByUser(sl()));
 
   sl.registerLazySingleton(() => Authentication(sl()));
   sl.registerLazySingleton(() => AuthenticationByFacebook(sl()));
@@ -129,9 +165,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetProfessionalServicesByProfessional(sl()));
   sl.registerLazySingleton(() => GetIndustries(sl()));
   sl.registerLazySingleton(() => RegisterBusinessByProfessional(sl()));
+  sl.registerLazySingleton(() => UpdateBusinessByProfessional(sl()));
   sl.registerLazySingleton(() => GetCreateServiceForm(sl()));
   sl.registerLazySingleton(() => RegisterServiceByProfessional(sl()));
-  sl.registerLazySingleton(() => UpdateBusinessByProfessional(sl()));
+  sl.registerLazySingleton(() => UpdateServiceByProfessional(sl()));
+  sl.registerLazySingleton(() => UpdateBusinessStatusByProfessional(sl()));
+  sl.registerLazySingleton(() => RequestResponseByProfessional(sl()));
+
+  sl.registerLazySingleton(() => DeleteImageByProfessional(sl()));
 
   // [ Repository ]
   sl.registerLazySingleton<HomeRepository>(

@@ -7,6 +7,7 @@ import 'package:service_now/features/appointment/data/responses/request_business
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/features/appointment/domain/usecases/request_business_by_user.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'select_business_event.dart';
 import 'select_business_state.dart';
 
@@ -24,9 +25,9 @@ class SelectBusinessBloc extends Bloc<SelectBusinessEvent, SelectBusinessState> 
   @override
   Stream<SelectBusinessState> mapEventToState(SelectBusinessEvent event) async* {
     if (event is RequestBusinessForUser) {
-      print('======= SOLICITANDO SERVICIO ======');
       final failureOrRequest = await requestBusinessByUser(Params(businessId: event.businessId));
       yield* _eitherRequestBusinessOrErrorState(failureOrRequest);
+      Navigator.pushNamedAndRemoveUntil(event.context, HomePage.routeName, (Route<dynamic> route) => false);
     }
   }
 

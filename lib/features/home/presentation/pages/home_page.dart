@@ -63,6 +63,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
+                      // ignore: close_sinks
+                      final bloc = HomeBloc.of(context);
+                      bloc.add(GetCategoriesForUser());
+
                       String text = '';
 
                       if (state.status == HomeStatus.ready) {

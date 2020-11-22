@@ -2,8 +2,9 @@ import 'package:meta/meta.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class RegisterServiceRequest {
-  const RegisterServiceRequest({ @required this.businessId, @required this.serviceId, @required this.price, @required this.images });
+  const RegisterServiceRequest({ this.professionalServiceId, this.businessId, this.serviceId, @required this.price, this.images });
 
+  final int professionalServiceId;
   final int businessId;
   final int serviceId;
   final double price;
@@ -18,6 +19,13 @@ class RegisterServiceRequest {
           'price': price
         }
       ]
+    };
+  }
+
+  Map<String, dynamic> toJsonUpdate() {
+    return {
+      'id': professionalServiceId,
+      'price': price
     };
   }
 }

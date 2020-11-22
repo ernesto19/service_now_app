@@ -8,6 +8,7 @@ class Auth {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
       if (result.status == 200) {
+        print(result.accessToken.token);
         return result.accessToken.token;
       } else if (result.status == 403) {
         print('======Error 403 -> ${result.toJson().toString()} =======');

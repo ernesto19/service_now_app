@@ -5,6 +5,7 @@ import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/entities/comment.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
+import 'package:service_now/utils/colors.dart';
 
 class BusinessInformationPage extends StatelessWidget {
   final Business business;
@@ -15,85 +16,99 @@ class BusinessInformationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<AppointmentBloc>(),
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(business.name, style: TextStyle(fontSize: 19))
-                      )
-                    ]
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(business.rating),
-                      SizedBox(width: 10),
-                      RatingBar(
-                        initialRating: double.parse(business.rating),
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemSize: 20,
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber
+      child: BlocBuilder<AppointmentBloc, AppointmentState>(
+        builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = AppointmentBloc.of(context);
+
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(business.name, style: TextStyle(fontSize: 19))
+                            )
+                          ]
                         ),
-                        ignoreGestures: true,
-                        onRatingUpdate: null
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text('${business.distance.toStringAsFixed(2)} km'),
-                  SizedBox(height: 20),
-                  Text(
-                    business.description
+                        SizedBox(height: 10),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(business.rating),
+                            SizedBox(width: 10),
+                            RatingBar(
+                              initialRating: double.parse(business.rating),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 20,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber
+                              ),
+                              ignoreGestures: true,
+                              onRatingUpdate: null
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text('${business.distance.toStringAsFixed(2)} km'),
+                        SizedBox(height: 20),
+                        Text(
+                          business.description
+                        )
+                      ]
+                    )
                   )
-                ]
-              )
-            )
-          ),
-          BlocBuilder<AppointmentBloc, AppointmentState>(
-            builder: (context, state) {
-              // ignore: close_sinks
-              final bloc = AppointmentBloc.of(context);
-              bloc.add(GetCommentsForUser(business.id));
+                ),
+                BlocBuilder<AppointmentBloc, AppointmentState>(
+                  builder: (context, state) {
+                    bloc.add(GetCommentsForUser(business.id));
 
-              if (state.status == BusinessStatus.readyComments) {
-                List<Comment> comments = state.comments;
+                    if (state.status == BusinessStatus.readyComments) {
+                      List<Comment> comments = state.comments;
 
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      Comment comment = comments[index];
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            Comment comment = comments[index];
 
-                      return _buildComment(comment);
-                    },
-                    childCount: comments.length
-                  ),
-                );
-              }
+                            return _buildComment(comment);
+                          },
+                          childCount: comments.length
+                        ),
+                      );
+                    }
 
-              return SliverFillRemaining(
-                child: Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: CircularProgressIndicator()
-                  ),
+                    return SliverFillRemaining(
+                      child: Container(
+                        color: Colors.white,
+                        child: Center(
+                          child: CircularProgressIndicator()
+                        ),
+                      )
+                    );
+                  }
                 )
-              );
-            }
-          )
-        ]
+              ]
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.send),
+              backgroundColor: secondaryDarkColor,
+              onPressed: () {
+                bloc.add(RequestBusinessForUser(business.id, context));
+              }
+            )
+          );
+        }
       )
     );
   }

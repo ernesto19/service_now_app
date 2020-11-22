@@ -6,17 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/core/error/failures.dart';
+import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/entities/comment.dart';
-import 'package:service_now/features/appointment/domain/entities/gallery.dart';
+import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_business_by_category.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_comments_by_business.dart';
 import 'package:service_now/features/appointment/domain/usecases/get_galleries_by_business.dart';
+import 'package:service_now/features/appointment/domain/usecases/request_business_by_user.dart';
 import 'package:service_now/features/appointment/presentation/bloc/appointment_event.dart';
 import 'package:service_now/features/appointment/presentation/bloc/appointment_state.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/features/appointment/presentation/pages/business_detail_page.dart';
+import 'package:service_now/features/appointment/presentation/widgets/custom_dialog.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/utils/extras_image.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
@@ -26,6 +30,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   final GetBusinessByCategory getBusinessByCategory;
   final GetGalleriesByBusiness getGalleriesByBusiness;
   final GetCommentsByBusiness getCommentsByBusiness;
+  final RequestBusinessByUser requestBusinessByUser;
   Completer<GoogleMapController> _completer = Completer();
 
   Future<GoogleMapController> get _mapController async {
@@ -35,11 +40,13 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   AppointmentBloc({
     @required GetBusinessByCategory business,
     @required GetGalleriesByBusiness galleries,
-    @required GetCommentsByBusiness comments
+    @required GetCommentsByBusiness comments,
+    @required RequestBusinessByUser requestBusiness
   }) : assert(business != null, galleries != null),
        getBusinessByCategory = business,
        getGalleriesByBusiness = galleries,
-       getCommentsByBusiness = comments {
+       getCommentsByBusiness = comments,
+       requestBusinessByUser = requestBusiness {
     this._init();
   }
 
@@ -70,7 +77,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         yield* _eitherLoadedBusinessOrErrorState(failureOrBusiness, event.context);
       }
     } else if (event is GetGalleriesForUser) {
-      this.state.copyWith(status: BusinessStatus.loadingGallery, galleries: []);
+      this.state.copyWith(status: BusinessStatus.loadingGallery, services: []);
       final failureOrGalleries = await getGalleriesByBusiness(GetGalleriesParams(businessId: event.businessId));
       yield* _eitherLoadedGalleriesOrErrorState(failureOrGalleries);
     } else if (event is GetCommentsForUser) {
@@ -103,7 +110,32 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       } else {
         yield this.state.copyWith(markers: markers, trade: event.trade);
       }
+    } else if (event is GetRequestServicesForUser) {
+      yield this.state.copyWith(status: BusinessStatus.readyServices, services: _getServices(event.services));
+    } else if (event is OnSelectedServiceEvent) {
+      yield* this._mapOnSelectedService(event);
+    } else if (event is RequestBusinessForUser) {
+      final failureOrRequest = await requestBusinessByUser(Params(businessId: event.businessId));
+      yield* _eitherRequestBusinessOrErrorState(failureOrRequest);
+      Navigator.pushNamedAndRemoveUntil(event.context, HomePage.routeName, (Route<dynamic> route) => false);
     }
+  }
+
+  List<Service> _getServices(Map<String, dynamic> json) {
+    List<Service> services = List();
+    for (var service in json['services']) {
+      services.add(
+        Service(
+          id: service['business_service_id'],
+          name: service['name'],
+          price: service['price'],
+          photos: [],
+          selected: 0
+        )
+      );
+    }
+
+    return services;
   }
 
   Stream<AppointmentState> _eitherLoadedBusinessOrErrorState(
@@ -142,14 +174,14 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   }
 
   Stream<AppointmentState> _eitherLoadedGalleriesOrErrorState(
-    Either<Failure, List<Gallery>> failureOrBusiness
+    Either<Failure, List<Service>> failureOrBusiness
   ) async * {
     yield failureOrBusiness.fold(
       (failure) {
-        return this.state.copyWith(status: BusinessStatus.error, galleries: []);
+        return this.state.copyWith(status: BusinessStatus.error, services: []);
       },
       (galleries) {
-        return this.state.copyWith(status: BusinessStatus.readyGallery, galleries: galleries);
+        return this.state.copyWith(status: BusinessStatus.readyGallery, services: galleries);
       }
     );
   }
@@ -188,41 +220,43 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     _completer.complete(controller);
   }
 
+  Stream<AppointmentState> _mapOnSelectedService(OnSelectedServiceEvent event) async* {
+    final int id = event.id;
+    final List<Service> tmp = List<Service>.from(this.state.services);
+    final int index = tmp.indexWhere((element) => element.id == id);
+    if (index != -1) {
+      tmp[index] = tmp[index].onSelected();
+      yield this.state.copyWith(status: BusinessStatus.readyServices, services: tmp);
+    }
+  }
+
+  Stream<AppointmentState> _eitherRequestBusinessOrErrorState(
+    Either<Failure, RequestBusinessResponse> failureOrBusiness
+  ) async * {
+    yield failureOrBusiness.fold(
+      (failure) {
+        return this.state.copyWith(selectBusinessStatus: SelectBusinessStatus.error);
+      },
+      (response) {
+        return this.state.copyWith(selectBusinessStatus: SelectBusinessStatus.ready);
+      }
+    );
+  }
+
   void _showMarkerDialog(Business trade, BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        return Container(
-          child: AlertDialog(
-            title: Text(trade.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Descripción', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                Text(trade.description, style: TextStyle(fontSize: 13)),
-                SizedBox(height: 8),
-                Text('Distancia', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                Text(trade.distance.toStringAsFixed(3) + ' km.', style: TextStyle(fontSize: 13)),
-                SizedBox(height: 8),
-                Text('Estado', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                Text(trade.active == 1 ? 'Activo' : 'Inactivo', style: TextStyle(fontSize: 13)),
-              ]
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('CANCELAR', style: TextStyle(fontSize: 14.0)),
-                onPressed: () => Navigator.pop(context)
-              ),
-              FlatButton(
-                child: Text('DETALLE', style: TextStyle(fontSize: 14.0)),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)));
-                }
-              )
-            ]
-          )
+        return CustomDialog(
+          title: trade.name,
+          description: trade.description,
+          rating: trade.rating,
+          distance: '${trade.distance.toStringAsFixed(3)} Km',
+          buttonText: 'Detalle',
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)));
+          }
         );
       }
     );

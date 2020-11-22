@@ -4,6 +4,8 @@ import 'package:service_now/features/home/data/datasources/home_remote_data_sour
 import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
+import 'package:service_now/features/home/domain/entities/membership.dart';
+import 'package:service_now/features/home/domain/entities/message.dart';
 import 'package:service_now/features/home/domain/repositories/home_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/core/error/exceptions.dart';
@@ -13,6 +15,8 @@ import 'package:service_now/preferences/user_preferences.dart';
 
 typedef Future<List<Category>> _CategoriesType();
 typedef Future<LoginResponse> _AcquireMembershipType();
+typedef Future<List<Message>> _MessagesType();
+typedef Future<Membership> _MembershipType();
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeRemoteDataSource remoteDataSource;
@@ -69,6 +73,20 @@ class HomeRepositoryImpl implements HomeRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<Message>>> getMessages() async {
+    return await _getMessagesType(() {
+      return remoteDataSource.getMessages();
+    });
+  }
+
+  @override
+  Future<Either<Failure, Membership>> getMembership() async {
+    return await _getMembershipType(() {
+      return remoteDataSource.getMembership();
+    });
+  }
+
   Future<Either<Failure, List<Category>>> _getCategoriesType(_CategoriesType getCategoriesType) async {
     if (await networkInfo.isConnected) {
       try {
@@ -113,6 +131,32 @@ class HomeRepositoryImpl implements HomeRepository {
       }
     } else {
       return Left(ServerFailure());
+    }
+  }
+
+  Future<Either<Failure, List<Message>>> _getMessagesType(_MessagesType getMessagesType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteMessages = await getMessagesType();
+        return Right(remoteMessages);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, Membership>> _getMembershipType(_MembershipType getMembershipType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteMembership = await getMembershipType();
+        return Right(remoteMembership);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
     }
   }
 }

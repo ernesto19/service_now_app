@@ -49,7 +49,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     if (this.state.status == LoginStatus.logIn) {
       this._storeDataUser(state.user);
-      Navigator.pushNamed(event.context, HomePage.routeName, arguments: state.user);
+      Navigator.of(event.context).pushNamedAndRemoveUntil(HomePage.routeName, (Route<dynamic> route) => false);
     } else if (this.state.status == LoginStatus.error) {
       Navigator.pop(event.context);
       this._showDialog('Importante', this.state.errorMessage, event.context);
@@ -93,7 +93,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (this.state.status == LoginStatus.logIn) {
         this._storeDataUser(state.user);
-        Navigator.pushNamed(event.context, HomePage.routeName, arguments: state.user);
+        Navigator.of(event.context).pushNamedAndRemoveUntil(HomePage.routeName, (Route<dynamic> route) => false);
       } else if (this.state.status == LoginStatus.error) {
         Navigator.pop(event.context);
         this._showDialog('Importante', this.state.errorMessage, event.context);

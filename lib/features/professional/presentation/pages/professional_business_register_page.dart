@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
@@ -13,6 +14,8 @@ import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+
+import 'professional_business_gallery_page.dart';
 
 class ProfessionalBusinessRegisterPage extends StatefulWidget {
   static final routeName = 'professional_business_register_page';
@@ -39,11 +42,14 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   @override
   void initState() {
     if (widget.business != null) {
+      _industrySelected             = widget.business.industryId.toString();
+      _categorySelected             = widget.business.categoryId.toString();
       _nameController.text          = widget.business.name;
       _descriptionController.text   = widget.business.description;
       _licenseNumberController.text = widget.business.licenseNumber;
       _addressController            = widget.business.address;
       _fanpageController.text       = widget.business.fanpage;
+      _place                        = Place(id: '1', title: 'title', position: LatLng(double.parse(widget.business.latitude), double.parse(widget.business.longitude)), vicinity: '');
       _addressColor                 = Colors.black;
     }
     super.initState();
@@ -56,9 +62,14 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
         title: Text(widget.business == null ? allTranslations.traslate('register_business_title') : allTranslations.traslate('update_business_title'), style: labelTitleForm),
         backgroundColor: primaryColor,
         actions: [
-          IconButton(
+          widget.business == null 
+          ? IconButton(
             icon: Icon(Icons.attach_file), 
             onPressed: loadAssets
+          )
+          : IconButton(
+            icon: Icon(Icons.add_photo_alternate), 
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessGalleryPage(gallery: widget.business.gallery, businessId: widget.business.id)))
           )
         ]
       ),
@@ -85,23 +96,25 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     children: [
-                      state.formStatus == RegisterBusinessFormDataStatus.ready 
-                      ? Column(
-                        children: [
-                          _buildIndustiesSelect(state.formData.industries),
-                          SizedBox(height: 12),
-                          _buildCategoriesSelect(state.formData.categories),
-                        ],
-                      ) 
-                      : Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: LinearProgressIndicator(),
-                          ),
-                          Text(text)
-                        ]
-                      ),
+                      widget.business == null
+                      ? state.formStatus == RegisterBusinessFormDataStatus.ready 
+                        ? Column(
+                          children: [
+                            _buildIndustiesSelect(state.formData.industries),
+                            SizedBox(height: 12),
+                            _buildCategoriesSelect(state.formData.categories),
+                          ],
+                        ) 
+                        : Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: LinearProgressIndicator(),
+                            ),
+                            Text(text)
+                          ]
+                        )
+                      : Container(),
                       SizedBox(height: 10),
                       _buildName(),
                       SizedBox(height: 20),
@@ -238,7 +251,9 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       label: widget.business == null ? allTranslations.traslate('register_button_text') : allTranslations.traslate('update_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: widget.business == null ? () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context)) : null
+      onPressed: widget.business == null 
+        ? () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context)) 
+        : () => bloc.add(UpdateBusinessForProfessional(widget.business.id, _nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, context))
     );
   }
 

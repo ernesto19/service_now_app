@@ -97,15 +97,15 @@ class _LoginFormState extends State<LoginForm> {
                           bloc.add(AuthenticationByFacebookEvent(token, context));
                         }
                       ),
-                      SizedBox(width: 20),
-                      CircleButton(
-                        iconPath: 'assets/icons/google.svg',
-                        backgroundColor: Color(0xffFF1744),
-                        size: 55,
-                        onPressed: () async {
-                          // User user = await Auth.instance.google();
-                        }
-                      )
+                      // SizedBox(width: 20),
+                      // CircleButton(
+                      //   iconPath: 'assets/icons/google.svg',
+                      //   backgroundColor: Color(0xffFF1744),
+                      //   size: 55,
+                      //   onPressed: () async {
+                      //     // User user = await Auth.instance.google();
+                      //   }
+                      // )
                     ]
                   ),
                   SizedBox(height: responsive.ip(3)),

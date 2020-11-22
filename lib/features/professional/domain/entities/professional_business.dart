@@ -7,6 +7,7 @@ class ProfessionalBusiness extends Equatable {
   final String description;
   final int categoryId;
   final String categoryName;
+  final int industryId;
   final String address;
   final String licenseNumber;
   final String fanpage;
@@ -22,6 +23,7 @@ class ProfessionalBusiness extends Equatable {
     @required this.description, 
     @required this.categoryId,
     @required this.categoryName,
+    @required this.industryId,
     @required this.address,
     @required this.licenseNumber,
     @required this.fanpage,
@@ -39,6 +41,7 @@ class ProfessionalBusiness extends Equatable {
       description: this.description,
       categoryId: this.categoryId,
       categoryName: this.categoryName,
+      industryId: this.industryId,
       address: this.address,
       licenseNumber: this.licenseNumber,
       fanpage: this.fanpage,
@@ -50,8 +53,27 @@ class ProfessionalBusiness extends Equatable {
     );
   }
 
+  ProfessionalBusiness onDeleteImage() {
+    return ProfessionalBusiness(
+      id: this.id, 
+      name: this.name, 
+      description: this.description,
+      categoryId: this.categoryId,
+      categoryName: this.categoryName,
+      industryId: this.industryId,
+      address: this.address,
+      licenseNumber: this.licenseNumber,
+      fanpage: this.fanpage,
+      logo: this.logo, 
+      latitude: this.latitude,
+      longitude: this.longitude,
+      active: this.active == 1 ? 0 : 1,
+      gallery: List()
+    );
+  }
+
   @override
-  List<Object> get props => [id, name, description, categoryId, categoryName, address, licenseNumber, fanpage, logo, latitude, longitude, active, gallery];
+  List<Object> get props => [id, name, description, categoryId, categoryName, industryId, address, licenseNumber, fanpage, logo, latitude, longitude, active, gallery];
 }
 
 class ProfessionalBusinessGallery {

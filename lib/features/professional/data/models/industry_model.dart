@@ -42,7 +42,7 @@ class ServiceModel extends Service {
     return ServiceModel(
       id:   json['id']    ?? 0, 
       name: json['name']  ?? '',
-      categoryId: json['business_category_id'] ?? 0
+      categoryId: json['business_categories_id'] ?? 0
     );
   }
 }

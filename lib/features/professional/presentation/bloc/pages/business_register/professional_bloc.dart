@@ -7,19 +7,25 @@ import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/failures.dart';
 import 'package:service_now/core/usecases/usecase.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
+import 'package:service_now/features/professional/data/responses/delete_image_response.dart';
 import 'package:service_now/features/professional/data/responses/get_create_service_form_response.dart';
 import 'package:service_now/features/professional/data/responses/get_industries_response.dart';
 import 'package:service_now/features/professional/data/responses/register_business_response.dart';
 import 'package:service_now/features/professional/data/responses/register_service_response.dart';
+import 'package:service_now/features/professional/data/responses/response_request_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
+import 'package:service_now/features/professional/domain/usecases/delete_image_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/get_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/get_create_service_form.dart';
 import 'package:service_now/features/professional/domain/usecases/get_industries.dart';
 import 'package:service_now/features/professional/domain/usecases/get_services_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/register_service_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/request_response_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/update_business_by_professional.dart';
 import 'package:service_now/features/professional/domain/usecases/update_business_status_by_professional.dart';
+import 'package:service_now/features/professional/domain/usecases/update_service_by_professional.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_event.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/professional_state.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
@@ -31,26 +37,38 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
   final GetProfessionalServicesByProfessional getServicesByProfessional;
   final GetIndustries getIndustries;
   final RegisterBusinessByProfessional registerBusinessByProfessional;
+  final UpdateBusinessByProfessional updateBusinessByProfessional;
   final GetCreateServiceForm getCreateServiceForm;
   final RegisterServiceByProfessional registerServiceByProfessional;
-  final UpdateBusinessByProfessional updateBusinessStatus;
+  final UpdateServiceByProfessional updateServiceByProfessional;
+  final UpdateBusinessStatusByProfessional updateBusinessStatus;
+  final RequestResponseByProfessional responseRequestByProfessional;
+  final DeleteImageByProfessional deleteImageByProfessional;
 
   ProfessionalBloc({
     @required GetProfessionalBusinessByProfessional business,
     @required GetProfessionalServicesByProfessional services,
     @required GetIndustries industries,
     @required RegisterBusinessByProfessional registerBusiness,
+    @required UpdateBusinessByProfessional updateBusiness,
     @required GetCreateServiceForm createServiceForm,
     @required RegisterServiceByProfessional registerService,
-    @required UpdateBusinessByProfessional updateBusiness
+    @required UpdateServiceByProfessional updateService,
+    @required UpdateBusinessStatusByProfessional updateBusinessStatus,
+    @required RequestResponseByProfessional responseRequest,
+    @required DeleteImageByProfessional deleteImage
   }) : assert(business != null, services != null),
        getBusinessByProfessional = business,
        getServicesByProfessional = services,
        getIndustries = industries,
        registerBusinessByProfessional = registerBusiness,
+       updateBusinessByProfessional = updateBusiness,
        getCreateServiceForm = createServiceForm,
        registerServiceByProfessional = registerService,
-       updateBusinessStatus = updateBusiness {
+       updateServiceByProfessional = updateService,
+       updateBusinessStatus = updateBusinessStatus, 
+       responseRequestByProfessional = responseRequest,
+       deleteImageByProfessional = deleteImage {
     add(GetBusinessForProfessional());
   }
 
@@ -76,6 +94,8 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       }
     } else if (event is RegisterBusinessForProfessional) {
       yield* this._registerBusiness(event);
+    } else if (event is UpdateBusinessForProfessional) {
+      yield* this._updateBusiness(event);
     } else if (event is GetCreateServiceFormForProfessional) {
       if (this.state.serviceFormStatus != RegisterServiceFormDataStatus.ready) {
         this.state.copyWith(serviceFormStatus: RegisterServiceFormDataStatus.loading, formData: null);
@@ -84,9 +104,32 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
       }
     } else if (event is RegisterServiceForProfessional) {
       yield* this._registerService(event);
+    } else if (event is UpdateServiceForProfessional) {
+      yield* this._updateService(event);
     } else if (event is OnActiveEvent) {
       yield* this._mapOnActive(event);
+    } else if (event is OnSelectedServiceEvent) {
+      yield* this._mapOnSelectedService(event);
+    } else if (event is RequestResponseForBusiness) {
+      final failureOrResponse = await responseRequestByProfessional(ResponseRequestParams(services: event.services, userId: event.userId));
+      yield* _eitherResponseRequestOrErrorState(failureOrResponse);
+      Navigator.pushNamedAndRemoveUntil(event.context, HomePage.routeName, (Route<dynamic> route) => false);
+    } else if (event is DeleteImageForProfessional) {
+      yield* this._deleteImage(event);
     }
+  }
+
+  Stream<ProfessionalState> _eitherResponseRequestOrErrorState(
+    Either<Failure, ResponseRequestResponse> failureOrSuccess
+  ) async * {
+    yield failureOrSuccess.fold(
+      (failure) {
+        return this.state.copyWith(status: ProfessionalStatus.error);
+      },
+      (response) {
+        return this.state.copyWith(status: ProfessionalStatus.ready);
+      }
+    );
   }
 
   Stream<ProfessionalState> _eitherLoadedBusinessOrErrorState(
@@ -163,6 +206,41 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     }
   }
 
+  Stream<ProfessionalState> _updateBusiness(UpdateBusinessForProfessional event) async* {
+    showDialog(
+      context: event.context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('updating_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+
+    yield this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registering);
+
+    final failureOrSuccess = await updateBusinessByProfessional(UpdateBusinessParams(businessId: event.businessId, name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage));
+    yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
+
+    if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {
+      Navigator.of(event.context).pop();
+      Navigator.of(event.context).push(FadeRouteBuilder(page: SuccessPage(message: 'El negocio ${event.name} fue actualizado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
+    } else if (this.state.registerBusinessStatus == RegisterBusinessStatus.error) {
+      Navigator.pop(event.context);
+      this._showDialog('Importante', this.state.errorMessage, event.context);
+    }
+  }
+
   Stream<ProfessionalState> _eitherBusinessRegisterOrErrorState(
     Either<Failure, RegisterBusinessResponse> failureOrSuccessRegister
   ) async * {
@@ -230,6 +308,38 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     }
   }
 
+  Stream<ProfessionalState> _updateService(UpdateServiceForProfessional event) async* {
+    showDialog(
+      context: event.context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('updating_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+
+    yield this.state.copyWith(registerServiceStatus: RegisterServiceStatus.registering);
+
+    final failureOrSuccess = await updateServiceByProfessional(UpdateServiceParams(id: event.id, price: event.price));
+    yield* _eitherServiceRegisterOrErrorState(failureOrSuccess);
+
+    if (this.state.registerServiceStatus == RegisterServiceStatus.registered) {
+      Navigator.of(event.context).pop();
+      Navigator.of(event.context).push(FadeRouteBuilder(page: SuccessPage(message: 'El servicio fue actualizado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
+    }
+  }
+
   Stream<ProfessionalState> _eitherServiceRegisterOrErrorState(
     Either<Failure, RegisterServiceResponse> failureOrSuccessRegister
   ) async * {
@@ -249,9 +359,70 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
     final int index = tmp.indexWhere((element) => element.id == id);
     if (index != -1) {
       tmp[index] = tmp[index].onActive();
-      updateBusinessStatus(UpdateBusinessParams(business: tmp[index]));
+      updateBusinessStatus(UpdateBusinessStatusParams(business: tmp[index]));
       yield this.state.copyWith(status: ProfessionalStatus.ready, business: tmp);
     }
+  }
+
+  Stream<ProfessionalState> _mapOnSelectedService(OnSelectedServiceEvent event) async* {
+    final int id = event.id;
+    final List<ProfessionalService> tmp = List<ProfessionalService>.from(this.state.services);
+    final int index = tmp.indexWhere((element) => element.id == id);
+    if (index != -1) {
+      tmp[index] = tmp[index].onSelected();
+      yield this.state.copyWith(status: ProfessionalStatus.readyServices, services: tmp);
+    }
+  }
+
+  Stream<ProfessionalState> _deleteImage(DeleteImageForProfessional event) async* {
+    showDialog(
+      context: event.context,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text('Eliminando ...', style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+
+    yield this.state.copyWith(galleryStatus: GalleryStatus.deleting);
+
+    final failureOrSuccess = await deleteImageByProfessional(DeleteParams(id: event.id));
+    yield* _eitherDeleteImageOrErrorState(failureOrSuccess, event);
+
+    if (this.state.galleryStatus == GalleryStatus.ready) {
+      Navigator.pop(event.context);
+      this._showDialog('Eliminación exitosa', this.state.deleteResponse.message, event.context);
+    }
+  }
+
+  Stream<ProfessionalState> _eitherDeleteImageOrErrorState(
+    Either<Failure, DeleteImageResponse> failureOrSuccessDelete, DeleteImageForProfessional event
+  ) async * {
+    yield failureOrSuccessDelete.fold(
+      (failure) {
+        return this.state.copyWith(galleryStatus: GalleryStatus.error, deleteResponse: null);
+      },
+      (response) {
+        // List<ProfessionalBusiness> businessTemp = List<ProfessionalBusiness>.from(this.state.business);
+        // final int index = businessTemp.indexWhere((element) => element.id == event.businessId);
+        // if (index != -1) {
+        //   businessTemp[index] = businessTemp[index].onDeleteImage();
+        // }
+
+        return this.state.copyWith(galleryStatus: GalleryStatus.ready, deleteResponse: response/*, status: ProfessionalStatus.ready, business: businessTemp*/);
+      }
+    );
   }
 
   void _showDialog(String title, String message, BuildContext context) {

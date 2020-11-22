@@ -17,6 +17,8 @@
     "menu_terms": "Terms",
     "menu_support": "Support",
     "menu_business": "Business",
+    "menu_message": "Messages",
+    "menu_membership": "Membership",
     "log_out": "Log out",
     "authenticating_message": "Authenticating ...",
     "registering_message": "Registering ...",
@@ -55,6 +57,9 @@
     "register_button_text": "Register",
     "update_button_text": "Update",
     "register_message": "Registering ...",
+    "updating_message": "Updating ...",
     "confirm_address_button_text": "Confirm address",
-    "acquiring_membership_message": "Acquiring membership ..."
+    "acquiring_membership_message": "Acquiring membership ...",
+    "confirm_request_button_text": "Confirm request",
+    "payment_services": "Payment services"
 }

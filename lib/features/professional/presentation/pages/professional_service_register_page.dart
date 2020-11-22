@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
+import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
@@ -14,8 +15,9 @@ class ProfessionalServiceRegisterPage extends StatefulWidget {
   static final routeName = 'professional_service_register_page';
 
   final int businessId;
+  final ProfessionalService professionalService;
 
-  const ProfessionalServiceRegisterPage({ @required this.businessId });
+  const ProfessionalServiceRegisterPage({ @required this.businessId, @required this.professionalService });
 
   @override
   _ProfessionalServiceRegisterPageState createState() => _ProfessionalServiceRegisterPageState();
@@ -29,15 +31,29 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   List<Asset> images = List<Asset>();
 
   @override
+  void initState() {
+    if (widget.professionalService != null) {
+      _priceController.text = widget.professionalService.price;
+      _serviceSelected = widget.professionalService.serviceId.toString();
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(allTranslations.traslate('register_service_title'), style: labelTitleForm),
         backgroundColor: primaryColor,
         actions: [
-          IconButton(
+          widget.professionalService == null 
+          ? IconButton(
             icon: Icon(Icons.attach_file), 
             onPressed: loadAssets
+          )
+          : IconButton(
+            icon: Icon(Icons.add_photo_alternate), 
+            onPressed: () { /* ir a pagina de galeria */}
           )
         ]
       ),
@@ -67,10 +83,14 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
                     state.serviceFormStatus == RegisterServiceFormDataStatus.ready 
                       ? Column(
                         children: [
-                          _buildIndustiesSelect(state.serviceFormData.industries),
-                          SizedBox(height: 12),
-                          _buildCategoriesSelect(state.serviceFormData.categories),
-                          SizedBox(height: 12),
+                          widget.professionalService == null ? Column(
+                            children: [
+                              _buildIndustiesSelect(state.serviceFormData.industries),
+                              SizedBox(height: 12),
+                              _buildCategoriesSelect(state.serviceFormData.categories),
+                              SizedBox(height: 12),
+                            ],
+                          ) : Container(),
                           _buildServicesSelect(state.serviceFormData.services)
                         ],
                       ) 
@@ -192,7 +212,9 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   Widget _buildServicesSelect(List<Service> services) {
     List<Service> servicesList = List();
 
-    if (_categorySelected != null) {
+    if (widget.professionalService != null) {
+      servicesList.add(Service(id: widget.professionalService.serviceId, name: widget.professionalService.name, categoryId: 0));
+    } else if (_categorySelected != null) {
       servicesList = services.where((element) => element.categoryId == int.parse(_categorySelected)).toList();
     }
 
@@ -228,10 +250,12 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
 
   Widget _buildSaveButton(ProfessionalBloc bloc) {
     return RoundedButton(
-      label: allTranslations.traslate('register_button_text'),
+      label: widget.professionalService == null ? allTranslations.traslate('register_button_text') : allTranslations.traslate('update_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), images, context))
+      onPressed: widget.professionalService == null
+        ? () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), images, context))
+        : () => bloc.add(UpdateServiceForProfessional(widget.professionalService.id, double.parse(_priceController.text), context))
     );
   }
 

@@ -69,6 +69,8 @@ dev_dependencies:
   location_permissions: ">=3.0.0+1 <4.0.0"
   multi_image_picker: ^4.6.5
   flutter_local_notifications: ^0.8.0
+  badges: ^1.1.0
+  simple_moment: ^1.0.3
 
 flutter_icons:
   android: "launcher_icon"

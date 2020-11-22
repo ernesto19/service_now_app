@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/appointment/domain/entities/gallery.dart';
+import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
 
@@ -23,35 +23,35 @@ class BusinessPhotosPage extends StatelessWidget {
             bloc.add(GetGalleriesForUser(business.id));
 
             if (state.status == BusinessStatus.readyGallery) {
-              List<Gallery> galleries = state.galleries;
+              List<Service> services = state.services;
 
-              if (galleries.length > 0) {
+              if (services.length > 0) {
                 return CustomScrollView(
                   slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          Gallery gallery = galleries[index];
+                          Service service = services[index];
 
                           return Container(
                             padding: EdgeInsets.only(top: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(gallery.name),
+                                Text(service.name),
                                 SizedBox(height: 10),
                                 Container(
                                   height: 200.0,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: gallery.photos.length,
+                                    itemCount: service.photos.length,
                                     itemBuilder: (context, index) {
                                       return Container(
                                         margin: EdgeInsets.only(right: 10),
                                         height: 200,
                                         width: 200,
                                         child: FadeInImage(
-                                          image: NetworkImage(gallery.photos[index] ?? ''),
+                                          image: NetworkImage(service.photos[index] ?? ''),
                                           placeholder: AssetImage('assets/images/loader.gif'),
                                           fadeInDuration: Duration(milliseconds: 200),
                                           fit: BoxFit.cover
@@ -64,7 +64,7 @@ class BusinessPhotosPage extends StatelessWidget {
                             )
                           );
                         },
-                        childCount: galleries.length
+                        childCount: services.length
                       )
                     )
                   ],

@@ -3,14 +3,16 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:service_now/features/appointment/data/models/business_model.dart';
 import 'package:service_now/features/appointment/data/models/comment_model.dart';
-import 'package:service_now/features/appointment/data/models/gallery_model.dart';
+import 'package:service_now/features/appointment/data/models/service_model.dart';
 import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_comments_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_galleries_request.dart';
+import 'package:service_now/features/appointment/data/requests/payment_services_request.dart';
 import 'package:service_now/features/appointment/data/requests/request_business_request.dart';
 import 'package:service_now/features/appointment/data/responses/get_business_response.dart';
 import 'package:service_now/features/appointment/data/responses/get_comments_response.dart';
 import 'package:service_now/features/appointment/data/responses/get_galleries_response.dart';
+import 'package:service_now/features/appointment/data/responses/payment_services_response.dart';
 import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'dart:convert';
 
@@ -19,8 +21,9 @@ import 'package:service_now/preferences/user_preferences.dart';
 abstract class AppointmentRemoteDataSource {
   Future<List<BusinessModel>> getBusiness(GetBusinessRequest request);
   Future<List<CommentModel>> getComments(GetCommentsRequest request);
-  Future<List<GalleryModel>> getGalleries(GetGalleriesRequest request);
+  Future<List<ServiceModel>> getGalleries(GetGalleriesRequest request);
   Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request);
+  Future<PaymentServicesResponse> paymentServices(PaymentServicesRequest request);
 }
 
 class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
@@ -35,10 +38,13 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   Future<List<CommentModel>> getComments(GetCommentsRequest request) => _getCommentsFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_comment_by_business');
 
   @override
-  Future<List<GalleryModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_all_galleries');
+  Future<List<ServiceModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_all_galleries');
 
   @override
   Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request) => _requestBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_request_service');
+
+  @override
+  Future<PaymentServicesResponse> paymentServices(PaymentServicesRequest request) => _paymentServicesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_pay_service');
 
   Future<List<BusinessModel>> _getBusinessFromUrl(GetBusinessRequest request, String url) async {
     final response = await client.post(
@@ -78,7 +84,7 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
     }
   }
 
-  Future<List<GalleryModel>> _getGalleriesFromUrl(GetGalleriesRequest request, String url) async {
+  Future<List<ServiceModel>> _getGalleriesFromUrl(GetGalleriesRequest request, String url) async {
     final response = await client.get(
       '$url?business_id=${request.businessId}',
       headers: {
@@ -109,6 +115,24 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
 
     if (response.statusCode == 200) {
       return RequestBusinessResponse.fromJson(json.decode(response.body));
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<PaymentServicesResponse> _paymentServicesFromUrl(PaymentServicesRequest request, String url) async {
+    final response = await client.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json.encode(request.toJson())
+    );
+
+    if (response.statusCode == 200) {
+      return PaymentServicesResponse.fromJson(json.decode(response.body));
     } else {
       throw ServerException();
     }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_event.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_state.dart';
+import 'package:service_now/features/home/presentation/pages/membership_page.dart';
+import 'package:service_now/features/home/presentation/pages/messages_page.dart';
 import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
+import 'package:service_now/features/home/presentation/pages/profile_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
 import 'package:service_now/injection_container.dart';
@@ -32,6 +36,7 @@ class _MenuState extends State<Menu> {
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = MenuBloc.of(context);
+          bloc.add(GetPermissionsForUser());
 
           if (state.status == MenuStatus.ready) {
             return Scaffold(
@@ -57,7 +62,15 @@ class _MenuState extends State<Menu> {
                           itemCount: state.permissions.length,
                           itemBuilder: (_, index) {
                             return ListTile(
-                              leading: SvgPicture.asset(
+                              leading: /*state.permissions[index].id == 7 
+                              ? Badge(
+                                badgeContent: Text('2', style: TextStyle(color: Colors.white, fontSize: 10)),
+                                child: SvgPicture.asset(
+                                  state.permissions[index].icon,
+                                  height: 23
+                                )
+                              )
+                              : */SvgPicture.asset(
                                 state.permissions[index].icon,
                                 height: 23
                               ),
@@ -108,6 +121,15 @@ class _MenuState extends State<Menu> {
         break;
       case 6:
         bloc.add(LogOutForUser(context));
+        break;
+      case 7:
+        Navigator.pushNamed(context, MessagesPage.routeName);
+        break;
+      case 8:
+        Navigator.pushNamed(context, MembershipPage.routeName);
+        break;
+      case 3:
+        Navigator.pushNamed(context, ProfilePage.routeName);
         break;
       default:
     }

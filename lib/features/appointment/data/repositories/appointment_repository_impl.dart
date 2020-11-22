@@ -6,18 +6,21 @@ import 'package:service_now/features/appointment/data/datasources/appointment_re
 import 'package:service_now/features/appointment/data/requests/get_business_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_comments_request.dart';
 import 'package:service_now/features/appointment/data/requests/get_galleries_request.dart';
+import 'package:service_now/features/appointment/data/requests/payment_services_request.dart';
 import 'package:service_now/features/appointment/data/requests/request_business_request.dart';
+import 'package:service_now/features/appointment/data/responses/payment_services_response.dart';
 import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/domain/entities/comment.dart';
-import 'package:service_now/features/appointment/domain/entities/gallery.dart';
+import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
 import 'package:meta/meta.dart';
 
 typedef Future<List<Business>> _BusinessType();
 typedef Future<List<Comment>> _CommentsType();
-typedef Future<List<Gallery>> _GalleriesType();
+typedef Future<List<Service>> _GalleriesType();
 typedef Future<RequestBusinessResponse> _RequestBusinessType();
+typedef Future<PaymentServicesResponse> _PaymentServicesType();
 
 class AppointmentRepositoryImpl implements AppointmentRepository {
   final AppointmentRemoteDataSource remoteDataSource;
@@ -45,7 +48,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, List<Gallery>>> getGalleries(int businessId) async {
+  Future<Either<Failure, List<Service>>> getGalleries(int businessId) async {
     return await _getGalleriesType(() {
       var request = GetGalleriesRequest(businessId: businessId);
       return remoteDataSource.getGalleries(request);
@@ -57,6 +60,14 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
     return await _requestBusinessType(() {
       var request = RequestBusinessRequest(businessId: businessId);
       return remoteDataSource.requestBusiness(request);
+    });
+  }
+
+  @override
+  Future<Either<Failure, PaymentServicesResponse>> paymentServices(int userId, List<Service> services) async {
+    return await _paymentServicesType(() {
+      var request = PaymentServicesRequest(userId: userId, services: services);
+      return remoteDataSource.paymentServices(request);
     });
   }
 
@@ -86,7 +97,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
     }
   }
 
-  Future<Either<Failure, List<Gallery>>> _getGalleriesType(_GalleriesType getGalleriesType) async {
+  Future<Either<Failure, List<Service>>> _getGalleriesType(_GalleriesType getGalleriesType) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteGalleries = await getGalleriesType();
@@ -104,6 +115,19 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       try {
         final requestBusiness = await requestBusinessType();
         return Right(requestBusiness);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, PaymentServicesResponse>> _paymentServicesType(_PaymentServicesType paymentServicesType) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final payment = await paymentServicesType();
+        return Right(payment);
       } on ServerException {
         return Left(ServerFailure());
       }

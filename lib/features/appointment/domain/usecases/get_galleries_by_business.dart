@@ -3,16 +3,16 @@ import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:service_now/core/usecases/usecase.dart';
-import 'package:service_now/features/appointment/domain/entities/gallery.dart';
+import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/domain/repositories/appointment_repository.dart';
 
-class GetGalleriesByBusiness implements UseCase<List<Gallery>, GetGalleriesParams> {
+class GetGalleriesByBusiness implements UseCase<List<Service>, GetGalleriesParams> {
   final AppointmentRepository repository;
 
   GetGalleriesByBusiness(this.repository);
 
   @override
-  Future<Either<Failure, List<Gallery>>> call(GetGalleriesParams params) async {
+  Future<Either<Failure, List<Service>>> call(GetGalleriesParams params) async {
     return await repository.getGalleries(params.businessId);
   }
 
