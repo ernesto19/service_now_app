@@ -141,6 +141,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
       + 'lat=${request.latitude}&'
       + 'lng=${request.longitude}&'
       + 'address=${request.address}&'
+      + 'phone=${request.phone}&'
       + 'fanpage=${request.fanpage}');
 
     Map<String, String> headers = {
@@ -192,6 +193,7 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
       + 'lat=${request.latitude}&'
       + 'lng=${request.longitude}&'
       + 'address=${request.address}&'
+      + 'phone=${request.phone}&'
       + 'fanpage=${request.fanpage}');
 
     Map<String, String> headers = {

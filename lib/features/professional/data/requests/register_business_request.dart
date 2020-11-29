@@ -12,7 +12,8 @@ class RegisterBusinessRequest {
   final String longitude;
   final String address;
   final String fanpage;
+  final String phone;
   final List<Asset> images;
 
-  RegisterBusinessRequest({ this.businessId, this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.images });
+  RegisterBusinessRequest({ this.businessId, this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.phone, this.images });
 }

@@ -20,6 +20,8 @@ import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/features/appointment/presentation/pages/business_detail_page.dart';
 import 'package:service_now/features/appointment/presentation/widgets/custom_dialog.dart';
+// import 'package:service_now/features/appointment/presentation/pages/business_detail_page.dart';
+// import 'package:service_now/features/appointment/presentation/widgets/custom_dialog.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/utils/extras_image.dart';
 
@@ -85,20 +87,29 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       yield* _eitherLoadedCommentsOrErrorState(failureOrComments);
     } else if (event is GoToPlace) {
       final history = Map<String, Business>.from(this.state.history);
+
+      final polylines = Map<PolylineId, Polyline>.from(this.state.polylines);
+      PolylineId id = PolylineId("poly");
+      Polyline polyline = Polyline(
+        polylineId: id, 
+        color: Colors.red, 
+        points: event.polylineCoordinates,
+        width: 3
+      );
+
+      polylines[id] = polyline;
+
+      final Uint8List bytes = await placeToMarker(event.trade.name, event.duration, event.distance);
+      BitmapDescriptor customIcon = BitmapDescriptor.fromBytes(bytes);
+
       final MarkerId markerId = MarkerId('place');
 
-      final Uint8List bytes = await loadAsset('assets/icons/marker_active.png', width: 130, height: 130);
-      final customIcon = BitmapDescriptor.fromBytes(bytes);
-
-      final info = InfoWindow(title: event.trade.name);
-
       final Marker marker = Marker(
-        markerId: markerId, 
+        markerId: markerId,
         position: LatLng(double.parse(event.trade.latitude), double.parse(event.trade.longitude)),
-        icon: customIcon, 
-        anchor: Offset(0.5, 1), 
-        infoWindow: info,
-        onTap: () => this._showMarkerDialog(event.trade, event.context)
+        icon: customIcon,
+        anchor: Offset(0.48, 0.0),
+        onTap: () => this._showMarkerDialog(event.trade, event.distance, event.context)
       );
 
       final markers = Map<MarkerId, Marker>.from(this.state.markers);
@@ -106,9 +117,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
       if (history[event.trade.id.toString()] == null) {
         history[event.trade.id.toString()] = event.trade;
-        yield this.state.copyWith(history: history, markers: markers, trade: event.trade);
+        yield this.state.copyWith(status: BusinessStatus.ready, history: history, markers: markers, trade: event.trade, polylines: polylines);
       } else {
-        yield this.state.copyWith(markers: markers, trade: event.trade);
+        yield this.state.copyWith(status: BusinessStatus.ready, markers: markers, trade: event.trade, polylines: polylines);
       }
     } else if (event is GetRequestServicesForUser) {
       yield this.state.copyWith(status: BusinessStatus.readyServices, services: _getServices(event.services));
@@ -118,6 +129,37 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       final failureOrRequest = await requestBusinessByUser(Params(businessId: event.businessId));
       yield* _eitherRequestBusinessOrErrorState(failureOrRequest);
       Navigator.pushNamedAndRemoveUntil(event.context, HomePage.routeName, (Route<dynamic> route) => false);
+    } else if (event is DrawPolyline) {
+      final markers = Map<MarkerId, Marker>.from(this.state.markers);
+      final List<Business> business = List<Business>.from(this.state.business);
+
+      PolylineId id = PolylineId("poly");
+      Polyline polyline = Polyline(
+        polylineId: id, 
+        color: Colors.red, 
+        points: event.polylineCoordinates,
+        width: 3
+      );
+
+      final polylines = Map<PolylineId, Polyline>.from(this.state.polylines);
+      polylines[id] = polyline;
+
+      final Uint8List bytes = await placeToMarker(event.business.name, event.duration, event.distance);
+      BitmapDescriptor customIcon = BitmapDescriptor.fromBytes(bytes);
+
+      final MarkerId markerId = MarkerId('place');
+
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(double.parse(event.business.latitude), double.parse(event.business.longitude)),
+        icon: customIcon,
+        anchor: Offset(0.48, 0.0),
+        onTap: () => this._showMarkerDialog(event.business, event.distance, event.context)
+      );
+
+      markers[markerId] = marker;
+
+      yield this.state.copyWith(status: BusinessStatus.ready, business: business, markers: markers, polylines: polylines);
     }
   }
 
@@ -161,7 +203,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
               icon: customIcon, 
               anchor: Offset(0.5, 1),
               infoWindow: info,
-              onTap: () => this._showMarkerDialog(trade, context)
+              // onTap: () => this._showMarkerDialog(trade, context)
             );
 
             markers[markerId] = marker;
@@ -201,14 +243,20 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
   goToMyPosition() async {
     if (this.state.myLocation != null) {
-      final CameraUpdate cameraUpdate = CameraUpdate.newLatLng(this.state.myLocation);
+      final CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(this.state.myLocation, 15);
       await (await _mapController).animateCamera(cameraUpdate);
     }
   }
 
-  goToPlace(Business trade, BuildContext context) async {
-    add(GoToPlace(trade, context));
-    final CameraUpdate cameraUpdate = CameraUpdate.newLatLng(LatLng(double.parse(trade.latitude), double.parse(trade.longitude)));
+  goToPlace(Business trade, List<LatLng> polylineCoordinates, String distance, String duration, double zoom, BuildContext context) async {
+    add(GoToPlace(trade, polylineCoordinates, distance, duration, context));
+    final CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng(double.parse(trade.latitude), double.parse(trade.longitude)), zoom);
+    await (await _mapController).animateCamera(cameraUpdate);
+  }
+
+  goToDirection(double latitude, double longitude, double latitudeDestino, double longitudeDestino, double zoom, List<LatLng> polylineCoordinates, Business business, String distance, String duration, BuildContext context) async {
+    add(DrawPolyline(polylineCoordinates, business, distance, duration, context));
+    final CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng((latitude + latitudeDestino) / 2, (longitude + longitudeDestino) / 2), zoom);
     await (await _mapController).animateCamera(cameraUpdate);
   }
 
@@ -243,7 +291,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     );
   }
 
-  void _showMarkerDialog(Business trade, BuildContext context) {
+  void _showMarkerDialog(Business trade, String distance, BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -251,7 +299,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
           title: trade.name,
           description: trade.description,
           rating: trade.rating,
-          distance: '${trade.distance.toStringAsFixed(3)} Km',
+          distance: distance,
           buttonText: 'Detalle',
           onPressed: () {
             Navigator.pop(context);

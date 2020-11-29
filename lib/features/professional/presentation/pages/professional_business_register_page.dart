@@ -3,11 +3,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/industry.dart';
-import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/address_page.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/models/place.dart';
+import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
@@ -32,6 +32,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
   final _descriptionController = TextEditingController();
   final _licenseNumberController = TextEditingController();
   final _fanpageController = TextEditingController();
+  final _phoneController = TextEditingController();
   String _industrySelected;
   String _categorySelected;
   Place _place;
@@ -49,6 +50,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       _licenseNumberController.text = widget.business.licenseNumber;
       _addressController            = widget.business.address;
       _fanpageController.text       = widget.business.fanpage;
+      _phoneController.text         = widget.business.phone;
       _place                        = Place(id: '1', title: 'title', position: LatLng(double.parse(widget.business.latitude), double.parse(widget.business.longitude)), vicinity: '');
       _addressColor                 = Colors.black;
     }
@@ -69,7 +71,7 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
           )
           : IconButton(
             icon: Icon(Icons.add_photo_alternate), 
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessGalleryPage(gallery: widget.business.gallery, businessId: widget.business.id)))
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessGalleryPage(businessId: widget.business.id)))
           )
         ]
       ),
@@ -125,6 +127,8 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
                       _buildAddress(),
                       SizedBox(height: 20),
                       _buildFanpage(),
+                      SizedBox(height: 20),
+                      _buildPhone(),
                       SizedBox(height: 10)
                     ]
                   )
@@ -207,6 +211,16 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
     );
   }
 
+  Widget _buildPhone() {
+    return InputFormField(
+      hint: allTranslations.traslate('business_phone_placeholder'),
+      label: allTranslations.traslate('business_phone_label'),
+      inputType: TextInputType.number,
+      controller: _phoneController,
+      maxLength: 11
+    );
+  }
+
   Widget _buildAddress() {
     return Container(
       child: Column(
@@ -252,8 +266,8 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
       onPressed: widget.business == null 
-        ? () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, images, context)) 
-        : () => bloc.add(UpdateBusinessForProfessional(widget.business.id, _nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, context))
+        ? () => bloc.add(RegisterBusinessForProfessional(_nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, _phoneController.text ?? '', images, context)) 
+        : () => bloc.add(UpdateBusinessForProfessional(widget.business.id, _nameController.text, _descriptionController.text, int.parse(_industrySelected), int.parse(_categorySelected), _licenseNumberController.text, '1', '${_place.position.latitude}', '${_place.position.longitude}', _addressController, _fanpageController.text, _phoneController.text ?? '', context))
     );
   }
 

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/features/professional/domain/entities/professional_business.dart';
+import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_register_page.dart';
+import 'package:service_now/features/professional/presentation/pages/professional_promotions_page.dart';
+import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
+import 'dart:math' as math;
 
 class ProfessionalBusinessInformationPage extends StatefulWidget {
   const ProfessionalBusinessInformationPage({ @required this.business });
@@ -15,12 +18,17 @@ class ProfessionalBusinessInformationPage extends StatefulWidget {
   _ProfessionalBusinessInformationPageState createState() => _ProfessionalBusinessInformationPageState();
 }
 
-class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusinessInformationPage> {
+class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusinessInformationPage> with TickerProviderStateMixin {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _licenseController = TextEditingController();
   final _addressController = TextEditingController();
   final _fanpageController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  AnimationController _controller;
+
+  static const List<IconData> icons = const [ Icons.label, Icons.edit ];
 
   @override
   void initState() {
@@ -29,6 +37,14 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     _licenseController.text     = widget.business.licenseNumber;
     _addressController.text     = widget.business.address;
     _fanpageController.text     = widget.business.fanpage;
+    _phoneController.text         = widget.business.phone;
+
+    bloc.fetchProfessionalBusinessGallery(widget.business.id);
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
 
     super.initState();
   }
@@ -54,6 +70,8 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
                     _buildAddress(),
                     SizedBox(height: 15),
                     _buildFanpage(),
+                    SizedBox(height: 15),
+                    _buildPhone(),
                     SizedBox(height: 20)
                   ]
                 )
@@ -68,10 +86,61 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
           ]
         )
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.edit),
-        backgroundColor: secondaryDarkColor,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)))
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(icons.length, (int index) {
+          Widget child = Container(
+            height: 70.0,
+            width: 56.0,
+            alignment: FractionalOffset.topCenter,
+            child: ScaleTransition(
+              scale: CurvedAnimation(
+                parent: _controller,
+                curve: Interval(
+                  0.0,
+                  1.0 - index / icons.length / 2.0,
+                  curve: Curves.easeOut
+                ),
+              ),
+              child: FloatingActionButton(
+                heroTag: null,
+                backgroundColor: Colors.white,
+                mini: true,
+                child: Icon(icons[index], color: secondaryDarkColor),
+                onPressed: () {
+                  if (index == 1) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
+                  } else {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
+                  }
+                },
+              ),
+            ),
+          );
+          return child;
+        }).toList()..add(
+          FloatingActionButton(
+            heroTag: null,
+            backgroundColor: secondaryDarkColor,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (BuildContext context, Widget child) {
+                return Transform(
+                  transform: Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
+                  alignment: FractionalOffset.center,
+                  child: Icon(_controller.isDismissed ? Icons.menu : Icons.close),
+                );
+              },
+            ),
+            onPressed: () {
+              if (_controller.isDismissed) {
+                _controller.forward();
+              } else {
+                _controller.reverse();
+              }
+            },
+          ),
+        ),
       )
     );
   }
@@ -126,6 +195,15 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     );
   }
 
+  Widget _buildPhone() {
+    return InputFormField(
+      label: allTranslations.traslate('business_phone_label'),
+      inputType: TextInputType.number,
+      controller: _phoneController,
+      maxLength: 11
+    );
+  }
+
   Widget _buildGallery() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -134,29 +212,44 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Galería', style: labelFormStyle),
-          GridView.builder(
-            itemBuilder: (context, index) {
-              return Container(
-                height: 200,
-                width: 200,
-                child: FadeInImage(
-                  image: NetworkImage(widget.business.gallery[index].url ?? ''),
-                  placeholder: AssetImage('assets/images/loader.gif'),
-                  fadeInDuration: Duration(milliseconds: 200),
-                  fit: BoxFit.cover
-                )
+          StreamBuilder(
+            stream: bloc.allProfessionalBusinessGallery,
+            builder: (context, AsyncSnapshot<GalleryResponse> snapshot) {
+              if (snapshot.hasData) {
+                GalleryResponse response = snapshot.data;
+
+                return GridView.builder(
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 200,
+                      width: 200,
+                      child: FadeInImage(
+                        image: NetworkImage(response.data[index].url ?? ''),
+                        placeholder: AssetImage('assets/images/loader.gif'),
+                        fadeInDuration: Duration(milliseconds: 200),
+                        fit: BoxFit.cover
+                      )
+                    );
+                  },
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.1,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10
+                  ),
+                  itemCount: response.data.length
+                );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+
+              return Center(
+                child: CircularProgressIndicator()
               );
-            },
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1.1,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10
-            ),
-            itemCount: widget.business.gallery.length
-          ),
+            }
+          )
         ],
       )
       : Container(

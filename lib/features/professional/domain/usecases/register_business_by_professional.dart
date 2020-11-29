@@ -14,7 +14,7 @@ class RegisterBusinessByProfessional implements UseCase<RegisterBusinessResponse
 
   @override
   Future<Either<Failure, RegisterBusinessResponse>> call(RegisterBusinessParams params) async {
-    return await repository.registerBusiness(params.name, params.description, params.industryId, params.categoryId, params.licenseNumber, params.jobOffer, params.latitude, params.longitude, params.address, params.fanpage, params.images);
+    return await repository.registerBusiness(params.name, params.description, params.industryId, params.categoryId, params.licenseNumber, params.jobOffer, params.latitude, params.longitude, params.address, params.fanpage, params.phone, params.images);
   }
 }
 
@@ -29,10 +29,11 @@ class RegisterBusinessParams extends Equatable {
   final String longitude;
   final String address;
   final String fanpage;
+  final String phone;
   final List<Asset> images;
 
-  RegisterBusinessParams({ @required this.name, @required this.description, @required this.industryId, @required this.categoryId, @required this.licenseNumber, @required this.jobOffer, @required this.latitude, @required this.longitude, @required this.address, @required this.fanpage, @required this.images });
+  RegisterBusinessParams({ @required this.name, @required this.description, @required this.industryId, @required this.categoryId, @required this.licenseNumber, @required this.jobOffer, @required this.latitude, @required this.longitude, @required this.address, @required this.fanpage, @required this.phone, @required this.images });
 
   @override
-  List<Object> get props => [name, description, industryId, categoryId, licenseNumber, jobOffer, latitude, longitude, address, fanpage];
+  List<Object> get props => [name, description, industryId, categoryId, licenseNumber, jobOffer, latitude, longitude, address, fanpage, phone];
 }

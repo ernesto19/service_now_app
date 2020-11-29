@@ -194,7 +194,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
 
     yield this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registering);
 
-    final failureOrSuccess = await registerBusinessByProfessional(RegisterBusinessParams(name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage, images: event.images));
+    final failureOrSuccess = await registerBusinessByProfessional(RegisterBusinessParams(name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage, phone: event.phone, images: event.images));
     yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {
@@ -229,7 +229,7 @@ class ProfessionalBloc extends Bloc<ProfessionalEvent, ProfessionalState> {
 
     yield this.state.copyWith(registerBusinessStatus: RegisterBusinessStatus.registering);
 
-    final failureOrSuccess = await updateBusinessByProfessional(UpdateBusinessParams(businessId: event.businessId, name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage));
+    final failureOrSuccess = await updateBusinessByProfessional(UpdateBusinessParams(businessId: event.businessId, name: event.name, description: event.description, industryId: event.industryId, categoryId: event.categoryId, licenseNumber: event.licenseNumber, jobOffer: event.jobOffer, latitude: event.latitude, longitude: event.longitude, address: event.address, fanpage: event.fanpage, phone: event.phone));
     yield* _eitherBusinessRegisterOrErrorState(failureOrSuccess);
 
     if (this.state.registerBusinessStatus == RegisterBusinessStatus.registered) {

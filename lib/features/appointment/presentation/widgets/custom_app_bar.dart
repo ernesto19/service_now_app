@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
+import 'package:service_now/libs/polylines/polylines_points.dart';
 import 'package:service_now/libs/search_api.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class CustomAppBar extends StatelessWidget{
+class CustomAppBar extends StatefulWidget {
+  @override
+  _CustomAppBarState createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  List<LatLng> polylineCoordinates = [];
+  PolylinePoints polylinePoints = PolylinePoints();
+  String googleAPiKey = 'AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc';
+
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
@@ -42,7 +52,8 @@ class CustomAppBar extends StatelessWidget{
                     );
 
                     if (business != null) {
-                      bloc.goToPlace(business, context);
+                      polylineCoordinates = [];
+                      _getPolyline(state.myLocation.latitude, state.myLocation.longitude, double.parse(business.latitude), double.parse(business.longitude), business, bloc, context);
                     }
                   }
                 )
@@ -52,6 +63,34 @@ class CustomAppBar extends StatelessWidget{
         );
       }
     );
+  }
+
+  _getPolyline(double origenLatitude, double origenLongitude, double latitude, double longitude, Business business, AppointmentBloc bloc, BuildContext context) async {
+    double zoom = 14.5;
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleAPiKey,
+      PointLatLng(origenLatitude, origenLongitude),
+      PointLatLng(latitude, longitude),
+      travelMode: TravelMode.driving
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+
+      if (result.distance.value > 0 && result.distance.value < 3000) {
+        zoom = 14.4;
+      } else if (result.distance.value > 3001 && result.distance.value < 6000) {
+        zoom = 13.9;
+      } else if (result.distance.value > 6001 && result.distance.value < 9000) {
+        zoom = 13.3;
+      } else {
+        zoom = 10;
+      }
+
+      bloc.goToPlace(business, polylineCoordinates, result.distance.text, result.duration.text, zoom, context);
+    }
   }
 }
 

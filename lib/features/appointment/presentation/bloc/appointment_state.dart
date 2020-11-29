@@ -13,12 +13,13 @@ class AppointmentState extends Equatable {
   final List<Service> services;
   final List<Comment> comments;
   final Map<MarkerId, Marker> markers;
+  final Map<PolylineId, Polyline> polylines;
   final BusinessStatus status;
   final Map<String, Business> history;
   final Business trade;
   final SelectBusinessStatus selectBusinessStatus;
 
-  AppointmentState({ this.myLocation, this.business, this.services, this.comments, this.markers, this.status, this.history, this.trade, this.selectBusinessStatus });
+  AppointmentState({ this.myLocation, this.business, this.services, this.comments, this.markers, this.polylines, this.status, this.history, this.trade, this.selectBusinessStatus });
 
   static AppointmentState get initialState => AppointmentState(
     myLocation: null,
@@ -26,6 +27,7 @@ class AppointmentState extends Equatable {
     services: const[],
     comments: const[],
     markers: Map(),
+    polylines: Map(),
     status: BusinessStatus.loading,
     history: Map(),
     trade: null,
@@ -38,6 +40,7 @@ class AppointmentState extends Equatable {
     List<Service> services,
     List<Comment> comments,
     Map<MarkerId, Marker> markers,
+    Map<PolylineId, Polyline> polylines,
     Map<String, Business> history,
     BusinessStatus status,
     Business trade,
@@ -49,6 +52,7 @@ class AppointmentState extends Equatable {
       services: services ?? this.services,
       comments: comments ?? this.comments,
       markers: markers ?? this.markers,
+      polylines: polylines ?? this.polylines,
       history: history ?? this.history,
       status: status ?? this.status,
       trade: trade ?? this.trade,
@@ -57,5 +61,5 @@ class AppointmentState extends Equatable {
   }
 
   @override
-  List<Object> get props => [myLocation, business, services, comments, markers, history, status, trade, selectBusinessStatus];
+  List<Object> get props => [myLocation, business, services, comments, markers, polylines, history, status, trade, selectBusinessStatus];
 }

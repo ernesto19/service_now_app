@@ -12,8 +12,9 @@ class BusinessModel extends Business {
     @required double distance,
     @required int active,
     @required String address,
+    @required String phone,
     @required List<BusinessGallery> gallery
-  }) : super(id: id, name: name, description: description, latitude: latitude, longitude: longitude, rating: rating, distance: distance, active: active, address: address, gallery: gallery);
+  }) : super(id: id, name: name, description: description, latitude: latitude, longitude: longitude, rating: rating, distance: distance, active: active, address: address, phone: phone, gallery: gallery);
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
     return BusinessModel(
@@ -26,6 +27,7 @@ class BusinessModel extends Business {
       distance:     json['distance'],
       active:       json['active'],
       address:      json['address'] ?? '',
+      phone:        json['phone'] ?? '',
       gallery:      ListBusinessGallery.fromJson(json).galleries
     );
   }

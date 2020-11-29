@@ -11,6 +11,8 @@ import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 
+import 'professional_service_gallery_page.dart';
+
 class ProfessionalServiceRegisterPage extends StatefulWidget {
   static final routeName = 'professional_service_register_page';
 
@@ -53,7 +55,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
           )
           : IconButton(
             icon: Icon(Icons.add_photo_alternate), 
-            onPressed: () { /* ir a pagina de galeria */}
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceGalleryPage(serviceId: widget.professionalService.id)))
           )
         ]
       ),

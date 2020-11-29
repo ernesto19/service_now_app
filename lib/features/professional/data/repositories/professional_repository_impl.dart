@@ -60,17 +60,17 @@ class ProfessionalRepositoryImpl implements ProfessionalRepository {
   }
 
   @override
-  Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage, List<Asset> images) async {
+  Future<Either<Failure, RegisterBusinessResponse>> registerBusiness(String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage, String phone, List<Asset> images) async {
     return await _registerBusinessType(() {
-      var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage, images: images);
+      var request = RegisterBusinessRequest(name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage, phone: phone, images: images);
       return remoteDataSource.registerBusiness(request);
     });
   }
 
   @override
-  Future<Either<Failure, RegisterBusinessResponse>> updateBusiness(int businessId, String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage) async {
+  Future<Either<Failure, RegisterBusinessResponse>> updateBusiness(int businessId, String name, String description, int industryId, int categoryId, String licenseNumber, String jobOffer, String latitude, String longitude, String address, String fanpage, String phone) async {
     return await _updateBusinessType(() {
-      var request = RegisterBusinessRequest(businessId: businessId, name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage);
+      var request = RegisterBusinessRequest(businessId: businessId, name: name, description: description, industryId: industryId, categoryId: categoryId, licenseNumber: licenseNumber, jobOffer: jobOffer, latitude: latitude, longitude: longitude, address: address, fanpage: fanpage, phone: phone);
       return remoteDataSource.updateBusiness(request);
     });
   }

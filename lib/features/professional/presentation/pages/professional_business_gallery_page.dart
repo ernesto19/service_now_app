@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/professional/domain/entities/professional_business.dart';
-import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
-import 'package:service_now/injection_container.dart';
+import 'package:service_now/blocs/professional_bloc.dart';
+import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
 class ProfessionalBusinessGalleryPage extends StatelessWidget {
   static final routeName = 'professional_business_gallery_page';
 
-  final List<ProfessionalBusinessGallery> gallery;
   final int businessId;
 
-  const ProfessionalBusinessGalleryPage({ @required this.gallery, @required this.businessId});
+  const ProfessionalBusinessGalleryPage({ @required this.businessId});
 
   @override
   Widget build(BuildContext context) {
+    bloc.fetchProfessionalBusinessGallery(businessId);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Galería', style: labelTitleForm),
@@ -25,22 +24,23 @@ class ProfessionalBusinessGalleryPage extends StatelessWidget {
     );
   }
 
-  BlocProvider<ProfessionalBloc> buildBody(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<ProfessionalBloc>(),
-      child: BlocBuilder<ProfessionalBloc, ProfessionalState>(
-        builder: (context, state) {
-          // ignore: close_sinks
-          final bloc = ProfessionalBloc.of(context);
+  Widget buildBody(BuildContext context) {
+    return StreamBuilder(
+      stream: bloc.allProfessionalBusinessGallery,
+      builder: (context, AsyncSnapshot<GalleryResponse> snapshot) {
+        if (snapshot.hasData) {
+          GalleryResponse response = snapshot.data;
 
           return Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 20),
-            child: gallery.length > 0
+            child: response.data.length > 0
             ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GridView.builder(
                   itemBuilder: (context, index) {
+                    Picture image = response.data[index];
+
                     return Column(
                       children: [
                         Expanded(
@@ -48,7 +48,7 @@ class ProfessionalBusinessGalleryPage extends StatelessWidget {
                             height: 200,
                             width: 200,
                             child: FadeInImage(
-                              image: NetworkImage(gallery[index].url ?? ''),
+                              image: NetworkImage(image.url ?? ''),
                               placeholder: AssetImage('assets/images/loader.gif'),
                               fadeInDuration: Duration(milliseconds: 200),
                               fit: BoxFit.cover
@@ -68,7 +68,14 @@ class ProfessionalBusinessGalleryPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)
                           ),
                           color: Colors.red,
-                          onPressed: () => bloc.add(DeleteImageForProfessional(gallery[index].id, businessId, context))
+                          onPressed: () {
+                            bloc.deleteBusinessImage(image.id);
+                            bloc.businessImageDeleteResponse.listen((response) {
+                              if (response.error == 0) {
+                                bloc.fetchProfessionalBusinessGallery(businessId);
+                              }
+                            });
+                          }
                         )
                       ],
                     );
@@ -81,7 +88,7 @@ class ProfessionalBusinessGalleryPage extends StatelessWidget {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10
                   ),
-                  itemCount: gallery.length
+                  itemCount: response.data.length
                 ),
               ],
             )
@@ -103,8 +110,14 @@ class ProfessionalBusinessGalleryPage extends StatelessWidget {
               )
             )
           );
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
         }
-      )
+
+        return Center(
+          child: CircularProgressIndicator()
+        );
+      }
     );
   }
 }

@@ -13,7 +13,7 @@ class UpdateBusinessByProfessional implements UseCase<RegisterBusinessResponse, 
 
   @override
   Future<Either<Failure, RegisterBusinessResponse>> call(UpdateBusinessParams params) async {
-    return await repository.updateBusiness(params.businessId, params.name, params.description, params.industryId, params.categoryId, params.licenseNumber, params.jobOffer, params.latitude, params.longitude, params.address, params.fanpage);
+    return await repository.updateBusiness(params.businessId, params.name, params.description, params.industryId, params.categoryId, params.licenseNumber, params.jobOffer, params.latitude, params.longitude, params.address, params.fanpage, params.phone);
   }
 }
 
@@ -29,9 +29,10 @@ class UpdateBusinessParams extends Equatable {
   final String longitude;
   final String address;
   final String fanpage;
+  final String phone;
 
-  UpdateBusinessParams({ @required this.businessId, @required this.name, @required this.description, @required this.industryId, @required this.categoryId, @required this.licenseNumber, @required this.jobOffer, @required this.latitude, @required this.longitude, @required this.address, @required this.fanpage });
+  UpdateBusinessParams({ @required this.businessId, @required this.name, @required this.description, @required this.industryId, @required this.categoryId, @required this.licenseNumber, @required this.jobOffer, @required this.latitude, @required this.longitude, @required this.address, @required this.fanpage, @required this.phone });
 
   @override
-  List<Object> get props => [name, description, industryId, categoryId, licenseNumber, jobOffer, latitude, longitude, address, fanpage];
+  List<Object> get props => [name, description, industryId, categoryId, licenseNumber, jobOffer, latitude, longitude, address, fanpage, phone];
 }

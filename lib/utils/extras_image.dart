@@ -13,11 +13,12 @@ Future<Uint8List> loadAsset(String path, {int width = 50, int height = 50}) asyn
   return data.buffer.asUint8List();
 }
 
-Future<Uint8List> placeToMarker(String title) async {
+Future<Uint8List> placeToMarker(String title, String duration, String distance) async {
   ui.PictureRecorder recorder = ui.PictureRecorder();
   ui.Canvas canvas = ui.Canvas(recorder);
-  final ui.Size size = ui.Size(450, 150);
-  MyCustomMarker customMarker = MyCustomMarker(title);
+  final ui.Size size = ui.Size(550, title.length <= 28 ? 150 : 200);
+  // MyCustomMarker customMarker = MyCustomMarker(title, duration, distance);
+  MyCustomMarker customMarker = MyCustomMarker(title, duration, distance);
   customMarker.paint(canvas, size);
   ui.Picture picture = recorder.endRecording();
   final ui.Image image = await picture.toImage(

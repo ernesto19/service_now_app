@@ -35,10 +35,11 @@ class RegisterBusinessForProfessional extends ProfessionalEvent {
   final String longitude;
   final String address;
   final String fanpage;
+  final String phone;
   final List<Asset> images;
   final BuildContext context;
 
-  RegisterBusinessForProfessional(this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.images, this.context);
+  RegisterBusinessForProfessional(this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.phone, this.images, this.context);
 }
 
 class UpdateBusinessForProfessional extends ProfessionalEvent {
@@ -53,9 +54,10 @@ class UpdateBusinessForProfessional extends ProfessionalEvent {
   final String longitude;
   final String address;
   final String fanpage;
+  final String phone;
   final BuildContext context;
 
-  UpdateBusinessForProfessional(this.businessId, this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.context);
+  UpdateBusinessForProfessional(this.businessId, this.name, this.description, this.industryId, this.categoryId, this.licenseNumber, this.jobOffer, this.latitude, this.longitude, this.address, this.fanpage, this.phone, this.context);
 }
 
 class RegisterServiceForProfessional extends ProfessionalEvent {

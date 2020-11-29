@@ -3,27 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/features/professional/presentation/widgets/header.dart';
 import 'package:service_now/models/professional_business.dart';
+import 'package:service_now/models/promotion.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
+import 'professional_promotion_register_page.dart';
 
-import 'professional_business_detail_page.dart';
-import 'professional_business_register_page.dart';
+class ProfessionalPromotionsPage extends StatefulWidget {
+  static final routeName = 'professional_promotions_page';
+  final ProfessionalBusiness business;
 
-class ProfessionalBusinessPage extends StatefulWidget {
-  static final routeName = 'professional_business_page';
+  const ProfessionalPromotionsPage({ @required this.business });
 
   @override
-  _ProfessionalBusinessPageState createState() => _ProfessionalBusinessPageState();
+  _ProfessionalPromotionsPageState createState() => _ProfessionalPromotionsPageState();
 }
 
-class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
+class _ProfessionalPromotionsPageState extends State<ProfessionalPromotionsPage> {
   bool toggleValue = false;
 
   @override
   void initState() {
     super.initState();
 
-    bloc.fetchProfessionalBusiness();
+    bloc.fetchPromotions(widget.business.id);
   }
 
   @override
@@ -33,9 +35,25 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: secondaryDarkColor,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: null)))
+        // onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionRegisterPage(businessId: widget.business.id)))
+        onPressed: _goToNextPage
       )
     );
+  }
+
+  void _goToNextPage() async {
+    await Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => ProfessionalPromotionRegisterPage(businessId: widget.business.id))
+    ).then((value) {
+      setState(() {
+        if (value != null) {
+          if (value) {
+            bloc.fetchPromotions(widget.business.id);
+          }
+        }
+      });
+    });
   }
 
   Widget buildBody(BuildContext context) {
@@ -44,26 +62,26 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
         children: <Widget>[
           Container(
             child: StreamBuilder(
-              stream: bloc.allProfessionalBusiness,
-              builder: (context, AsyncSnapshot<ProfessionalBusinessResponse> snapshot) {
+              stream: bloc.allPromotions,
+              builder: (context, AsyncSnapshot<PromotionResponse> snapshot) {
                 if (snapshot.hasData) {
-                  ProfessionalBusinessResponse response = snapshot.data;
+                  PromotionResponse response = snapshot.data;
 
-                  return response.data.length > 0 
+                  return response.data.length > 0
                   ? CustomScrollView(
                     slivers: [
                       Header(
-                        title: allTranslations.traslate('my_business_title'),
+                        title: allTranslations.traslate('my_promotions_title'),
                         titleSize: 22,
                         onTap: () => Navigator.pop(context)
                       ),
-                      _buildBusiness(response.data)
+                      _buildPromotions(response.data, context)
                     ],
                   ) 
                   : CustomScrollView(
                     slivers: [
                       Header(
-                        title: allTranslations.traslate('my_business_title'),
+                        title: allTranslations.traslate('my_promotions_title'),
                         titleSize: 22,
                         onTap: () => Navigator.pop(context)
                       ),
@@ -88,7 +106,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                 return CustomScrollView(
                   slivers: [
                     Header(
-                      title: allTranslations.traslate('my_business_title'),
+                      title: allTranslations.traslate('my_promotions_title'),
                       titleSize: 22,
                       onTap: () => Navigator.pop(context)
                     ),
@@ -110,11 +128,11 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
     );
   }
 
-  Widget _buildBusiness(List<ProfessionalBusiness> businessList) {
+  Widget _buildPromotions(List<Promotion> promotionsList, BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          ProfessionalBusiness business = businessList[index];
+          Promotion promotion = promotionsList[index];
 
           return GestureDetector(
             child: Container(
@@ -129,41 +147,27 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(business.name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
+                            child: Text(promotion.name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
                           ),
                           ShaderMask(
                             child: CupertinoSwitch(
                               activeColor: Colors.greenAccent[100],
-                              value: business.active == 1,
+                              value: promotion.active == 1,
                               onChanged: (value) {
-                                
-                                bloc.updateBusinessStatus(business.id);
-                                bloc.businessStatusUpdateResponse.listen((response) {
-                                  ProfessionalBusiness businessTemp = ProfessionalBusiness(
-                                    id: business.id, 
-                                    name: business.name, 
-                                    description: business.description, 
-                                    categoryId: business.categoryId, 
-                                    categoryName: business.categoryName, 
-                                    industryId: business.industryId,
-                                    address: business.address,
-                                    licenseNumber: business.licenseNumber,
-                                    fanpage: business.fanpage,
-                                    latitude: business.latitude,
-                                    longitude: business.longitude,
-                                    active: business.active == 1 ? 0 : 1);
-
+                                bloc.updatePromotionStatus(promotion.id, promotion.active == 1 ? 0 : 1);
+                                bloc.promotionStatusUpdateResponse.listen((response) {
+                                  Promotion promotionTemp = Promotion(id: promotion.id, name: promotion.name, description: promotion.description, amount: promotion.amount, businessId: promotion.businessId, type: promotion.type, active: promotion.active == 1 ? 0 : 1);
                                   setState(() {
-                                    businessList[index] = businessTemp;  
+                                    promotionsList[index] = promotionTemp;  
                                   });
                                 });
                               }
                             ),
                             shaderCallback: (r) {
                               return LinearGradient(
-                                colors: business.active == 1
-                                    ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
-                                    : [ Colors.redAccent[100], Colors.redAccent[100]],
+                                colors: promotion.active == 1
+                                  ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
+                                  : [ Colors.redAccent[100], Colors.redAccent[100]],
                               ).createShader(r);
                             }
                           )
@@ -172,25 +176,17 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Icon(Icons.web, size: 20),
+                          Icon(Icons.description, size: 20),
                           SizedBox(width: 10),
-                          Text(business.categoryName.toUpperCase(), style: TextStyle(fontSize: 11)),
+                          Text(promotion.description, style: TextStyle(fontSize: 11)),
                         ],
                       ),
                       SizedBox(height: 5),
                       Row(
                         children: [
-                          Icon(Icons.pin_drop, size: 20),
+                          Icon(promotion.type == 1 ? Icons.trending_down : Icons.monetization_on, size: 20),
                           SizedBox(width: 10),
-                          Expanded(child: Text(business.address, style: TextStyle(fontSize: 11))),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(Icons.stars, size: 20),
-                          SizedBox(width: 10),
-                          Text(business.licenseNumber, style: TextStyle(fontSize: 11)),
+                          Expanded(child: Text(promotion.type == 1 ? '${promotion.amount} % de descuento' : 'S/ ${promotion.amount} de descuento', style: TextStyle(fontSize: 11))),
                         ],
                       ),
                       SizedBox(height: 5)
@@ -210,11 +206,10 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                   )
                 ]
               )
-            ),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business)))
+            )
           );
         },
-        childCount: businessList.length
+        childCount: promotionsList.length
       )
     );
   }

@@ -11,6 +11,7 @@ class Business extends Equatable {
   final double distance;
   final int active;
   final String address;
+  final String phone;
   final List<BusinessGallery> gallery;
 
   Business({
@@ -23,11 +24,12 @@ class Business extends Equatable {
     @required this.distance,
     @required this.active,
     @required this.address,
+    @required this.phone,
     @required this.gallery
   });
 
   @override
-  List<Object> get props => [id, name, description, latitude, longitude, rating, distance, address, gallery];
+  List<Object> get props => [id, name, description, latitude, longitude, rating, distance, address, phone, gallery];
 }
 
 class BusinessGallery {

@@ -33,9 +33,12 @@ class GetCommentsForUser extends AppointmentEvent {
 
 class GoToPlace extends AppointmentEvent {
   final Business trade;
+  final List<LatLng> polylineCoordinates;
+  final String distance;
+  final String duration;
   final BuildContext context;
 
-  GoToPlace(this.trade, this.context);
+  GoToPlace(this.trade, this.polylineCoordinates, this.distance, this.duration, this.context);
 }
 
 class GetRequestServicesForUser extends AppointmentEvent {
@@ -55,4 +58,14 @@ class RequestBusinessForUser extends AppointmentEvent {
   final BuildContext context;
 
   RequestBusinessForUser(this.businessId, this.context);
+}
+
+class DrawPolyline extends AppointmentEvent {
+  final List<LatLng> polylineCoordinates;
+  final Business business;
+  final String distance;
+  final String duration;
+  final BuildContext context;
+
+  DrawPolyline(this.polylineCoordinates, this.business, this.distance, this.duration, this.context);
 }

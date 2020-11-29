@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:service_now/features/professional/domain/entities/professional_business.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_service_register_page.dart';
+import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/colors.dart';
 
 class ProfessionalBusinessServicesPage extends StatelessWidget {
