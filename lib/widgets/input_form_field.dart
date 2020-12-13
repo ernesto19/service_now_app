@@ -6,7 +6,7 @@ import 'package:service_now/utils/text_styles.dart';
 class InputFormField extends StatelessWidget {
   final String hint;
   final String error;
-  final Function blocFunction;
+  final Function onChanged;
   final TextEditingController controller;
   final TextInputType inputType;
   final bool enabled;
@@ -15,8 +15,10 @@ class InputFormField extends StatelessWidget {
   final Color textColor;
   final String prefix;
   final List<TextInputFormatter> inputFormatters;
+  final int maxLines;
+  final String counterText;
   
-  InputFormField({this.hint, this.blocFunction, this.error, @required this.controller, this.inputType, this.enabled, this.label, this.maxLength, this.textColor, this.prefix = '', this.inputFormatters});
+  InputFormField({ this.hint, this.onChanged, this.error, @required this.controller, this.inputType, this.enabled, this.label, this.maxLength, this.textColor, this.prefix = '', this.inputFormatters, this.maxLines, this.counterText });
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +34,13 @@ class InputFormField extends StatelessWidget {
               hintStyle: TextStyle(color: hintColor),
               hintText: hint,
               errorText: error,
-              counterText: '',
+              counterText: counterText ?? '',
               prefix: Text(prefix, style: TextStyle(color: Colors.black87))
             ),
             style: TextStyle(fontSize: 15.0, color: textColor == null ? Colors.black87 : textColor),
-            onChanged: blocFunction,
+            onChanged: onChanged,
             enabled: enabled,
-            maxLines: null,
+            maxLines: maxLines,
             inputFormatters: inputFormatters
           ),
         ],

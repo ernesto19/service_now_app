@@ -1,4 +1,3 @@
-// import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/libs/polylines/polylines_points.dart';
 import 'package:service_now/utils/colors.dart';
-// import 'package:service_now/utils/extras_image.dart';
 import '../widgets/custom_search.dart';
 import 'business_detail_page.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -202,7 +200,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
     }
 
     return Container(
-      width: 290,
+      width: 300,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -237,45 +235,49 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
           SizedBox(height: 5),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
+            child: Column(
               children: [
-                business.phone.isNotEmpty ? Expanded(
-                  child: RaisedButton(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.call, color: Colors.white, size: 20),
-                        SizedBox(width: 5),
-                        Text('Llamar', style: TextStyle(fontSize: 16, color: Colors.white))
-                      ]
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                    color: Colors.green,
-                    onPressed: () => launch('tel://+51${business.phone}')
-                  ),
-                ) : Container(),
-                SizedBox(width: 7),
-                Expanded(
-                  child: RaisedButton(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.business, color: Colors.white, size: 20),
-                        SizedBox(width: 5),
-                        Text('Detalle', style: TextStyle(fontSize: 16, color: Colors.white))
-                      ]
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                    color: secondaryDarkColor,
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business)))
-                  ),
+                Row(
+                  children: [
+                    business.phone.isNotEmpty ? Expanded(
+                      child: RaisedButton(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.call, color: Colors.white, size: 20),
+                            SizedBox(width: 5),
+                            Text('Llamar', style: TextStyle(fontSize: 16, color: Colors.white))
+                          ]
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)
+                        ),
+                        color: Colors.green,
+                        onPressed: () => launch('tel://+51${business.phone}')
+                      ),
+                    ) : Container(),
+                    SizedBox(width: 7),
+                    Expanded(
+                      child: RaisedButton(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.business, color: Colors.white, size: 20),
+                            SizedBox(width: 5),
+                            Text('Detalle', style: TextStyle(fontSize: 16, color: Colors.white))
+                          ]
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)
+                        ),
+                        color: secondaryDarkColor,
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business)))
+                      ),
+                    )
+                  ],
                 )
-              ],
-            ),
+              ]
+            )
           )
         ]
       ),

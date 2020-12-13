@@ -107,6 +107,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     UserPreferences.instance.firstName = user.firstName;
     UserPreferences.instance.lastName = user.lastName;
     UserPreferences.instance.token    = user.token;
+    UserPreferences.instance.profileId = user.profileId;
   }
 
   void _showProgressDialog(BuildContext context) {

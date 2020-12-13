@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/features/home/presentation/pages/request_tray_page.dart';
+import 'package:unicorndial/unicorndial.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_register_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_promotions_page.dart';
@@ -7,7 +9,6 @@ import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
-import 'dart:math' as math;
 
 class ProfessionalBusinessInformationPage extends StatefulWidget {
   const ProfessionalBusinessInformationPage({ @required this.business });
@@ -18,17 +19,13 @@ class ProfessionalBusinessInformationPage extends StatefulWidget {
   _ProfessionalBusinessInformationPageState createState() => _ProfessionalBusinessInformationPageState();
 }
 
-class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusinessInformationPage> with TickerProviderStateMixin {
+class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusinessInformationPage> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _licenseController = TextEditingController();
   final _addressController = TextEditingController();
   final _fanpageController = TextEditingController();
   final _phoneController = TextEditingController();
-
-  AnimationController _controller;
-
-  static const List<IconData> icons = const [ Icons.label, Icons.edit ];
 
   @override
   void initState() {
@@ -41,16 +38,61 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
 
     bloc.fetchProfessionalBusinessGallery(widget.business.id);
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var childButtons = List<UnicornButton>();
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: 'Solicitudes de colaboración',
+        currentButton: FloatingActionButton(
+          heroTag: "solicitudes",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.work),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RequestTrayPage(business: widget.business)));
+          },
+        )
+      )
+    );
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: 'Promociones',
+        currentButton: FloatingActionButton(
+          heroTag: "promocion",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.label),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
+          },
+        )
+      )
+    );
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: 'Editar',
+        currentButton: FloatingActionButton(
+          heroTag: "editar",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.edit),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
+          }
+        )
+      )
+    );
+
     return Scaffold(
       body: Container(
         child: CustomScrollView(
@@ -86,62 +128,69 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
           ]
         )
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(icons.length, (int index) {
-          Widget child = Container(
-            height: 70.0,
-            width: 56.0,
-            alignment: FractionalOffset.topCenter,
-            child: ScaleTransition(
-              scale: CurvedAnimation(
-                parent: _controller,
-                curve: Interval(
-                  0.0,
-                  1.0 - index / icons.length / 2.0,
-                  curve: Curves.easeOut
-                ),
-              ),
-              child: FloatingActionButton(
-                heroTag: null,
-                backgroundColor: Colors.white,
-                mini: true,
-                child: Icon(icons[index], color: secondaryDarkColor),
-                onPressed: () {
-                  if (index == 1) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
-                  } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
-                  }
-                },
-              ),
-            ),
-          );
-          return child;
-        }).toList()..add(
-          FloatingActionButton(
-            heroTag: null,
-            backgroundColor: secondaryDarkColor,
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (BuildContext context, Widget child) {
-                return Transform(
-                  transform: Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
-                  alignment: FractionalOffset.center,
-                  child: Icon(_controller.isDismissed ? Icons.menu : Icons.close),
-                );
-              },
-            ),
-            onPressed: () {
-              if (_controller.isDismissed) {
-                _controller.forward();
-              } else {
-                _controller.reverse();
-              }
-            },
-          ),
-        ),
+      floatingActionButton: UnicornDialer(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
+        parentButtonBackground: secondaryDarkColor,
+        orientation: UnicornOrientation.VERTICAL,
+        parentButton: Icon(Icons.menu),
+        childButtons: childButtons
       )
+      // floatingActionButton: Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: List.generate(icons.length, (int index) {
+      //     Widget child = Container(
+      //       height: 70.0,
+      //       width: 56.0,
+      //       alignment: FractionalOffset.topCenter,
+      //       child: ScaleTransition(
+      //         scale: CurvedAnimation(
+      //           parent: _controller,
+      //           curve: Interval(
+      //             0.0,
+      //             1.0 - index / icons.length / 2.0,
+      //             curve: Curves.easeOut
+      //           ),
+      //         ),
+      //         child: FloatingActionButton(
+      //           heroTag: null,
+      //           backgroundColor: Colors.white,
+      //           mini: true,
+      //           child: Icon(icons[index], color: secondaryDarkColor),
+      //           onPressed: () {
+      //             if (index == 1) {
+      //               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
+      //             } else {
+      //               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
+      //             }
+      //           },
+      //         ),
+      //       ),
+      //     );
+      //     return child;
+      //   }).toList()..add(
+      //     FloatingActionButton(
+      //       heroTag: null,
+      //       backgroundColor: secondaryDarkColor,
+      //       child: AnimatedBuilder(
+      //         animation: _controller,
+      //         builder: (BuildContext context, Widget child) {
+      //           return Transform(
+      //             transform: Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
+      //             alignment: FractionalOffset.center,
+      //             child: Icon(_controller.isDismissed ? Icons.menu : Icons.close),
+      //           );
+      //         },
+      //       ),
+      //       onPressed: () {
+      //         if (_controller.isDismissed) {
+      //           _controller.forward();
+      //         } else {
+      //           _controller.reverse();
+      //         }
+      //       },
+      //     ),
+      //   ),
+      // )
     );
   }
 

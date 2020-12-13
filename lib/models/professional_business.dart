@@ -115,3 +115,37 @@ class ProfessionalCRUDResponse {
     message = json['message'];
   }
 }
+
+class Request {
+  int id;
+  String firstName;
+  String lastName;
+  String email;
+
+  Request.fromJson(dynamic json) {
+    id        = json['request_id'];
+    firstName = json['first_name'] ?? '';
+    lastName  = json['last_name'] ?? '';
+    email     = json['email'] ?? '';
+  }
+}
+
+class RequestResponse {
+  int error;
+  String message;
+  List<Request> data = List();
+
+  RequestResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error   = json['error'];
+    message = json['message'];
+
+    if (error == 0) {
+      for (var item in json['data']) {
+        final request = Request.fromJson(item);
+        data.add(request);
+      }
+    }
+  }
+}

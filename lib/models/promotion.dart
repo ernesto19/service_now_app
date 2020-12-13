@@ -4,7 +4,7 @@ class Promotion {
   String name;
   String description;
   String amount;
-  int type;
+  String type;
   int active;
 
   Promotion({

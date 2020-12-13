@@ -184,9 +184,9 @@ class _ProfessionalPromotionsPageState extends State<ProfessionalPromotionsPage>
                       SizedBox(height: 5),
                       Row(
                         children: [
-                          Icon(promotion.type == 1 ? Icons.trending_down : Icons.monetization_on, size: 20),
+                          Icon(promotion.type == '1' ? Icons.trending_down : Icons.monetization_on, size: 20),
                           SizedBox(width: 10),
-                          Expanded(child: Text(promotion.type == 1 ? '${promotion.amount} % de descuento' : 'S/ ${promotion.amount} de descuento', style: TextStyle(fontSize: 11))),
+                          Expanded(child: Text(promotion.type == '1' ? '${promotion.amount} % de descuento' : 'S/ ${promotion.amount} de descuento', style: TextStyle(fontSize: 11))),
                         ],
                       ),
                       SizedBox(height: 5)

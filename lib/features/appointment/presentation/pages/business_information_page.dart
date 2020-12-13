@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/blocs/appointment_bloc.dart';
+import 'package:service_now/preferences/user_preferences.dart';
+import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
@@ -14,6 +17,43 @@ class BusinessInformationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var childButtons = List<UnicornButton>();
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: 'Solicitar colaboración',
+        currentButton: FloatingActionButton(
+          heroTag: "colaboracion",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.work),
+          onPressed: () {
+            bloc.solicitarColaboracion(business.id);
+            bloc.solicitudColaboracionResponse.listen((response) {
+              if (response.error == 0) {
+                print('La solicitud fue enviada exitosamente');
+              }
+            });
+          }
+        )
+      )
+    );
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: 'Solicitar servicio',
+        currentButton: FloatingActionButton(
+          heroTag: "servicio",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.send),
+          onPressed: () {}
+        )
+      )
+    );
+
     return BlocProvider(
       create: (_) => sl<AppointmentBloc>(),
       child: BlocBuilder<AppointmentBloc, AppointmentState>(
@@ -100,12 +140,18 @@ class BusinessInformationPage extends StatelessWidget {
                 )
               ]
             ),
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: UserPreferences.instance.profileId == 0 ? FloatingActionButton(
               child: Icon(Icons.send),
               backgroundColor: secondaryDarkColor,
               onPressed: () {
                 bloc.add(RequestBusinessForUser(business.id, context));
               }
+            ) : UnicornDialer(
+              backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
+              parentButtonBackground: secondaryDarkColor,
+              orientation: UnicornOrientation.VERTICAL,
+              parentButton: Icon(Icons.menu),
+              childButtons: childButtons
             )
           );
         }

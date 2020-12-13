@@ -15,6 +15,9 @@ class ProfessionalBloc {
   final _promotionRegister = PublishSubject<ProfessionalCRUDResponse>();
   final _promotionsFetcher = PublishSubject<PromotionResponse>();
   final _promotionStatusUpdate = PublishSubject<void>();
+  final _solicitudesFetcher = PublishSubject<RequestResponse>();
+  final _aprobarSolicitud = PublishSubject<void>();
+  final _denegarSolicitud = PublishSubject<void>();
 
   Observable<ProfessionalBusinessResponse> get allProfessionalBusiness => _professionalBusinessFetcher.stream;
   Observable<GalleryResponse> get allProfessionalBusinessGallery => _professionalBusinessGalleryFetcher.stream;
@@ -25,6 +28,9 @@ class ProfessionalBloc {
   Observable<ProfessionalCRUDResponse> get promotionRegisterResponse => _promotionRegister.stream;
   Observable<PromotionResponse> get allPromotions => _promotionsFetcher.stream;
   Observable<void> get promotionStatusUpdateResponse => _promotionStatusUpdate.stream;
+  Observable<RequestResponse> get solicitudes => _solicitudesFetcher.stream;
+  Observable<void> get aprobarSolicitudResponse => _aprobarSolicitud.stream;
+  Observable<void> get denegarSolicitudResponse => _denegarSolicitud.stream;
 
   Future fetchProfessionalBusiness() async {
     ProfessionalBusinessResponse response = await _repository.fetchProfessionalBusiness();
@@ -69,6 +75,19 @@ class ProfessionalBloc {
     _promotionStatusUpdate.add(await _repository.updatePromotionStatus(id, status));
   }
 
+  Future obtenerBandejaSolicitudes(int businessId) async {
+    RequestResponse response = await _repository.obtenerBandejaSolicitudes(businessId);
+    _solicitudesFetcher.sink.add(response);
+  }
+
+  Future aprobarSolicitud(int id) async {
+    _aprobarSolicitud.add(await _repository.aprobarSolicitud(id));
+  }
+
+  Future denegarSolicitud(int id) async {
+    _denegarSolicitud.add(await _repository.denegarSolicitud(id));
+  }
+
   dispose() {
     _professionalBusinessFetcher.close();
     _professionalBusinessGalleryFetcher.close();
@@ -79,6 +98,9 @@ class ProfessionalBloc {
     _promotionRegister.close();
     _promotionsFetcher.close();
     _promotionStatusUpdate.close();
+    _solicitudesFetcher.close();
+    _aprobarSolicitud.close();
+    _denegarSolicitud.close();
   }
 }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/appointment/data/responses/get_business_response.dart';
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/models/place.dart';
@@ -35,7 +36,7 @@ class SearchAPI {
 
   Future<List<Business>> searchBusiness(String query, LatLng at) async {
     final response = await client.get(
-      'https://test.konxulto.com/service_now/public/api/business/search_business'
+      ApiBaseHelper().baseUrl + 'business/search_business'
       + '?string=$query'
       + '&lat=${at.latitude}'
       + '&long=${at.longitude}',

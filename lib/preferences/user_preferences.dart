@@ -83,4 +83,12 @@ class UserPreferences {
   set rol(int value) {
     _preferences.setInt('rol', value);
   }
+
+  get profileId {
+    return _preferences.getInt('profileId' ?? '');
+  }
+
+  set profileId(int value) {
+    _preferences.setInt('profileId', value);
+  }
 }

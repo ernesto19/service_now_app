@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 import 'package:service_now/core/error/exceptions.dart';
+import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/professional/data/models/professional_business_model.dart';
 import 'package:service_now/features/professional/data/models/professional_service_model.dart';
 import 'package:service_now/features/professional/data/requests/get_professional_services_request.dart';
@@ -43,37 +44,37 @@ class ProfessionalRemoteDataSourceImpl implements ProfessionalRemoteDataSource {
   ProfessionalRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness() => _getProfessionalBusinessFromUrl('https://test.konxulto.com/service_now/public/api/business/business_by_professional');
+  Future<List<ProfessionalBusinessModel>> getProfessionalBusiness() => _getProfessionalBusinessFromUrl(ApiBaseHelper().baseUrl + 'business/business_by_professional');
 
   @override
-  Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request) => _getProfessionalServicesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/get_services');
+  Future<List<ProfessionalServiceModel>> getProfessionalServices(GetProfessionalServicesRequest request) => _getProfessionalServicesFromUrl(request, ApiBaseHelper().baseUrl + 'business/get_services');
 
   @override
-  Future<IndustryCategory> getIndustries() => _getIndustriesFromUrl('https://test.konxulto.com/service_now/public/api/business/industries_categories');
+  Future<IndustryCategory> getIndustries() => _getIndustriesFromUrl(ApiBaseHelper().baseUrl + 'business/industries_categories');
 
   @override
-  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/create');
+  Future<RegisterBusinessResponse> registerBusiness(RegisterBusinessRequest request) => _registerBusinessFromUrl(request, ApiBaseHelper().baseUrl + 'business/create');
 
   @override
-  Future<RegisterBusinessResponse> updateBusiness(RegisterBusinessRequest request) => _updateBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/update');
+  Future<RegisterBusinessResponse> updateBusiness(RegisterBusinessRequest request) => _updateBusinessFromUrl(request, ApiBaseHelper().baseUrl + 'business/update');
 
   @override
-  Future<CreateServiceForm> getCreateServiceForm() => _getCreateServiceFormFromUrl('https://test.konxulto.com/service_now/public/api/business/ind_cat_serv');
+  Future<CreateServiceForm> getCreateServiceForm() => _getCreateServiceFormFromUrl(ApiBaseHelper().baseUrl + 'business/ind_cat_serv');
 
   @override
-  Future<RegisterServiceResponse> registerService(RegisterServiceRequest request) => _registerServiceFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/add_service');
+  Future<RegisterServiceResponse> registerService(RegisterServiceRequest request) => _registerServiceFromUrl(request, ApiBaseHelper().baseUrl + 'business/add_service');
 
   @override
-  Future<RegisterServiceResponse> updateService(RegisterServiceRequest request) => _updateServiceFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/update_service');
+  Future<RegisterServiceResponse> updateService(RegisterServiceRequest request) => _updateServiceFromUrl(request, ApiBaseHelper().baseUrl + 'business/update_service');
 
   @override
-  Future<ResponseRequestResponse> responseRequest(ResponseRequestRequest request) => _responseRequestFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_response_service');
+  Future<ResponseRequestResponse> responseRequest(ResponseRequestRequest request) => _responseRequestFromUrl(request, ApiBaseHelper().baseUrl + 'business_service/pn_response_service');
 
   @override
-  Future<void> updateBusinessStatus(ProfessionalBusiness business) => _updateBusinessStatusFromUrl(business, 'https://test.konxulto.com/service_now/public/api/business/active');
+  Future<void> updateBusinessStatus(ProfessionalBusiness business) => _updateBusinessStatusFromUrl(business, ApiBaseHelper().baseUrl + 'business/active');
 
   @override
-  Future<DeleteImageResponse> deleteImage(int id) => _deleteImageFromUrl(id, 'https://test.konxulto.com/service_now/public/api/business/delete_gallery');
+  Future<DeleteImageResponse> deleteImage(int id) => _deleteImageFromUrl(id, ApiBaseHelper().baseUrl + 'business/delete_gallery');
   
   Future<List<ProfessionalBusinessModel>> _getProfessionalBusinessFromUrl(String url) async {
     final response = await client.get(

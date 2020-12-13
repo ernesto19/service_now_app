@@ -21,6 +21,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     PaymentGatewayPage.routeName  : (context) => PaymentGatewayPage(),
     MessagesPage.routeName        : (context) => MessagesPage(),
     MembershipPage.routeName      : (context) => MembershipPage(),
-    ProfilePage.routeName        : (context) => ProfilePage()
+    ProfilePage.routeName         : (context) => ProfilePage()
   };
 }

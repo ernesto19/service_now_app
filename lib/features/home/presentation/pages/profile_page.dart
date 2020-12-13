@@ -3,6 +3,9 @@ import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
+import 'professional_profile_page.dart';
+import 'professional_profile_register_page.dart';
+
 class ProfilePage extends StatefulWidget {
   static final routeName = 'profile_page';
 
@@ -43,8 +46,8 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(height: 30, child: Container(color: backgroundColor)),
               _crearCabecera(),
               SizedBox(height: 30, child: Container(color: backgroundColor)),
-              // _crearSeparador(),
-              // _crearIrAInformacion(),
+              _crearSeparador(),
+              _crearIrAPerfilProfesional(),
               _crearSeparador(),
               _crearIrACambioContrasena(),
               _crearSeparador(),
@@ -71,34 +74,32 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Widget _crearIrAInformacion() {
-  //   return InkWell(
-  //     child: Container(
-  //       padding: EdgeInsets.all(20.0),
-  //       child: Row(
-  //         children: <Widget>[
-  //           Expanded(
-  //             flex: 1,
-  //             child: SizedBox(),
-  //           ),
-  //           Expanded(
-  //             flex: 4,
-  //             child: Center(
-  //               child: Text('Mi información')
-  //             ),
-  //           ),
-  //           Expanded(
-  //             flex: 1,
-  //             child: Icon(Icons.keyboard_arrow_right),
-  //           )
-  //         ],
-  //       ),
-  //     ),
-  //     onTap: () {
-  //       // Navigator.pushNamed(context, 'informacion_usuario');
-  //     },
-  //   );
-  // }
+  Widget _crearIrAPerfilProfesional() {
+    return InkWell(
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: SizedBox(),
+            ),
+            Expanded(
+              flex: 4,
+              child: Center(
+                child: Text('Perfil profesional')
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Icon(Icons.keyboard_arrow_right),
+            )
+          ],
+        ),
+      ),
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserPreferences.instance.profileId == 0 ? ProfessionalProfileRegisterPage() : ProfessionalProfilePage()))
+    );
+  }
 
   Widget _crearIrACambioContrasena() {
     return InkWell(

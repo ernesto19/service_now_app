@@ -82,4 +82,27 @@ class ProfessionalApiProvider {
       }
     );
   }
+
+  Future<RequestResponse> obtenerBandejaSolicitudes(int businessId) async {
+    final response = await _helper.get('business_request/inbox?business_id=$businessId');
+    return RequestResponse.fromJson(response);
+  }
+
+  Future<void> aprobarSolicitud(int id) async {
+    await _helper.post(
+      'business_request/aprove', 
+      {
+        'id': id
+      }
+    );
+  }
+
+  Future<void> denegarSolicitud(int id) async {
+    await _helper.post(
+      'business_request/deny', 
+      {
+        'id': id
+      }
+    );
+  }
 }

@@ -76,6 +76,8 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     UserPreferences.instance.email = '';
     UserPreferences.instance.firstName = '';
     UserPreferences.instance.lastName = '';
+    UserPreferences.instance.profileId = 0;
+    UserPreferences.instance.userId = 0;
   }
 
   static MenuBloc of(BuildContext context) {

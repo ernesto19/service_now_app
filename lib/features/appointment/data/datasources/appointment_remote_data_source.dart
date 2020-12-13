@@ -1,6 +1,7 @@
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/appointment/data/models/business_model.dart';
 import 'package:service_now/features/appointment/data/models/comment_model.dart';
 import 'package:service_now/features/appointment/data/models/service_model.dart';
@@ -15,7 +16,6 @@ import 'package:service_now/features/appointment/data/responses/get_galleries_re
 import 'package:service_now/features/appointment/data/responses/payment_services_response.dart';
 import 'package:service_now/features/appointment/data/responses/request_business_response.dart';
 import 'dart:convert';
-
 import 'package:service_now/preferences/user_preferences.dart';
 
 abstract class AppointmentRemoteDataSource {
@@ -32,19 +32,19 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   AppointmentRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<List<BusinessModel>> getBusiness(GetBusinessRequest request) => _getBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business/nearest_business');
+  Future<List<BusinessModel>> getBusiness(GetBusinessRequest request) => _getBusinessFromUrl(request, ApiBaseHelper().baseUrl + 'business/nearest_business');
 
   @override
-  Future<List<CommentModel>> getComments(GetCommentsRequest request) => _getCommentsFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_comment_by_business');
+  Future<List<CommentModel>> getComments(GetCommentsRequest request) => _getCommentsFromUrl(request, ApiBaseHelper().baseUrl + 'business_service/get_comment_by_business');
 
   @override
-  Future<List<ServiceModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/get_all_galleries');
+  Future<List<ServiceModel>> getGalleries(GetGalleriesRequest request) => _getGalleriesFromUrl(request, ApiBaseHelper().baseUrl + 'business_service/get_all_galleries');
 
   @override
-  Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request) => _requestBusinessFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_request_service');
+  Future<RequestBusinessResponse> requestBusiness(RequestBusinessRequest request) => _requestBusinessFromUrl(request, ApiBaseHelper().baseUrl + 'business_service/pn_request_service');
 
   @override
-  Future<PaymentServicesResponse> paymentServices(PaymentServicesRequest request) => _paymentServicesFromUrl(request, 'https://test.konxulto.com/service_now/public/api/business_service/pn_pay_service');
+  Future<PaymentServicesResponse> paymentServices(PaymentServicesRequest request) => _paymentServicesFromUrl(request, ApiBaseHelper().baseUrl + 'business_service/pn_pay_service');
 
   Future<List<BusinessModel>> _getBusinessFromUrl(GetBusinessRequest request, String url) async {
     final response = await client.post(

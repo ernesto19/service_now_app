@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:service_now/core/error/exceptions.dart';
+import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/home/data/models/category_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -23,16 +24,16 @@ class CategoryRemoteDataSourceImpl implements HomeRemoteDataSource {
   CategoryRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<List<CategoryModel>> getCategories() => _getCategoriesFromUrl('https://test.konxulto.com/service_now/public/api/favorite_business_categories');
+  Future<List<CategoryModel>> getCategories() => _getCategoriesFromUrl(ApiBaseHelper().baseUrl + 'favorite_business_categories');
 
   @override
-  Future<LoginResponse> acquireMembership() => _acquireMembershipFromUrl('https://test.konxulto.com/service_now/public/api/permissions/add_role');
+  Future<LoginResponse> acquireMembership() => _acquireMembershipFromUrl(ApiBaseHelper().baseUrl + 'permissions/add_role');
 
   @override
-  Future<List<MessageModel>> getMessages() => _getMessagesFromUrl('https://test.konxulto.com/service_now/public/api/business_service/get_push_notification_log');
+  Future<List<MessageModel>> getMessages() => _getMessagesFromUrl(ApiBaseHelper().baseUrl + 'business_service/get_push_notification_log');
 
   @override
-  Future<MembershipModel> getMembership() => _getMembershipFromUrl('https://test.konxulto.com/service_now/public/api/permissions/membership');
+  Future<MembershipModel> getMembership() => _getMembershipFromUrl(ApiBaseHelper().baseUrl + 'permissions/membership');
 
   Future<List<CategoryModel>> _getCategoriesFromUrl(String url) async {
     final response = await client.post(

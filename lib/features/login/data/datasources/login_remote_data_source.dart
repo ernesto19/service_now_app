@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:service_now/core/error/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/login/data/requests/login_request.dart';
 import 'package:service_now/features/login/data/requests/sign_up_request.dart';
 import 'package:service_now/features/login/data/responses/login_response.dart';
@@ -19,13 +20,13 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
   LoginRemoteDataSourceImpl({ @required this.client });
 
   @override
-  Future<LoginResponse> logIn(LoginRequest request) => _logInFromUrl(request, 'https://test.konxulto.com/service_now/public/api/login');
+  Future<LoginResponse> logIn(LoginRequest request) => _logInFromUrl(request, ApiBaseHelper().baseUrl + 'login');
 
   @override
-  Future<LoginResponse> logInByFacebook(String request) => _logInByFacebookFromUrl(request, 'https://test.konxulto.com/service_now/public/api/login/facebook/get_token_from_facebook');
+  Future<LoginResponse> logInByFacebook(String request) => _logInByFacebookFromUrl(request, ApiBaseHelper().baseUrl + 'login/facebook/get_token_from_facebook');
 
   @override
-  Future<SignUpResponse> signUp(SignUpRequest request) => _signUpFromUrl(request, 'https://test.konxulto.com/service_now/public/api/register');
+  Future<SignUpResponse> signUp(SignUpRequest request) => _signUpFromUrl(request, ApiBaseHelper().baseUrl + 'register');
 
   Future<LoginResponse> _logInFromUrl(LoginRequest request, String url) async {
     final response = await client.post(

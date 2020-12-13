@@ -7,6 +7,7 @@ class User extends Equatable {
   final String lastName;
   final String email;
   final String token;
+  final int profileId;
   final Rol rol;
 
   User({
@@ -15,11 +16,12 @@ class User extends Equatable {
     @required this.lastName, 
     @required this.email, 
     @required this.token,
+    @required this.profileId,
     @required this.rol
   });
 
   @override
-  List<Object> get props => [id, firstName, lastName, email, token, rol];
+  List<Object> get props => [id, firstName, lastName, email, token, profileId, rol];
 }
 
 class Rol extends Equatable {

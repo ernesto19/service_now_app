@@ -8,8 +8,9 @@ class UserModel extends User {
     @required String lastName,
     @required String email,
     @required String token,
+    @required int profileId,
     @required RolModel rol
-  }) : super(id: id, firstName: firstName, lastName: lastName, email: email, token: token, rol: rol);
+  }) : super(id: id, firstName: firstName, lastName: lastName, email: email, token: token, profileId: profileId, rol: rol);
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -18,6 +19,7 @@ class UserModel extends User {
       lastName:   json['last_name']   ?? '',
       email:      json['email']       ?? '',
       token:      json['token']       ?? '',
+      profileId:  json['profile_id']  ?? 0,
       rol:        json['roles'] == null ? null : RolModel.fromJson(json['roles'][0])
     );
   }
