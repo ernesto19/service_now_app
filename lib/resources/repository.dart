@@ -1,3 +1,5 @@
+import 'package:service_now/features/appointment/domain/entities/service.dart';
+import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/appointment.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/models/promotion.dart';
@@ -25,6 +27,10 @@ class Repository {
   Future<RequestResponse> obtenerBandejaSolicitudes(int businessId) => professionalApiProvider.obtenerBandejaSolicitudes(businessId);
   Future<void> aprobarSolicitud(int id) => professionalApiProvider.aprobarSolicitud(id);
   Future<void> denegarSolicitud(int id) => professionalApiProvider.denegarSolicitud(id);
+  Future<ProfessionalCRUDResponse> responderSolicitudServicio(List<ProfessionalService> services, int userId) => professionalApiProvider.responderSolicitudServicio(services, userId);
+  Future<ServiciosPendientesResponse> obtenerBandejaServiciosPendientes() => professionalApiProvider.obtenerBandejaServiciosPendientes();
+  Future<void> iniciarServicio(int id) => professionalApiProvider.iniciarServicio(id);
+  Future<void> terminarServicio(int id) => professionalApiProvider.terminarServicio(id);
 
   // USER
   Future<UserCRUDResponse> registerProfessionalProfile(String phone, String resume, String facebook, String linkedin) => userApiProvider.registerProfessionalProfile(phone, resume, facebook, linkedin);
@@ -34,4 +40,8 @@ class Repository {
 
   // APPOINTMENT
   Future<AppointmentCRUDResponse> solicitarColaboracion(int businessId) => appointmentApiProvider.solicitarColaboracion(businessId);
+  Future<ProfessionalResponse> obtenerProfesionalesPorNegocio(int businessId) => appointmentApiProvider.obtenerProfesionalesPorNegocio(businessId);
+  Future<ProfessionalDetailResponse> obtenerPerfilProfesional(int id) => appointmentApiProvider.obtenerPerfilProfesional(id);
+  Future<AppointmentCRUDResponse> solicitarServicio(int businessId, int professionalId) => appointmentApiProvider.solicitarServicio(businessId, professionalId);
+  Future<AppointmentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) => appointmentApiProvider.finalizarSolicitud(services, professionalId);
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/presentation/pages/client_request.dart';
-import 'package:service_now/features/professional/presentation/pages/professional_request.dart';
+import 'package:service_now/features/professional/presentation/pages/professional_request_page.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/message.dart';

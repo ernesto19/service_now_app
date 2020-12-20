@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:service_now/features/home/presentation/pages/request_tray_page.dart';
+import 'package:service_now/features/professional/presentation/pages/payment_means_configuration_page.dart';
+import 'package:service_now/features/professional/presentation/pages/request_tray_page.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_register_page.dart';
@@ -34,7 +35,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     _licenseController.text     = widget.business.licenseNumber;
     _addressController.text     = widget.business.address;
     _fanpageController.text     = widget.business.fanpage;
-    _phoneController.text         = widget.business.phone;
+    _phoneController.text       = widget.business.phone;
 
     bloc.fetchProfessionalBusinessGallery(widget.business.id);
 
@@ -64,6 +65,22 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     childButtons.add(
       UnicornButton(
         hasLabel: true,
+        labelText: 'Configurar medios de pago',
+        currentButton: FloatingActionButton(
+          heroTag: "medios_pago",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.payment),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMeansConfigurationPage(business: widget.business)));
+          },
+        )
+      )
+    );
+
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
         labelText: 'Promociones',
         currentButton: FloatingActionButton(
           heroTag: "promocion",
@@ -71,7 +88,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
           mini: true,
           child: Icon(Icons.label),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
           },
         )
       )
@@ -87,7 +104,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
           mini: true,
           child: Icon(Icons.edit),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
           }
         )
       )

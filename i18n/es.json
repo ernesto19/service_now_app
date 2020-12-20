@@ -90,5 +90,11 @@
     "aptitude_description_label": "Descripción",
     "aptitude_title_placeholder": "Escribe el título de tu aptitud",
     "aptitude_description_placeholder": "Escribe la descripción de tu aptitud",
-    "my_colaborations_tray_title": "Solicitudes de colaboración"
+    "my_colaborations_tray_title": "Solicitudes de colaboración",
+    "professionals_title": "Profesionales",
+    "sending_request_message": "Enviando solicitud ...",
+    "sending_response_message": "Enviando respuesta ...",
+    "pending_services_title": "Servicios pendientes",
+    "starting_service_message": "Iniciando servicio ...",
+    "ending_service_message": "Terminando servicio ..."
 }

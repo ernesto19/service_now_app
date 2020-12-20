@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
+import 'package:service_now/features/appointment/presentation/pages/professional_detail_page.dart';
 import 'package:service_now/features/professional/presentation/widgets/header.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
@@ -16,6 +17,8 @@ class RequestTrayPage extends StatefulWidget {
 }
 
 class _RequestTrayPageState extends State<RequestTrayPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +29,7 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: buildBody(context)
     );
   }
@@ -149,7 +153,13 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                               ),
                               color: Colors.blueAccent,
                               onPressed: () {
+                                this._showProgressDialog('Aprobando solicitud ...');
                                 bloc.aprobarSolicitud(solicitud.id);
+                                bloc.aprobarSolicitudResponse.listen((response) {
+                                  Navigator.pop(_scaffoldKey.currentContext);
+                                  this._showDialog('Aprobación exitosa', 'La solicitud de colaboración ha sido aprobada exitosamente.');
+                                  bloc.obtenerBandejaSolicitudes(widget.business.id);
+                                });
                               }
                             ),
                           ),
@@ -169,7 +179,13 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                               ),
                               color: Colors.redAccent,
                               onPressed: () {
+                                this._showProgressDialog('Denegando solicitud ...');
                                 bloc.denegarSolicitud(solicitud.id);
+                                bloc.denegarSolicitudResponse.listen((response) {
+                                  Navigator.pop(_scaffoldKey.currentContext);
+                                  this._showDialog('Denegación exitosa', 'La solicitud de colaboración ha sido denegada exitosamente.');
+                                  bloc.obtenerBandejaSolicitudes(widget.business.id);
+                                });
                               }
                             ),
                           )
@@ -193,11 +209,51 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                 ]
               )
             ),
-            // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business)))
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalDetailPage(id: solicitud.userId, name: solicitud.firstName + ' ' + solicitud.lastName)))
           );
         },
         childCount: solicitudes.length
       )
+    );
+  }
+
+  void _showProgressDialog(String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(message, style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
     );
   }
 }

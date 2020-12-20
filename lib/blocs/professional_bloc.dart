@@ -1,10 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/models/promotion.dart';
 import 'package:service_now/resources/repository.dart';
 
-class ProfessionalBloc {
+class ProfessionalUserBloc {
   final _repository = Repository();
   final _professionalBusinessFetcher = PublishSubject<ProfessionalBusinessResponse>();
   final _professionalBusinessGalleryFetcher = PublishSubject<GalleryResponse>();
@@ -18,6 +19,10 @@ class ProfessionalBloc {
   final _solicitudesFetcher = PublishSubject<RequestResponse>();
   final _aprobarSolicitud = PublishSubject<void>();
   final _denegarSolicitud = PublishSubject<void>();
+  final _respuestaSolicitud = PublishSubject<ProfessionalCRUDResponse>();
+  final _serviciosPendientesFetcher = PublishSubject<ServiciosPendientesResponse>();
+  final _iniciarServicio = PublishSubject<void>();
+  final _terminarServicio = PublishSubject<void>();
 
   Observable<ProfessionalBusinessResponse> get allProfessionalBusiness => _professionalBusinessFetcher.stream;
   Observable<GalleryResponse> get allProfessionalBusinessGallery => _professionalBusinessGalleryFetcher.stream;
@@ -31,6 +36,10 @@ class ProfessionalBloc {
   Observable<RequestResponse> get solicitudes => _solicitudesFetcher.stream;
   Observable<void> get aprobarSolicitudResponse => _aprobarSolicitud.stream;
   Observable<void> get denegarSolicitudResponse => _denegarSolicitud.stream;
+  Observable<ProfessionalCRUDResponse> get respuestaSolicitudResponse => _respuestaSolicitud.stream;
+  Observable<ServiciosPendientesResponse> get allServiciosPendientes => _serviciosPendientesFetcher.stream;
+  Observable<void> get iniciarServicioResponse => _iniciarServicio.stream;
+  Observable<void> get terminarServicioResponse => _terminarServicio.stream;
 
   Future fetchProfessionalBusiness() async {
     ProfessionalBusinessResponse response = await _repository.fetchProfessionalBusiness();
@@ -88,6 +97,24 @@ class ProfessionalBloc {
     _denegarSolicitud.add(await _repository.denegarSolicitud(id));
   }
 
+  Future responderSolicitudServicio(List<ProfessionalService> services, int userId) async {
+    ProfessionalCRUDResponse response = await _repository.responderSolicitudServicio(services, userId);
+    _respuestaSolicitud.sink.add(response);
+  }
+
+  Future obtenerBandejaServiciosPendientes() async {
+    ServiciosPendientesResponse response = await _repository.obtenerBandejaServiciosPendientes();
+    _serviciosPendientesFetcher.sink.add(response);
+  }
+
+  Future iniciarServicio(int id) async {
+    _iniciarServicio.add(await _repository.iniciarServicio(id));
+  }
+
+  Future terminarServicio(int id) async {
+    _terminarServicio.add(await _repository.terminarServicio(id));
+  }
+
   dispose() {
     _professionalBusinessFetcher.close();
     _professionalBusinessGalleryFetcher.close();
@@ -101,7 +128,11 @@ class ProfessionalBloc {
     _solicitudesFetcher.close();
     _aprobarSolicitud.close();
     _denegarSolicitud.close();
+    _respuestaSolicitud.close();
+    _serviciosPendientesFetcher.close();
+    _iniciarServicio.close();
+    _terminarServicio.close();
   }
 }
 
-final bloc = ProfessionalBloc();
+final bloc = ProfessionalUserBloc();

@@ -3,10 +3,11 @@ import 'package:service_now/utils/colors.dart';
 
 class Header extends StatelessWidget {
   final String title;
+  final String subtitle;
   final double titleSize;
   final Function onTap;
 
-  const Header({ @required this.title, this.titleSize, @required this.onTap });
+  const Header({ @required this.title, this.subtitle, this.titleSize, @required this.onTap });
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +35,26 @@ class Header extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: constraints.maxHeight * 0.3,
+                  bottom: subtitle == null ? constraints.maxHeight * 0.3 : constraints.maxHeight * 0.4,
                   left: 20,
                   child: Text(
                     title,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: titleSize ?? 19,
+                      fontFamily: 'raleway',
+                      height: 1
+                    )
+                  )
+                ),
+                subtitle == null ? Container() : Positioned(
+                  bottom: constraints.maxHeight * 0.28,
+                  left: 20,
+                  child: Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
                       fontFamily: 'raleway',
                       height: 1
                     )

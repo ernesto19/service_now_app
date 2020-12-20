@@ -54,7 +54,7 @@ class _ProfessionalProfilePageState extends State<ProfessionalProfilePage> {
           backgroundColor: secondaryDarkColor,
           mini: true,
           child: Icon(Icons.assignment),
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalAptitudesPage(/*profileId: UserPreferences.instance.profileId*/)))
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalAptitudesPage()))
         )
       )
     );

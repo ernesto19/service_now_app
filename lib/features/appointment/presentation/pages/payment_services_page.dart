@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/presentation/bloc/payment_services/bloc.dart';
 import 'package:service_now/injection_container.dart';
-import 'package:service_now/preferences/user_preferences.dart';
+// import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,8 +15,9 @@ class PaymentServicesPage extends StatefulWidget {
 
   final double totalPrice;
   final List<Service> services;
+  final int professionaUserId;
 
-  const PaymentServicesPage({ @required this.totalPrice, @required this.services });
+  const PaymentServicesPage({ @required this.totalPrice, @required this.services, @required this.professionaUserId });
 
   @override
   _PaymentServicesPageState createState() => _PaymentServicesPageState();
@@ -29,10 +31,12 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   String creditNumber = '';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(allTranslations.traslate('payment_services'), style: labelTitleForm),
         backgroundColor: primaryColor
@@ -47,7 +51,7 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
       child: BlocBuilder<PaymentServicesBloc, PaymentServicesState>(
         builder: (context, state) {
           // ignore: close_sinks
-          final bloc = PaymentServicesBloc.of(context);
+          // final bloc = PaymentServicesBloc.of(context);
 
           return Container(
             padding: EdgeInsets.only(top: 30),
@@ -162,7 +166,7 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                                         decoration: InputDecoration(
                                           prefixIcon: Icon(Icons.person_outline, color: secondaryDarkColor),
                                           border: InputBorder.none,
-                                          hintText: 'Ernesto'
+                                          hintText: 'Nombre'
                                         ),
                                         textAlignVertical: TextAlignVertical.center,
                                         style: TextStyle(fontSize: 14)
@@ -183,7 +187,7 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                                     decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.person_outline, color: secondaryDarkColor),
                                       border: InputBorder.none,
-                                      hintText: 'Chira'
+                                      hintText: 'Apellido'
                                     ),
                                     textAlignVertical: TextAlignVertical.center,
                                     style: TextStyle(fontSize: 14)
@@ -224,7 +228,7 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.mail, color: secondaryDarkColor),
                                 border: InputBorder.none,
-                                hintText: 'ernesto.chira@mail.com'
+                                hintText: 'nombre.apellido@mail.com'
                               ),
                               textAlignVertical: TextAlignVertical.center,
                               style: TextStyle(fontSize: 14)
@@ -256,7 +260,20 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0)
                     ),
-                    onPressed: () => bloc.add(PaymentServicesForUser(UserPreferences.instance.userId, widget.services, context))
+                    // onPressed: () => bloc.add(PaymentServicesForUser(UserPreferences.instance.userId, widget.services, context))
+                    onPressed: () {
+                      this._showProgressDialog();
+                      bloc.finalizarSolicitud(widget.services, widget.professionaUserId);
+                      bloc.finalizarServicioResponse.listen((response) {
+                        if (response.error == 0) {
+                          Navigator.pop(_scaffoldKey.currentContext);
+                          this._showDialog('Registro exitoso', 'La solicitud ha sido registrada exitosamente.');
+                        } else {
+                          Navigator.pop(_scaffoldKey.currentContext);
+                          this._showDialog('Registro fallido', response.message);
+                        }
+                      });
+                    }
                   ),
                 )
               ]
@@ -264,6 +281,46 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
           );
         }
       )
+    );
+  }
+
+  void _showProgressDialog() {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(/*allTranslations.traslate('sending_response_message')*/'Registrando solicitud ....', style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
     );
   }
 }

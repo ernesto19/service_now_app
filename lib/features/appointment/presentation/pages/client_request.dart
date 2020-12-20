@@ -113,8 +113,7 @@ class _ClientRequestState extends State<ClientRequest> {
                         totalPagar += double.parse(service.price);
                       });
 
-                      // print('======= $totalPagar =======');
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentServicesPage(totalPrice: totalPagar, services: services)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentServicesPage(totalPrice: totalPagar, services: services, professionaUserId: int.parse(message['professional_user_id'].toString()))));
                     }, 
                     label: allTranslations.traslate('confirm_request_button_text'),
                     backgroundColor: secondaryDarkColor,

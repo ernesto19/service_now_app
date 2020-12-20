@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/injection_container.dart';
@@ -9,16 +10,24 @@ import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 
-class ProfessionalRequest extends StatelessWidget {
+class ProfessionalRequest extends StatefulWidget {
   final String notification;
 
   const ProfessionalRequest({ @required this.notification });
 
   @override
+  _ProfessionalRequestState createState() => _ProfessionalRequestState();
+}
+
+class _ProfessionalRequestState extends State<ProfessionalRequest> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> message = json.decode(notification);
+    Map<String, dynamic> message = json.decode(widget.notification);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Solicitud', style: labelTitleForm),
         backgroundColor: primaryColor
@@ -28,8 +37,8 @@ class ProfessionalRequest extends StatelessWidget {
         child: BlocBuilder<ProfessionalBloc, ProfessionalState>(
           builder: (context, state) {
             // ignore: close_sinks
-            final bloc = ProfessionalBloc.of(context);
-            bloc.add(GetServicesForProfessional(int.parse(message['business_id'].toString())));
+            final blocProf = ProfessionalBloc.of(context);
+            blocProf.add(GetServicesForProfessional(int.parse(message['business_id'].toString())));
 
             return Column(
               children: [
@@ -64,7 +73,7 @@ class ProfessionalRequest extends StatelessWidget {
                                 value: service.selected == 1,
                                 activeColor: secondaryDarkColor,
                                 onChanged: (bool value) {
-                                  bloc.add(OnSelectedServiceEvent(service.id));
+                                  blocProf.add(OnSelectedServiceEvent(service.id));
                                 }
                               );
                             },
@@ -95,7 +104,17 @@ class ProfessionalRequest extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   child: RoundedButton(
                     onPressed: () {
-                      bloc.add(RequestResponseForBusiness(state.services.where((element) => element.selected == 1).toList(), int.parse(message['user_id'].toString()), context));
+                      this._showProgressDialog();
+                      bloc.responderSolicitudServicio(state.services.where((element) => element.selected == 1).toList(), int.parse(message['user_id'].toString()));
+                      bloc.respuestaSolicitudResponse.listen((response) {
+                        if (response.error == 0) {
+                          Navigator.pop(_scaffoldKey.currentContext);
+                          this._showDialog('Envio exitoso', 'Su respuesta ha sido enviada exitosamente');
+                        } else {
+                          Navigator.pop(_scaffoldKey.currentContext);
+                          this._showDialog('Envio fallido', response.message);
+                        }
+                      });
                     }, 
                     label: allTranslations.traslate('confirm_request_button_text'),
                     backgroundColor: secondaryDarkColor,
@@ -107,6 +126,46 @@ class ProfessionalRequest extends StatelessWidget {
           }
         )
       )
+    );
+  }
+
+  void _showProgressDialog() {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('sending_response_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
     );
   }
 }

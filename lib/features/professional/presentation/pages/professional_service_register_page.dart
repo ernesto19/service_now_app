@@ -49,10 +49,7 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
         backgroundColor: primaryColor,
         actions: [
           widget.professionalService == null 
-          ? IconButton(
-            icon: Icon(Icons.attach_file), 
-            onPressed: loadAssets
-          )
+          ? Container()
           : IconButton(
             icon: Icon(Icons.add_photo_alternate), 
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceGalleryPage(serviceId: widget.professionalService.id)))
@@ -114,11 +111,34 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
               ),
               SliverToBoxAdapter(
                 child: images != null && images.length > 0 
-                  ? Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), 
-                    child: buildGridView()
-                  ) 
-                  : Container()
+                ? Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), 
+                  child: buildGridView()
+                ) 
+                : widget.professionalService == null ? Container(
+                    padding: EdgeInsets.only(left: 20, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          color: Colors.black12,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Center(
+                                  child: Icon(Icons.add_a_photo, size: 60, color: Colors.black38),
+                                ),
+                              ),
+                              SizedBox(height: 5)
+                            ]
+                          )
+                        ),
+                        onTap: loadAssets
+                      ),
+                  )
+                ) : Container()
               ),
               SliverToBoxAdapter(
                 child: Container(

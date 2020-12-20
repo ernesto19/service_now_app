@@ -90,5 +90,11 @@
     "aptitude_description_label": "Description",
     "aptitude_title_placeholder": "Write the title of your skill",
     "aptitude_description_placeholder": "Write the description of your skill",
-    "my_colaborations_tray_title": "Collaboration requests"
+    "my_colaborations_tray_title": "Collaboration requests",
+    "professionals_title": "Professionals",
+    "sending_request_message": "Sending request ...",
+    "sending_response_message": "Sending response ...",
+    "pending_services_title": "Pending services",
+    "starting_service_message": "Starting service ...",
+    "ending_service_message": "Ending service ..."
 }

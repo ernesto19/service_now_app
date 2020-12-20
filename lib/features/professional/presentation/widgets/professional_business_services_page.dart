@@ -103,22 +103,22 @@ class ProfessionalServiceItem extends StatelessWidget {
       )
     );
 
-    menuOptions.add(
-      PopupMenuItem<String>(
-        value: '2',
-        child: ListTile(
-          leading: Icon(Icons.redeem), 
-          title: InkWell(
-            child: Row(
-              children: [
-                Text('Promociones'),
-                SizedBox(width: 20)
-              ]
-            )
-          )
-        )
-      )
-    );
+    // menuOptions.add(
+    //   PopupMenuItem<String>(
+    //     value: '2',
+    //     child: ListTile(
+    //       leading: Icon(Icons.redeem), 
+    //       title: InkWell(
+    //         child: Row(
+    //           children: [
+    //             Text('Promociones'),
+    //             SizedBox(width: 20)
+    //           ]
+    //         )
+    //       )
+    //     )
+    //   )
+    // );
 
     return Column(
       children: [

@@ -5,7 +5,6 @@ import 'package:service_now/features/professional/presentation/widgets/header.da
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
-
 import 'professional_business_detail_page.dart';
 import 'professional_business_register_page.dart';
 
@@ -116,6 +115,114 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
         (BuildContext context, int index) {
           ProfessionalBusiness business = businessList[index];
 
+          List<PopupMenuEntry<String>> menuOptions = List();
+
+          if (business.owner == 1) {
+            menuOptions.add(
+              PopupMenuItem<String>(
+                value: '1',
+                child: Row(
+                  children: [
+                    ShaderMask(
+                      child: CupertinoSwitch(
+                        activeColor: Colors.greenAccent[100],
+                        value: business.active == 1,
+                        onChanged: (value) {
+                          Navigator.pop(context);
+
+                          bloc.updateBusinessStatus(business.id);
+                          bloc.businessStatusUpdateResponse.listen((response) {
+                            ProfessionalBusiness businessTemp = ProfessionalBusiness(
+                              id: business.id, 
+                              name: business.name, 
+                              description: business.description, 
+                              categoryId: business.categoryId, 
+                              categoryName: business.categoryName, 
+                              industryId: business.industryId,
+                              address: business.address,
+                              licenseNumber: business.licenseNumber,
+                              fanpage: business.fanpage,
+                              latitude: business.latitude,
+                              longitude: business.longitude,
+                              owner: business.owner,
+                              active: business.active == 1 ? 0 : 1,
+                              professionalActive: business.professionalActive
+                            );
+
+                            setState(() {
+                              businessList[index] = businessTemp;  
+                            });
+                          });
+                        }
+                      ),
+                      shaderCallback: (r) {
+                        return LinearGradient(
+                          colors: business.active == 1
+                              ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
+                              : [ Colors.redAccent[100], Colors.redAccent[100]],
+                        ).createShader(r);
+                      }
+                    ),
+                    SizedBox(width: 10),
+                    Text('Negocio')
+                  ],
+                )
+              )
+            );
+          }
+
+          menuOptions.add(
+            PopupMenuItem<String>(
+              value: '2',
+              child: Row(
+                children: [
+                  ShaderMask(
+                    child: CupertinoSwitch(
+                      activeColor: Colors.greenAccent[100],
+                      value: business.professionalActive == 1,
+                      onChanged: (value) {
+                        Navigator.pop(context);
+
+                        // bloc.updateBusinessStatus(business.id);
+                        // bloc.businessStatusUpdateResponse.listen((response) {
+                          ProfessionalBusiness businessTemp = ProfessionalBusiness(
+                            id: business.id, 
+                            name: business.name, 
+                            description: business.description, 
+                            categoryId: business.categoryId, 
+                            categoryName: business.categoryName, 
+                            industryId: business.industryId,
+                            address: business.address,
+                            licenseNumber: business.licenseNumber,
+                            fanpage: business.fanpage,
+                            latitude: business.latitude,
+                            longitude: business.longitude,
+                            owner: business.owner,
+                            active: business.active,
+                            professionalActive: business.professionalActive == 1 ? 0 : 1
+                          );
+
+                          setState(() {
+                            businessList[index] = businessTemp;  
+                          });
+                        // });
+                      }
+                    ),
+                    shaderCallback: (r) {
+                      return LinearGradient(
+                        colors: business.professionalActive == 1
+                            ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
+                            : [ Colors.redAccent[100], Colors.redAccent[100]],
+                      ).createShader(r);
+                    }
+                  ),
+                  SizedBox(width: 10),
+                  Text('Jornada laboral')
+                ],
+              )
+            )
+          );
+
           return GestureDetector(
             child: Container(
               margin: EdgeInsets.only(bottom: 15, right: 15, left: 15),
@@ -131,12 +238,11 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                           Expanded(
                             child: Text(business.name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
                           ),
-                          ShaderMask(
-                            child: CupertinoSwitch(
-                              activeColor: Colors.greenAccent[100],
-                              value: business.active == 1,
-                              onChanged: (value) {
-                                
+                          PopupMenuButton<String>(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.more_vert),
+                            onSelected: (value) {
+                              if (value == '1') {
                                 bloc.updateBusinessStatus(business.id);
                                 bloc.businessStatusUpdateResponse.listen((response) {
                                   ProfessionalBusiness businessTemp = ProfessionalBusiness(
@@ -151,21 +257,20 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                                     fanpage: business.fanpage,
                                     latitude: business.latitude,
                                     longitude: business.longitude,
-                                    active: business.active == 1 ? 0 : 1);
+                                    owner: business.owner,
+                                    active: business.active == 1 ? 0 : 1,
+                                    professionalActive: business.professionalActive
+                                  );
 
                                   setState(() {
                                     businessList[index] = businessTemp;  
                                   });
                                 });
+                              } else {
+
                               }
-                            ),
-                            shaderCallback: (r) {
-                              return LinearGradient(
-                                colors: business.active == 1
-                                    ? [ Colors.greenAccent[100], Colors.greenAccent[100]]
-                                    : [ Colors.redAccent[100], Colors.redAccent[100]],
-                              ).createShader(r);
-                            }
+                            },
+                            itemBuilder: (BuildContext context) => menuOptions
                           )
                         ]
                       ),
@@ -211,7 +316,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                 ]
               )
             ),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business)))
+            onTap: business.owner == 0 ? () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business))) : null
           );
         },
         childCount: businessList.length

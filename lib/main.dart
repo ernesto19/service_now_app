@@ -9,7 +9,7 @@ import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'features/appointment/presentation/pages/client_request.dart';
 import 'features/home/presentation/pages/home_page.dart';
-import 'features/professional/presentation/pages/professional_request.dart';
+import 'features/professional/presentation/pages/professional_request_page.dart';
 import 'preferences/user_preferences.dart';
 import 'routes/routes.dart';
 import 'injection_container.dart' as di;

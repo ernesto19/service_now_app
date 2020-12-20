@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/preferences/user_preferences.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -10,10 +11,19 @@ import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/colors.dart';
 
-class BusinessInformationPage extends StatelessWidget {
+import 'professionals_business_list_page.dart';
+
+class BusinessInformationPage extends StatefulWidget {
   final Business business;
 
   const BusinessInformationPage({ @required this.business });
+
+  @override
+  _BusinessInformationPageState createState() => _BusinessInformationPageState();
+}
+
+class _BusinessInformationPageState extends State<BusinessInformationPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +39,16 @@ class BusinessInformationPage extends StatelessWidget {
           mini: true,
           child: Icon(Icons.work),
           onPressed: () {
-            bloc.solicitarColaboracion(business.id);
+            this._showProgressDialog();
+            bloc.solicitarColaboracion(widget.business.id);
             bloc.solicitudColaboracionResponse.listen((response) {
               if (response.error == 0) {
-                print('La solicitud fue enviada exitosamente');
-              }
+                Navigator.pop(_scaffoldKey.currentContext);
+                  this._showDialog('Envio exitoso', 'Su solicitud ha sido enviada exitosamente');
+                } else {
+                  Navigator.pop(_scaffoldKey.currentContext);
+                  this._showDialog('Envio fallido', response.message);
+                }
             });
           }
         )
@@ -49,7 +64,7 @@ class BusinessInformationPage extends StatelessWidget {
           backgroundColor: secondaryDarkColor,
           mini: true,
           child: Icon(Icons.send),
-          onPressed: () {}
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessListPage(business: widget.business)))
         )
       )
     );
@@ -62,6 +77,7 @@ class BusinessInformationPage extends StatelessWidget {
           final bloc = AppointmentBloc.of(context);
 
           return Scaffold(
+            key: _scaffoldKey,
             body: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -73,7 +89,7 @@ class BusinessInformationPage extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: Text(business.name, style: TextStyle(fontSize: 19))
+                              child: Text(widget.business.name, style: TextStyle(fontSize: 19))
                             )
                           ]
                         ),
@@ -81,10 +97,10 @@ class BusinessInformationPage extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(business.rating),
+                            Text(widget.business.rating),
                             SizedBox(width: 10),
                             RatingBar(
-                              initialRating: double.parse(business.rating),
+                              initialRating: double.parse(widget.business.rating),
                               minRating: 1,
                               direction: Axis.horizontal,
                               allowHalfRating: true,
@@ -100,10 +116,10 @@ class BusinessInformationPage extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 10),
-                        Text('${business.distance.toStringAsFixed(2)} km'),
+                        Text('${widget.business.distance.toStringAsFixed(2)} km'),
                         SizedBox(height: 20),
                         Text(
-                          business.description
+                          widget.business.description
                         )
                       ]
                     )
@@ -111,7 +127,7 @@ class BusinessInformationPage extends StatelessWidget {
                 ),
                 BlocBuilder<AppointmentBloc, AppointmentState>(
                   builder: (context, state) {
-                    bloc.add(GetCommentsForUser(business.id));
+                    bloc.add(GetCommentsForUser(widget.business.id));
 
                     if (state.status == BusinessStatus.readyComments) {
                       List<Comment> comments = state.comments;
@@ -144,7 +160,8 @@ class BusinessInformationPage extends StatelessWidget {
               child: Icon(Icons.send),
               backgroundColor: secondaryDarkColor,
               onPressed: () {
-                bloc.add(RequestBusinessForUser(business.id, context));
+                // bloc.add(RequestBusinessForUser(business.id, context));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessListPage(business: widget.business)));
               }
             ) : UnicornDialer(
               backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
@@ -199,6 +216,46 @@ class BusinessInformationPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showProgressDialog() {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('sending_request_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
     );
   }
 }
