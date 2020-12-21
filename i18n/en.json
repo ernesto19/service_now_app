@@ -19,6 +19,7 @@
     "menu_business": "Business",
     "menu_message": "Messages",
     "menu_membership": "Membership",
+    "menu_pending_services": "Pending services",
     "log_out": "Log out",
     "authenticating_message": "Authenticating ...",
     "registering_message": "Registering ...",
@@ -96,5 +97,6 @@
     "sending_response_message": "Sending response ...",
     "pending_services_title": "Pending services",
     "starting_service_message": "Starting service ...",
-    "ending_service_message": "Ending service ..."
+    "ending_service_message": "Ending service ...",
+    "sending_rating_message": "Sending rating ..."
 }

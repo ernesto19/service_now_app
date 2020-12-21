@@ -13,6 +13,7 @@ class ProfessionalUserBloc {
   final _businessImageDelete = PublishSubject<ProfessionalCRUDResponse>();
   final _serviceImageDelete = PublishSubject<ProfessionalCRUDResponse>();
   final _businessStatusUpdate = PublishSubject<void>();
+  final _businessProfessionalStatusUpdate = PublishSubject<void>();
   final _promotionRegister = PublishSubject<ProfessionalCRUDResponse>();
   final _promotionsFetcher = PublishSubject<PromotionResponse>();
   final _promotionStatusUpdate = PublishSubject<void>();
@@ -30,6 +31,7 @@ class ProfessionalUserBloc {
   Observable<ProfessionalCRUDResponse> get businessImageDeleteResponse => _businessImageDelete.stream;
   Observable<ProfessionalCRUDResponse> get serviceImageDeleteResponse => _serviceImageDelete.stream;
   Observable<void> get businessStatusUpdateResponse => _businessStatusUpdate.stream;
+  Observable<void> get businessProfessionalStatusUpdateResponse => _businessProfessionalStatusUpdate.stream;
   Observable<ProfessionalCRUDResponse> get promotionRegisterResponse => _promotionRegister.stream;
   Observable<PromotionResponse> get allPromotions => _promotionsFetcher.stream;
   Observable<void> get promotionStatusUpdateResponse => _promotionStatusUpdate.stream;
@@ -68,6 +70,10 @@ class ProfessionalUserBloc {
 
   Future updateBusinessStatus(int id) async {
     _businessStatusUpdate.add(await _repository.updateBusinessStatus(id));
+  }
+
+  Future updateBusinessProfessionalStatus(int id, int estado) async {
+    _businessProfessionalStatusUpdate.add(await _repository.updateBusinessProfessionalStatus(id, estado));
   }
 
   Future registerPromotion(String name, String description, var amount, String type, int businessId) async {
@@ -122,6 +128,7 @@ class ProfessionalUserBloc {
     _businessImageDelete.close();
     _serviceImageDelete.close();
     _businessStatusUpdate.close();
+    _businessProfessionalStatusUpdate.close();
     _promotionRegister.close();
     _promotionsFetcher.close();
     _promotionStatusUpdate.close();

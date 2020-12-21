@@ -55,4 +55,16 @@ class AppointmentApiProvider {
     );
     return AppointmentCRUDResponse.fromJson(response);
   }
+
+  Future<AppointmentCRUDResponse> enviarCalificacion(int id, String comentario, double calificacion) async {
+    final response = await _helper.post(
+      'business_service/rate_service', 
+      {
+        'payment_id': id,
+        'rating': calificacion,
+        'comment': comentario
+      }
+    );
+    return AppointmentCRUDResponse.fromJson(response);
+  }
 }

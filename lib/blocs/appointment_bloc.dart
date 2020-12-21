@@ -11,12 +11,14 @@ class AppointmentServicesBloc {
   final _profesionalFetcher = PublishSubject<ProfessionalDetailResponse>();
   final _solicitudServicio = PublishSubject<AppointmentCRUDResponse>();
   final _finalizarServicio = PublishSubject<AppointmentCRUDResponse>();
+  final _enviarCalificacion = PublishSubject<AppointmentCRUDResponse>();
 
   Observable<AppointmentCRUDResponse> get solicitudColaboracionResponse => _solicitudColaboracion.stream;
   Observable<ProfessionalResponse> get profesionales => _profesionalesFetcher.stream;
   Observable<ProfessionalDetailResponse> get profesional => _profesionalFetcher.stream;
   Observable<AppointmentCRUDResponse> get solicitudServicioResponse => _solicitudServicio.stream;
   Observable<AppointmentCRUDResponse> get finalizarServicioResponse => _finalizarServicio.stream;
+  Observable<AppointmentCRUDResponse> get enviarCalificacionResponse => _enviarCalificacion.stream;
 
   Future solicitarColaboracion(int businessId) async {
     AppointmentCRUDResponse response = await _repository.solicitarColaboracion(businessId);
@@ -43,12 +45,18 @@ class AppointmentServicesBloc {
     _finalizarServicio.sink.add(response);
   }
 
+  Future enviarCalificacion(int id, String comentario, double calificacion) async {
+    AppointmentCRUDResponse response = await _repository.enviarCalificacion(id, comentario, calificacion);
+    _enviarCalificacion.sink.add(response);
+  }
+
   dispose() {
     _solicitudColaboracion.close();
     _profesionalesFetcher.close();
     _profesionalFetcher.close();
     _solicitudServicio.close();
     _finalizarServicio.close();
+    _enviarCalificacion.close();
   }
 }
 

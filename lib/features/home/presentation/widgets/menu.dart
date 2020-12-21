@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_event.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_state.dart';
+import 'package:service_now/features/home/presentation/pages/conditions_page.dart';
 import 'package:service_now/features/home/presentation/pages/membership_page.dart';
 import 'package:service_now/features/home/presentation/pages/messages_page.dart';
 import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
+import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/professional/presentation/pages/pending_service_tray_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
 import 'package:service_now/injection_container.dart';
@@ -40,6 +42,11 @@ class _MenuState extends State<Menu> {
           bloc.add(GetPermissionsForUser());
 
           if (state.status == MenuStatus.ready) {
+            List<Permission> permissions = state.permissions;
+            permissions.sort((a, b) {
+              return a.order.compareTo(b.order);
+            });
+            
             return Scaffold(
               body: SafeArea(
                 child: Container(
@@ -60,7 +67,7 @@ class _MenuState extends State<Menu> {
                       SizedBox(height: 20),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: state.permissions.length,
+                          itemCount: permissions.length,
                           itemBuilder: (_, index) {
                             return ListTile(
                               leading: /*state.permissions[index].id == 7 
@@ -72,11 +79,11 @@ class _MenuState extends State<Menu> {
                                 )
                               )
                               : */SvgPicture.asset(
-                                state.permissions[index].icon,
+                                permissions[index].icon,
                                 height: 23
                               ),
-                              title: Text(allTranslations.traslate(state.permissions[index].translateName)),
-                              onTap: () => _onTap(state.permissions[index].id, context, bloc)
+                              title: Text(allTranslations.traslate(permissions[index].translateName)),
+                              onTap: () => _onTap(permissions[index].id, context, bloc)
                             );
                           }
                         )
@@ -132,8 +139,11 @@ class _MenuState extends State<Menu> {
       case 3:
         Navigator.pushNamed(context, ProfilePage.routeName);
         break;
-      case 4:
+      case 9:
         Navigator.pushNamed(context, PendingServiceTrayPage.routeName);
+        break;
+      case 4:
+        Navigator.pushNamed(context, ConditionsPage.routeName);
         break;
       default:
     }

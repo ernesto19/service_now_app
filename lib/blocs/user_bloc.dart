@@ -10,11 +10,13 @@ class UserBloc {
   final _profileFetcher = PublishSubject<ProfileResponse>();
   final _aptitudeRegister = PublishSubject<UserCRUDResponse>();
   final _aptitudesFetcher = PublishSubject<AptitudeResponse>();
+  final _conditionsFetcher = PublishSubject<ConditionsResponse>();
 
   Observable<UserCRUDResponse> get profileRegisterResponse => _profileRegister.stream;
   Observable<ProfileResponse> get profile => _profileFetcher.stream;
   Observable<UserCRUDResponse> get aptitudeRegisterResponse => _aptitudeRegister.stream;
   Observable<AptitudeResponse> get allAptitudes => _aptitudesFetcher.stream;
+  Observable<ConditionsResponse> get allConditions => _conditionsFetcher.stream;
 
   Future registerProfessionalProfile(String phone, String resume, String facebook, String linkedin) async {
     UserCRUDResponse response = await _repository.registerProfessionalProfile(phone, resume, facebook, linkedin);
@@ -36,11 +38,17 @@ class UserBloc {
     _aptitudesFetcher.sink.add(response);
   }
 
+  Future fetchConditions() async {
+    ConditionsResponse response = await _repository.fetchConditions();
+    _conditionsFetcher.sink.add(response);
+  }
+
   dispose() {
     _profileRegister.close();
     _profileFetcher.close();
     _aptitudeRegister.close();
     _aptitudesFetcher.close();
+    _conditionsFetcher.close();
   }
 }
 

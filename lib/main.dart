@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:service_now/core/db/db.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/utils/all_translations.dart';
+import 'features/appointment/presentation/pages/client_rating.dart';
 import 'features/appointment/presentation/pages/client_request.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/professional/presentation/pages/professional_request_page.dart';
@@ -144,6 +145,8 @@ class _MyAppState extends State<MyApp> {
       navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => ProfessionalRequest(notification: message)));
     } else if (messageJson['tipo'] == 'pnResponseService') {
       navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => ClientRequest(notification: message)));
+    } else if (messageJson['tipo'] == 'pnFinishService') {
+      navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => ClientRating(notification: message)));
     }
   }
 

@@ -106,3 +106,37 @@ class AptitudeResponse {
     }
   }
 }
+
+class Condition {
+  int id;
+  String content;
+  int order;
+
+  Condition.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
+
+    id      = json['id'];
+    content = json['text']       ?? '';
+    order   = json['item_order'] ?? 0;
+  }
+}
+
+class ConditionsResponse {
+  int error;
+  String message;
+  List<Condition> data = List();
+
+  ConditionsResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error   = json['error'];
+    message = json['message'];
+
+    if (error == 0) {
+      for (var item in json['data']) {
+        final condition = Condition.fromJson(item);
+        data.add(condition);
+      }
+    }
+  }
+}

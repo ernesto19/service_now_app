@@ -75,4 +75,9 @@ class UserApiProvider {
     final response = await _helper.get('professional/aptitude/get?professional_profile_id=$id');
     return AptitudeResponse.fromJson(response);
   }
+
+  Future<ConditionsResponse> fetchConditions() async {
+    final response = await _helper.get('business/get_terms');
+    return ConditionsResponse.fromJson(response);
+  }
 }

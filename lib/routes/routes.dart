@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/presentation/pages/search_business_page.dart';
+import 'package:service_now/features/home/presentation/pages/conditions_page.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/home/presentation/pages/membership_page.dart';
 import 'package:service_now/features/home/presentation/pages/messages_page.dart';
@@ -23,6 +24,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     MessagesPage.routeName        : (context) => MessagesPage(),
     MembershipPage.routeName      : (context) => MembershipPage(),
     ProfilePage.routeName         : (context) => ProfilePage(),
-    PendingServiceTrayPage.routeName : (context) => PendingServiceTrayPage()
+    PendingServiceTrayPage.routeName : (context) => PendingServiceTrayPage(),
+    ConditionsPage.routeName      : (context) => ConditionsPage()
   };
 }

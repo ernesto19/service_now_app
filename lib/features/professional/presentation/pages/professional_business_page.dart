@@ -183,8 +183,8 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                       onChanged: (value) {
                         Navigator.pop(context);
 
-                        // bloc.updateBusinessStatus(business.id);
-                        // bloc.businessStatusUpdateResponse.listen((response) {
+                        bloc.updateBusinessProfessionalStatus(business.id, business.professionalActive == 1 ? 0 : 1);
+                        bloc.businessProfessionalStatusUpdateResponse.listen((response) {
                           ProfessionalBusiness businessTemp = ProfessionalBusiness(
                             id: business.id, 
                             name: business.name, 
@@ -205,7 +205,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                           setState(() {
                             businessList[index] = businessTemp;  
                           });
-                        // });
+                        });
                       }
                     ),
                     shaderCallback: (r) {
@@ -316,7 +316,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                 ]
               )
             ),
-            onTap: business.owner == 0 ? () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business))) : null
+            onTap: business.owner == 1 ? () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessDetailPage(business: business))) : null
           );
         },
         childCount: businessList.length

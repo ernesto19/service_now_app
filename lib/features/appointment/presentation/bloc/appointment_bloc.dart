@@ -303,7 +303,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
           buttonText: 'Detalle',
           onPressed: () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: trade, distance: distance)));
           }
         );
       }

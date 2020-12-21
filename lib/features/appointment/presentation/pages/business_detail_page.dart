@@ -9,8 +9,9 @@ import 'business_photos_page.dart';
 class BusinessDetailPage extends StatefulWidget {
   static final routeName = 'business_detail_page';
   final Business business;
+  final String distance;
 
-  const BusinessDetailPage({ @required this.business});
+  const BusinessDetailPage({ @required this.business, @required this.distance });
 
   @override
   _BusinessDetailPageState createState() => _BusinessDetailPageState();
@@ -58,7 +59,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
           },
           body: TabBarView(
             children: [
-              BusinessInformationPage(business: widget.business),
+              BusinessInformationPage(business: widget.business, distance: widget.distance),
               BusinessPhotosPage(business: widget.business),
             ]
           )

@@ -238,24 +238,6 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
               children: [
                 Row(
                   children: [
-                    // business.phone.isNotEmpty ? Expanded(
-                    //   child: RaisedButton(
-                    //     child: Row(
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         Icon(Icons.call, color: Colors.white, size: 20),
-                    //         SizedBox(width: 5),
-                    //         Text('Llamar', style: TextStyle(fontSize: 16, color: Colors.white))
-                    //       ]
-                    //     ),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(5)
-                    //     ),
-                    //     color: Colors.green,
-                    //     onPressed: () => launch('tel://+51${business.phone}')
-                    //   ),
-                    // ) : Container(),
-                    // SizedBox(width: 7),
                     Expanded(
                       child: RaisedButton(
                         child: Row(
@@ -270,7 +252,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
                           borderRadius: BorderRadius.circular(5)
                         ),
                         color: secondaryDarkColor,
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business)))
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business, distance: '${business.distance.toStringAsFixed(2)} km')))
                       ),
                     )
                   ],

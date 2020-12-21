@@ -10,13 +10,14 @@ import 'package:service_now/features/appointment/domain/entities/comment.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/colors.dart';
-
+import 'package:simple_moment/simple_moment.dart';
 import 'professionals_business_list_page.dart';
 
 class BusinessInformationPage extends StatefulWidget {
   final Business business;
+  final String distance;
 
-  const BusinessInformationPage({ @required this.business });
+  const BusinessInformationPage({ @required this.business, @required this.distance });
 
   @override
   _BusinessInformationPageState createState() => _BusinessInformationPageState();
@@ -116,7 +117,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                           ],
                         ),
                         SizedBox(height: 10),
-                        Text('${widget.business.distance.toStringAsFixed(2)} km'),
+                        Text(widget.distance),
                         SizedBox(height: 20),
                         Text(
                           widget.business.description
@@ -193,6 +194,15 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(comment.firstName + ' ' + comment.lastName, style: TextStyle(fontSize: 12))
+                    ),
+                    Text(_buildMoment(comment.createdAt).replaceFirst('En', 'Hace'), style: TextStyle(fontSize: 11))
+                  ],
+                ),
+                SizedBox(height: 5),
                 RatingBar(
                   initialRating: double.parse(comment.rating),
                   minRating: 1,
@@ -208,8 +218,8 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                   onRatingUpdate: null
                 ),
                 Text(
-                  comment.comment,
-                  style: TextStyle(fontSize: 13),
+                  '"' + comment.comment + '"',
+                  style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
                 )
               ],
             ),
@@ -217,6 +227,14 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
         ],
       ),
     );
+  }
+
+  String _buildMoment(String date) {
+    Moment.setLocaleGlobally(new LocaleEs());
+    var updateDate = DateTime.parse(date);
+    var moment = new Moment.now();
+    String text = moment.from(updateDate);
+    return '${text[0].toUpperCase()}${text.substring(1, text.length)}';
   }
 
   void _showProgressDialog() {

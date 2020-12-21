@@ -87,7 +87,7 @@ class BusinessList extends StatelessWidget {
                         ]
                       )
                     ),
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business)))
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BusinessDetailPage(business: business, distance: '${business.distance.toStringAsFixed(2)} km')))
                   ),
                   SizedBox(height: 10)
                 ]

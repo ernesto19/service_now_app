@@ -50,7 +50,7 @@ class ProfessionalBusiness {
     latitude      = json['lat'].toString()  ?? '';
     longitude     = json['lng'].toString()  ?? '';
     active        = json['active']          ?? 0;
-    professionalActive = json['professional_active'] ?? 0;
+    professionalActive = json['professional_status'] == 1 || json['professional_status'] == 2 ? 1 : 0;
     owner         = json['owner']           ?? 0;
 
     for (var item in json['gallery']) {
@@ -178,11 +178,11 @@ class ServicioPendiente {
   });
 
   ServicioPendiente.fromJson(dynamic json) {
-    id        = json['request_id'];
-    firstName = json['first_name']  ?? '';
-    lastName  = json['last_name']   ?? '';
+    id        = json['id'];
+    firstName = json['client_name']  ?? '';
+    lastName  = json['client_last_name']   ?? '';
     businessName = json['business_name'] ?? '';
-    servicesName = json['services_name'] ?? '';
+    servicesName = json['services'] ?? '';
     total     = json['total']       ?? '';
     status    = json['status']      ?? 0;
   }

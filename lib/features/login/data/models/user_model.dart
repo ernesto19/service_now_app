@@ -46,8 +46,9 @@ class PermissionModel extends Permission {
     @required int id,
     @required String name,
     @required String icon,
-    @required String translateName
-  }) : super(id: id, name: name, icon: icon, translateName: translateName);
+    @required String translateName,
+    @required int order
+  }) : super(id: id, name: name, icon: icon, translateName: translateName, order: order);
 
   factory PermissionModel.fromJson(Map<String, dynamic> json) {
     return PermissionModel(
@@ -55,6 +56,7 @@ class PermissionModel extends Permission {
       name: json['name']  ?? '',
       icon: json['icon']  ?? '',
       translateName: json['translate_name']  ?? '',
+      order: json['order'] ?? 0
     );
   }
 
@@ -63,7 +65,8 @@ class PermissionModel extends Permission {
       'id': id,
       'name': name,
       'icon': icon,
-      'translate_name': translateName
+      'translate_name': translateName,
+      'order': order
     };
   }
 }

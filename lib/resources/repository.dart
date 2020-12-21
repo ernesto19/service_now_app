@@ -21,6 +21,7 @@ class Repository {
   Future<ProfessionalCRUDResponse> deleteBusinessImage(int id) => professionalApiProvider.deleteBusinessImage(id);
   Future<ProfessionalCRUDResponse> deleteServiceImage(int id) => professionalApiProvider.deleteServiceImage(id);
   Future<void> updateBusinessStatus(int id) => professionalApiProvider.updateBusinessStatus(id);
+  Future<void> updateBusinessProfessionalStatus(int id, int estado) => professionalApiProvider.updateBusinessProfessionalStatus(id, estado);
   Future<ProfessionalCRUDResponse> registerPromotion(String name, String description, var amount, String type, int businessId) => professionalApiProvider.registerPromotion(name, description, amount, type, businessId);
   Future<PromotionResponse> fetchPromotions(int id) => professionalApiProvider.fetchPromotions(id);
   Future<void> updatePromotionStatus(int id, int status) => professionalApiProvider.updatePromotionStatus(id, status);
@@ -37,6 +38,7 @@ class Repository {
   Future<ProfileResponse> fetchProfile(int id) => userApiProvider.fetchProfile(id);
   Future<UserCRUDResponse> registerProfessionalAptitude(String title, String description, int professionalId, List<Asset> images) => userApiProvider.registerProfessionalAptitude(title, description, professionalId, images);
   Future<AptitudeResponse> fetchAptitudes(int id) => userApiProvider.fetchAptitudes(id);
+  Future<ConditionsResponse> fetchConditions() => userApiProvider.fetchConditions();
 
   // APPOINTMENT
   Future<AppointmentCRUDResponse> solicitarColaboracion(int businessId) => appointmentApiProvider.solicitarColaboracion(businessId);
@@ -44,4 +46,5 @@ class Repository {
   Future<ProfessionalDetailResponse> obtenerPerfilProfesional(int id) => appointmentApiProvider.obtenerPerfilProfesional(id);
   Future<AppointmentCRUDResponse> solicitarServicio(int businessId, int professionalId) => appointmentApiProvider.solicitarServicio(businessId, professionalId);
   Future<AppointmentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) => appointmentApiProvider.finalizarSolicitud(services, professionalId);
+  Future<AppointmentCRUDResponse> enviarCalificacion(int id, String comentario, double calificacion) => appointmentApiProvider.enviarCalificacion(id, comentario, calificacion);
 }

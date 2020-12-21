@@ -3,6 +3,7 @@ import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/models/promotion.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 
 class ProfessionalApiProvider {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -47,6 +48,16 @@ class ProfessionalApiProvider {
       'business/active', 
       {
         'business_id': id     
+      }
+    );
+  }
+
+  Future<void> updateBusinessProfessionalStatus(int id, int estado) async {
+    await _helper.post(
+      'professional/business_status', 
+      {
+        'business_id': id,
+        'active': estado
       }
     );
   }
@@ -126,64 +137,32 @@ class ProfessionalApiProvider {
   }
 
   Future<ServiciosPendientesResponse> obtenerBandejaServiciosPendientes() async {
-    List<ServicioPendiente> data = [
-      ServicioPendiente(
-        id: 1,
-        firstName: 'Ernesto',
-        lastName: 'Chira',
-        businessName: 'Baberia ABC',
-        servicesName: 'Corte de cabello, peinado',
-        total: 'S/ 45.00',
-        status: 1
-      ),
-      ServicioPendiente(
-        id: 2,
-        firstName: 'Leslie',
-        lastName: 'Arroyo',
-        businessName: 'Baberia ABC',
-        servicesName: 'Corte de cabello, peinado',
-        total: 'S/ 45.00',
-        status: 2
-      ),
-      ServicioPendiente(
-        id: 3,
-        firstName: 'Gustavo',
-        lastName: 'Ramirez',
-        businessName: 'Baberia ABC',
-        servicesName: 'Corte de cabello, peinado',
-        total: 'S/ 45.00',
-        status: 1
-      )
-    ];
-
-    ServiciosPendientesResponse response = ServiciosPendientesResponse(
-      error: 0,
-      message: 'ok',
-      data: data
+    final response = await _helper.post(
+      'business_service/get_client_services', 
+      {
+        'professional_user_id': UserPreferences.instance.userId
+      }
     );
-
-    return response;
-    // final response = await _helper.get('business_request/inbox');
-    // return ServiciosPendientesResponse.fromJson(response);
+    return ServiciosPendientesResponse.fromJson(response);
   }
 
   Future<void> iniciarServicio(int id) async {
-    // await _helper.post(
-    //   'business_request/aprove', 
-    //   {
-    //     'id': id
-    //   }
-    // );
-    await Future.delayed(Duration(seconds: 3));
+    await _helper.post(
+      'business_service/service_status', 
+      {
+        'payment_id': id,
+        "status": 1
+      }
+    );
   }
 
   Future<void> terminarServicio(int id) async {
-    // await _helper.post(
-    //   'business_request/aprove', 
-    //   {
-    //     'id': id
-    //   }
-    // );
-    await Future.delayed(Duration(seconds: 3));
+    await _helper.post(
+      'business_service/service_status', 
+      {
+        'payment_id': id,
+        "status": 2
+      }
+    );
   }
 }

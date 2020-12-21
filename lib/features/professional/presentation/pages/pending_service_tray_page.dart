@@ -180,8 +180,8 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)
                               ),
-                              color: servicio.status == 1 ? HexColor('#77D077') : HexColor('#E3E0E0'),
-                              onPressed: servicio.status == 1 ? () {
+                              color: servicio.status == 0 ? HexColor('#77D077') : HexColor('#E3E0E0'),
+                              onPressed: servicio.status == 0 ? () {
                                 this._showProgressDialog('Iniciando servicio ...');
                                 bloc.iniciarServicio(servicio.id);
                                 bloc.iniciarServicioResponse.listen((response) {
@@ -200,19 +200,19 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                                 children: [
                                   Icon(Icons.stop, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Terminar servicio', style: TextStyle(fontSize: 12, color: Colors.white))
+                                  Text('Finalizar servicio', style: TextStyle(fontSize: 12, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)
                               ),
-                              color: servicio.status == 2 ? HexColor('#BD7AD1') : HexColor('#E3E0E0'),
-                              onPressed: servicio.status == 2 ? () {
-                                this._showProgressDialog('Denegando solicitud ...');
+                              color: servicio.status == 1 ? HexColor('#BD7AD1') : HexColor('#E3E0E0'),
+                              onPressed: servicio.status == 1 ? () {
+                                this._showProgressDialog('Finalizando servicio ...');
                                 bloc.terminarServicio(servicio.id);
                                 bloc.terminarServicioResponse.listen((response) {
                                   Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog('Término exitoso', 'El servicio ha sido terminado exitosamente.');
+                                  this._showDialog('Finalización exitosa', 'El servicio ha sido terminado exitosamente.');
                                   bloc.obtenerBandejaServiciosPendientes();
                                 });
                               } : () {}

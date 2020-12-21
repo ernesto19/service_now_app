@@ -44,14 +44,16 @@ class Permission extends Equatable {
   final String name;
   final String icon;
   final String translateName;
+  final int order;
 
   Permission({
     @required this.id, 
     @required this.name,
     @required this.icon,
-    @required this.translateName
+    @required this.translateName,
+    @required this.order
   });
   
   @override
-  List<Object> get props => [id, name, icon, translateName];
+  List<Object> get props => [id, name, icon, translateName, order];
 }
