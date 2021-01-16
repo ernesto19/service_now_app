@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 
 class ServicePicker extends StatefulWidget {
@@ -39,7 +40,7 @@ class _ServicePickerState extends State<ServicePicker> {
                                   padding: EdgeInsets.symmetric(horizontal: 20),
                                   child: Row(
                                     children: [
-                                      Text('Servicio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      Text('${allTranslations.traslate('servicio')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                                       Text(service.name.toUpperCase(), style: TextStyle(fontSize: 16))
                                     ]
                                   ),
@@ -49,9 +50,9 @@ class _ServicePickerState extends State<ServicePicker> {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text('Precio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                                      Text('S/ ', style: TextStyle(fontSize: 13)),
-                                      Text(service.price, style: TextStyle(fontSize: 16))
+                                      Text('${allTranslations.traslate('precio')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      Text('\$ ', style: TextStyle(fontSize: 13)),
+                                      Text(service.price + ' USD', style: TextStyle(fontSize: 16))
                                     ]
                                   ),
                                 )

@@ -9,6 +9,7 @@ class User extends Equatable {
   final String token;
   final int profileId;
   final Rol rol;
+  final List<Permission> permissions;
 
   User({
     @required this.id, 
@@ -17,26 +18,27 @@ class User extends Equatable {
     @required this.email, 
     @required this.token,
     @required this.profileId,
-    @required this.rol
+    @required this.rol,
+    @required this.permissions
   });
 
   @override
-  List<Object> get props => [id, firstName, lastName, email, token, profileId, rol];
+  List<Object> get props => [id, firstName, lastName, email, token, profileId, rol, permissions];
 }
 
 class Rol extends Equatable {
   final int id;
   final String name;
-  final List<Permission> permissions;
+  // final List<Permission> permissions;
 
   Rol({
     @required this.id, 
     @required this.name,
-    @required this.permissions
+    // @required this.permissions
   });
   
   @override
-  List<Object> get props => [id, name, permissions];
+  List<Object> get props => [id, name/*, permissions*/];
 }
 
 class Permission extends Equatable {

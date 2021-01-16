@@ -4,6 +4,7 @@ import 'package:service_now/features/professional/presentation/bloc/pages/addres
 import 'package:service_now/libs/search_api.dart';
 import 'package:service_now/models/place.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_now/utils/all_translations.dart';
 
 class CustomAppBar extends StatelessWidget{
   @override
@@ -23,7 +24,7 @@ class CustomAppBar extends StatelessWidget{
                   child: GestureDetector(
                     child: Container(
                       child: Text(
-                        'Buscar',
+                        allTranslations.traslate('buscar'),
                         style: TextStyle(
                           color: Colors.black38,
                           fontSize: 17

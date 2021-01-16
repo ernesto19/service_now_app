@@ -391,15 +391,15 @@ class _ProfessionalBusinessRegisterPageState extends State<ProfessionalBusinessR
       resultList = await MultiImagePicker.pickImages(
         maxImages: 5,
         materialOptions: MaterialOptions(
-          actionBarTitle: "Seleccionadas",
-          allViewTitle: "Seleccionadas",
+          actionBarTitle: allTranslations.traslate('seleccionadas'),
+          allViewTitle: allTranslations.traslate('seleccionadas'),
           actionBarColor: "#E2C662",
           actionBarTitleColor: "#FFFFFF",
           lightStatusBar: false,
           statusBarColor: '#B3993B',
           startInAllView: true,
           selectCircleStrokeColor: "#000000",
-          selectionLimitReachedText: "No puede seleccionar más",
+          selectionLimitReachedText: allTranslations.traslate('no_puede_seleccionar')
         )
       );
     } on Exception catch (e) {

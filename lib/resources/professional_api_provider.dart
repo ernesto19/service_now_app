@@ -1,4 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:service_now/core/helpers/api_base_helper.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/professional_business.dart';
@@ -164,5 +169,87 @@ class ProfessionalApiProvider {
         "status": 2
       }
     );
+  }
+
+  Future<ProfessionalCRUDResponse> agregarImagenesNegocio(int id, List<Asset> images) async {
+    final uri = Uri.parse(ApiBaseHelper().baseUrl + 'business/upload_gallery' 
+      + '?'
+      + 'business_id=$id');
+
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${UserPreferences.instance.token}',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final multipartRequest = http.MultipartRequest('POST', uri);
+    multipartRequest.headers.addAll(headers);
+
+    if (images != null ) {
+      for (int i = 0; i < images.length; i++) {
+        Asset asset = images[i];
+        ByteData byteData = await asset.getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+
+        final multipartFile = http.MultipartFile.fromBytes(
+          'files[]',
+          imageData,
+          filename: 'name.jpg',
+          contentType: MediaType("image", "jpg"),
+        );
+
+        multipartRequest.files.add(multipartFile);
+      }
+    }
+
+    final streamResponse = await multipartRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      return null;
+    }
+
+    return ProfessionalCRUDResponse.fromJson(json.decode(resp.body));
+  }
+
+  Future<ProfessionalCRUDResponse> agregarImagenesServicio(int id, List<Asset> images) async {
+    final uri = Uri.parse(ApiBaseHelper().baseUrl + 'business_service/upload_gallery' 
+      + '?'
+      + 'business_service_id=$id');
+
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${UserPreferences.instance.token}',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final multipartRequest = http.MultipartRequest('POST', uri);
+    multipartRequest.headers.addAll(headers);
+
+    if (images != null ) {
+      for (int i = 0; i < images.length; i++) {
+        Asset asset = images[i];
+        ByteData byteData = await asset.getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+
+        final multipartFile = http.MultipartFile.fromBytes(
+          'files[]',
+          imageData,
+          filename: 'name.jpg',
+          contentType: MediaType("image", "jpg"),
+        );
+
+        multipartRequest.files.add(multipartFile);
+      }
+    }
+
+    final streamResponse = await multipartRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      return null;
+    }
+
+    return ProfessionalCRUDResponse.fromJson(json.decode(resp.body));
   }
 }

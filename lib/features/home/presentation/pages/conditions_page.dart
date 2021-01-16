@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/user_bloc.dart';
 import 'package:service_now/models/user.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
@@ -13,7 +14,7 @@ class ConditionsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Condiciones', style: labelTitleForm),
+        title: Text(allTranslations.traslate('condiciones'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: Container(

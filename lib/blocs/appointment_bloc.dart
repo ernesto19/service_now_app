@@ -10,14 +10,14 @@ class AppointmentServicesBloc {
   final _profesionalesFetcher = PublishSubject<ProfessionalResponse>();
   final _profesionalFetcher = PublishSubject<ProfessionalDetailResponse>();
   final _solicitudServicio = PublishSubject<AppointmentCRUDResponse>();
-  final _finalizarServicio = PublishSubject<AppointmentCRUDResponse>();
+  final _finalizarServicio = PublishSubject<PaymentCRUDResponse>();
   final _enviarCalificacion = PublishSubject<AppointmentCRUDResponse>();
 
   Observable<AppointmentCRUDResponse> get solicitudColaboracionResponse => _solicitudColaboracion.stream;
   Observable<ProfessionalResponse> get profesionales => _profesionalesFetcher.stream;
   Observable<ProfessionalDetailResponse> get profesional => _profesionalFetcher.stream;
   Observable<AppointmentCRUDResponse> get solicitudServicioResponse => _solicitudServicio.stream;
-  Observable<AppointmentCRUDResponse> get finalizarServicioResponse => _finalizarServicio.stream;
+  Observable<PaymentCRUDResponse> get finalizarServicioResponse => _finalizarServicio.stream;
   Observable<AppointmentCRUDResponse> get enviarCalificacionResponse => _enviarCalificacion.stream;
 
   Future solicitarColaboracion(int businessId) async {
@@ -41,7 +41,7 @@ class AppointmentServicesBloc {
   }
 
   Future finalizarSolicitud(List<Service> services, int professionalId) async {
-    AppointmentCRUDResponse response = await _repository.finalizarSolicitud(services, professionalId);
+    PaymentCRUDResponse response = await _repository.finalizarSolicitud(services, professionalId);
     _finalizarServicio.sink.add(response);
   }
 

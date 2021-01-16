@@ -8,6 +8,7 @@ import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
 import 'professional_aptitudes_page.dart';
+import 'professional_profile_register_page.dart';
 
 class ProfessionalProfilePage extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _ProfessionalProfilePageState extends State<ProfessionalProfilePage> {
   final _resumeController = TextEditingController();
   final _facebookPageController = TextEditingController();
   final _linkedinPageController = TextEditingController();
+  UserProfile userProfile;
 
   @override
   void initState() { 
@@ -34,13 +36,13 @@ class _ProfessionalProfilePageState extends State<ProfessionalProfilePage> {
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Editar',
+        labelText: allTranslations.traslate('editar'),
         currentButton: FloatingActionButton(
           heroTag: "editar",
           backgroundColor: secondaryDarkColor,
           mini: true,
           child: Icon(Icons.edit),
-          onPressed: () {},
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalProfileRegisterPage(profile: userProfile)))
         )
       )
     );
@@ -48,7 +50,7 @@ class _ProfessionalProfilePageState extends State<ProfessionalProfilePage> {
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Aptitudes',
+        labelText: allTranslations.traslate('aptitudes'),
         currentButton: FloatingActionButton(
           heroTag: "aptitudes",
           backgroundColor: secondaryDarkColor,
@@ -86,6 +88,7 @@ class _ProfessionalProfilePageState extends State<ProfessionalProfilePage> {
             builder: (context, AsyncSnapshot<ProfileResponse> snapshot) {
               if (snapshot.hasData) {
                 ProfileResponse profile = snapshot.data;
+                userProfile = profile.data;
                 _phoneController.text = profile.data.phone;
                 _resumeController.text = profile.data.resume;
                 _facebookPageController.text = profile.data.facebookPage;

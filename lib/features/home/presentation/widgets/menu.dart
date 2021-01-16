@@ -111,7 +111,7 @@ class _MenuState extends State<Menu> {
 
           return Scaffold(
             body: Center(
-              child: Text('Cargando ...'),
+              child: Text(allTranslations.traslate('loading_message')),
             ),
           );
         }

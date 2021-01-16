@@ -9,8 +9,9 @@ class UserModel extends User {
     @required String email,
     @required String token,
     @required int profileId,
+    @required List<PermissionModel> permissions,
     @required RolModel rol
-  }) : super(id: id, firstName: firstName, lastName: lastName, email: email, token: token, profileId: profileId, rol: rol);
+  }) : super(id: id, firstName: firstName, lastName: lastName, email: email, token: token, profileId: profileId, rol: rol, permissions: permissions);
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -20,7 +21,8 @@ class UserModel extends User {
       email:      json['email']       ?? '',
       token:      json['token']       ?? '',
       profileId:  json['profile_id']  ?? 0,
-      rol:        json['roles'] == null ? null : RolModel.fromJson(json['roles'][0])
+      rol:        json['roles'] == null ? null : RolModel.fromJson(json['roles'][0]),
+      permissions: json['user_permissions'] == null ? null : ListPermissions.fromJson(json).permissions
     );
   }
 }
@@ -29,14 +31,14 @@ class RolModel extends Rol {
   RolModel({
     @required int id,
     @required String name,
-    @required List<PermissionModel> permissions
-  }) : super(id: id, name: name, permissions: permissions);
+    // @required List<PermissionModel> permissions
+  }) : super(id: id, name: name/*, permissions: permissions*/);
 
   factory RolModel.fromJson(Map<String, dynamic> json) {
     return RolModel(
       id:   json['id']    ?? '', 
       name: json['name']  ?? '',
-      permissions: ListPermissions.fromJson(json).permissions
+      // permissions: ListPermissions.fromJson(json).permissions
     );
   }
 }
@@ -75,7 +77,7 @@ class ListPermissions {
   List<PermissionModel> permissions = List();
 
   ListPermissions.fromJson(dynamic json) {
-    for (var item in json['permissions']) {
+    for (var item in json['user_permissions']) {
       final permission = PermissionModel.fromJson(item);
       permissions.add(permission);
     }

@@ -29,7 +29,7 @@ class UserApiProvider {
   }
 
   Future<UserCRUDResponse> registerProfessionalAptitude(String title, String description, int professionalId, List<Asset> images) async {
-    final uri = Uri.parse('https://test.konxulto.com/service_now_desa/public/api/professional/aptitude/create' 
+    final uri = Uri.parse(ApiBaseHelper().baseUrl + 'professional/aptitude/create' 
       + '?'
       + 'title=$title&'
       + 'description=$description&'

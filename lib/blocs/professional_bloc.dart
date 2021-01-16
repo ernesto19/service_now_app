@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/models/promotion.dart';
@@ -24,6 +25,8 @@ class ProfessionalUserBloc {
   final _serviciosPendientesFetcher = PublishSubject<ServiciosPendientesResponse>();
   final _iniciarServicio = PublishSubject<void>();
   final _terminarServicio = PublishSubject<void>();
+  final _agregarImagenNegocio = PublishSubject<ProfessionalCRUDResponse>();
+  final _agregarImagenServicio = PublishSubject<ProfessionalCRUDResponse>();
 
   Observable<ProfessionalBusinessResponse> get allProfessionalBusiness => _professionalBusinessFetcher.stream;
   Observable<GalleryResponse> get allProfessionalBusinessGallery => _professionalBusinessGalleryFetcher.stream;
@@ -42,6 +45,8 @@ class ProfessionalUserBloc {
   Observable<ServiciosPendientesResponse> get allServiciosPendientes => _serviciosPendientesFetcher.stream;
   Observable<void> get iniciarServicioResponse => _iniciarServicio.stream;
   Observable<void> get terminarServicioResponse => _terminarServicio.stream;
+  Observable<ProfessionalCRUDResponse> get agregarImagenNegocioResponse => _agregarImagenNegocio.stream;
+  Observable<ProfessionalCRUDResponse> get agregarImagenServicioResponse => _agregarImagenServicio.stream;
 
   Future fetchProfessionalBusiness() async {
     ProfessionalBusinessResponse response = await _repository.fetchProfessionalBusiness();
@@ -121,6 +126,16 @@ class ProfessionalUserBloc {
     _terminarServicio.add(await _repository.terminarServicio(id));
   }
 
+  Future agregarImagenesNegocio(int id, List<Asset> images) async {
+    ProfessionalCRUDResponse response = await _repository.agregarImagenesNegocio(id, images);
+    _agregarImagenNegocio.sink.add(response);
+  }
+
+  Future agregarImagenesServicio(int id, List<Asset> images) async {
+    ProfessionalCRUDResponse response = await _repository.agregarImagenesServicio(id, images);
+    _agregarImagenServicio.sink.add(response);
+  }
+
   dispose() {
     _professionalBusinessFetcher.close();
     _professionalBusinessGalleryFetcher.close();
@@ -139,6 +154,8 @@ class ProfessionalUserBloc {
     _serviciosPendientesFetcher.close();
     _iniciarServicio.close();
     _terminarServicio.close();
+    _agregarImagenNegocio.close();
+    _agregarImagenServicio.close();
   }
 }
 

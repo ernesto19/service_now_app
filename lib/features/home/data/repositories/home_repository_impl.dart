@@ -119,8 +119,8 @@ class HomeRepositoryImpl implements HomeRepository {
           if (response.data.rol != null) {
             UserPreferences.instance.rol = response.data.rol.id;
 
-            if (response.data.rol.permissions != null) {
-              localDataSource.createPermissions(response.data.rol.permissions);
+            if (response.data.permissions != null) {
+              localDataSource.createPermissions(response.data.permissions);
             }
           }
         }

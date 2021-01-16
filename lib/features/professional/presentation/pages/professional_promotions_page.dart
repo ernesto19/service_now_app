@@ -92,7 +92,7 @@ class _ProfessionalPromotionsPageState extends State<ProfessionalPromotionsPage>
                             children: [
                               Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                               SizedBox(height: 10),
-                              Text('No hay registros para mostrar')
+                              Text(allTranslations.traslate('no_hay_informacion'))
                             ],
                           )
                         ),
@@ -186,7 +186,7 @@ class _ProfessionalPromotionsPageState extends State<ProfessionalPromotionsPage>
                         children: [
                           Icon(promotion.type == '1' ? Icons.trending_down : Icons.monetization_on, size: 20),
                           SizedBox(width: 10),
-                          Expanded(child: Text(promotion.type == '1' ? '${promotion.amount} % de descuento' : 'S/ ${promotion.amount} de descuento', style: TextStyle(fontSize: 11))),
+                          Expanded(child: Text(promotion.type == '1' ? '${promotion.amount} % ${allTranslations.traslate('de_descuento')}' : '\$ ${promotion.amount} USD ${allTranslations.traslate('de_descuento')}', style: TextStyle(fontSize: 11))),
                         ],
                       ),
                       SizedBox(height: 5)

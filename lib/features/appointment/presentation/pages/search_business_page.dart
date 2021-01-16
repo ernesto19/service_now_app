@@ -7,6 +7,7 @@ import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/libs/polylines/polylines_points.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import '../widgets/custom_search.dart';
 import 'business_detail_page.dart';
@@ -136,7 +137,6 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
               child: _buildBusinessCard(
                 business.gallery.length > 0
                 ? business.gallery[0].url
-                // ? 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png'
                 : 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png',
                 business,
                 bloc
@@ -223,10 +223,10 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
           SizedBox(height: 8),
           Container(
             child: Text(
-              business.active == 1 ? 'Activo' : 'Inactivo',
+              business.active == 1 ? allTranslations.traslate('activo') : allTranslations.traslate('inactivo'),
               style: TextStyle(
                 color: Colors.black54,
-                fontSize: 19,
+                fontSize: 17,
                 fontWeight: FontWeight.bold
               )
             )
@@ -245,7 +245,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
                           children: [
                             Icon(Icons.business, color: Colors.white, size: 20),
                             SizedBox(width: 5),
-                            Text('Detalle', style: TextStyle(fontSize: 16, color: Colors.white))
+                            Text(allTranslations.traslate('detalle'), style: TextStyle(fontSize: 16, color: Colors.white))
                           ]
                         ),
                         shape: RoundedRectangleBorder(

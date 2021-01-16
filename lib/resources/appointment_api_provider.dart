@@ -38,7 +38,7 @@ class AppointmentApiProvider {
     return AppointmentCRUDResponse.fromJson(response);
   }
 
-  Future<AppointmentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) async {
+  Future<PaymentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) async {
     var serviceArray = [];
 
     services.forEach((service) { 
@@ -53,7 +53,7 @@ class AppointmentApiProvider {
         'user_id': UserPreferences.instance.userId
       }
     );
-    return AppointmentCRUDResponse.fromJson(response);
+    return PaymentCRUDResponse.fromJson(response);
   }
 
   Future<AppointmentCRUDResponse> enviarCalificacion(int id, String comentario, double calificacion) async {

@@ -66,7 +66,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                             children: [
                               Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                               SizedBox(height: 10),
-                              Text('No hay registros para mostrar')
+                              Text(allTranslations.traslate('no_hay_informacion'))
                             ],
                           )
                         ),
@@ -130,7 +130,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Text('Negocio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
+                            child: Text('${allTranslations.traslate('negocio')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
                           ),
                           Expanded(
                             flex: 3,
@@ -143,7 +143,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Text('Servicios: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
+                            child: Text('${allTranslations.traslate('servicios')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
                           ),
                           Expanded(
                             flex: 3,
@@ -156,7 +156,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Text('Total: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
+                            child: Text('${allTranslations.traslate('total')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
                           ),
                           Expanded(
                             flex: 3,
@@ -174,7 +174,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                                 children: [
                                   Icon(Icons.play_arrow, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Iniciar servicio', style: TextStyle(fontSize: 12, color: Colors.white))
+                                  Text(allTranslations.traslate('iniciar_servicio'), style: TextStyle(fontSize: 12, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
@@ -182,11 +182,11 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                               ),
                               color: servicio.status == 0 ? HexColor('#77D077') : HexColor('#E3E0E0'),
                               onPressed: servicio.status == 0 ? () {
-                                this._showProgressDialog('Iniciando servicio ...');
+                                this._showProgressDialog(allTranslations.traslate('iniciando_servicio'));
                                 bloc.iniciarServicio(servicio.id);
                                 bloc.iniciarServicioResponse.listen((response) {
                                   Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog('Inicio exitoso', 'El servicio ha sido iniciado exitosamente.');
+                                  this._showDialog(allTranslations.traslate('inicio_exitoso'), allTranslations.traslate('servicio_iniciado_exitosamente'));
                                   bloc.obtenerBandejaServiciosPendientes();
                                 });
                               } : () {}
@@ -200,7 +200,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                                 children: [
                                   Icon(Icons.stop, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Finalizar servicio', style: TextStyle(fontSize: 12, color: Colors.white))
+                                  Text(allTranslations.traslate('terminar_servicio'), style: TextStyle(fontSize: 12, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
@@ -208,11 +208,11 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                               ),
                               color: servicio.status == 1 ? HexColor('#BD7AD1') : HexColor('#E3E0E0'),
                               onPressed: servicio.status == 1 ? () {
-                                this._showProgressDialog('Finalizando servicio ...');
+                                this._showProgressDialog(allTranslations.traslate('finalizando_servicio'));
                                 bloc.terminarServicio(servicio.id);
                                 bloc.terminarServicioResponse.listen((response) {
                                   Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog('Finalización exitosa', 'El servicio ha sido terminado exitosamente.');
+                                  this._showDialog(allTranslations.traslate('finalizacion_exitosa'), allTranslations.traslate('servicio_finalizado_exitosamente'));
                                   bloc.obtenerBandejaServiciosPendientes();
                                 });
                               } : () {}
@@ -276,7 +276,7 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
           content: Text(message, style: TextStyle(fontSize: 16.0),),
           actions: <Widget>[
             FlatButton(
-              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
               onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
             )
           ],

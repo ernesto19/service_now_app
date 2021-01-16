@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
 import 'package:service_now/models/professional_business.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
+
+import 'professional_service_gallery_add_page.dart';
 
 class ProfessionalServiceGalleryPage extends StatelessWidget {
   static final routeName = 'professional_service_gallery_page';
@@ -17,10 +20,23 @@ class ProfessionalServiceGalleryPage extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Galería', style: labelTitleForm),
+        title: Text(allTranslations.traslate('galeria'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
-      body: buildBody(context)
+      body: buildBody(context),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => ProfessionalServiceGalleryAddPage(id: serviceId))
+          ).then((value) {
+            if (value != null) {
+              bloc.fetchProfessionalServiceGallery(serviceId);
+            }
+          });
+        }
+      )
     );
   }
 
@@ -61,7 +77,7 @@ class ProfessionalServiceGalleryPage extends StatelessWidget {
                             children: [
                               Icon(Icons.delete, color: Colors.white, size: 20),
                               SizedBox(width: 5),
-                              Text('Eliminar', style: TextStyle(color: Colors.white))
+                              Text(allTranslations.traslate('eliminar'), style: TextStyle(color: Colors.white))
                             ]
                           ),
                           shape: RoundedRectangleBorder(

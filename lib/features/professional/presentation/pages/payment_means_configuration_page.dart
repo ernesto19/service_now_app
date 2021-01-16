@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/models/professional_business.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
@@ -22,7 +23,7 @@ class _PaymentMeansConfigurationPageState extends State<PaymentMeansConfiguratio
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Configuración medios de pago', style: labelTitleForm),
+        title: Text(allTranslations.traslate('configurar_medios_pago'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: SingleChildScrollView(

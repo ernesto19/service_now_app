@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/presentation/pages/client_request.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_request_page.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/message.dart';
@@ -17,7 +18,7 @@ class MessagesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mensajes', style: labelTitleForm),
+        title: Text(allTranslations.traslate('mensajes'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: buildBody(context)
@@ -57,7 +58,7 @@ class MessagesPage extends StatelessWidget {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(_buildMoment(message).replaceFirst('En', 'Hace'), style: TextStyle(fontSize: 11)),
+                                          Text(_buildMoment(message).replaceFirst(allTranslations.traslate('en'), allTranslations.traslate('hace')), style: TextStyle(fontSize: 11)),
                                           SizedBox(height: 5),
                                           Text(content['title'] ?? '', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                           SizedBox(height: 5),
@@ -101,7 +102,7 @@ class MessagesPage extends StatelessWidget {
                                   children: [
                                     Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                                     SizedBox(height: 10),
-                                    Text('No hay registros para mostrar')
+                                    Text(allTranslations.traslate('no_hay_informacion'))
                                   ],
                                 )
                               ),

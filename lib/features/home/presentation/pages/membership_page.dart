@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/home/domain/entities/membership.dart';
 import 'package:service_now/features/home/presentation/bloc/membership/bloc.dart';
 import 'package:service_now/injection_container.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
@@ -13,7 +14,7 @@ class MembershipPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Membresía', style: labelTitleForm),
+        title: Text(allTranslations.traslate('membresia'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: buildBody(context)
@@ -46,10 +47,10 @@ class MembershipPage extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Column(
                                   children: [
-                                    Text('Estado', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(allTranslations.traslate('estado'), style: TextStyle(fontWeight: FontWeight.bold)),
                                     SizedBox(height: 5),
                                     Container(
-                                      child: Text(membership.active == 1 ? 'ACTIVO' : 'INACTIVO', style: TextStyle(color: Colors.white, fontSize: 15), textAlign: TextAlign.center),
+                                      child: Text(membership.active == 1 ? allTranslations.traslate('activo') : allTranslations.traslate('inactivo'), style: TextStyle(color: Colors.white, fontSize: 15), textAlign: TextAlign.center),
                                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                       decoration: BoxDecoration(
                                         color: membership.active == 1 ? Colors.green : Colors.red,
@@ -57,11 +58,11 @@ class MembershipPage extends StatelessWidget {
                                       )
                                     ),
                                     SizedBox(height: 15),
-                                    Text('Inicio membresía', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(allTranslations.traslate('inicio_membresia'), style: TextStyle(fontWeight: FontWeight.bold)),
                                     SizedBox(height: 5),
                                     Text(membership.acquisitionDate, style: TextStyle(fontSize: 17)),
                                     SizedBox(height: 15),
-                                    Text('Expiración membresía', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(allTranslations.traslate('expiracion_membresia'), style: TextStyle(fontWeight: FontWeight.bold)),
                                     SizedBox(height: 5),
                                     Text(membership.expiration, style: TextStyle(fontSize: 17))
                                   ]

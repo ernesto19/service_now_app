@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
+import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/rounded_button.dart';
+import 'package:service_now/widgets/success_page.dart';
 
 class ProfessionalRequest extends StatefulWidget {
   final String notification;
@@ -29,7 +32,7 @@ class _ProfessionalRequestState extends State<ProfessionalRequest> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Solicitud', style: labelTitleForm),
+        title: Text(allTranslations.traslate('solicitud'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: BlocProvider(
@@ -50,7 +53,7 @@ class _ProfessionalRequestState extends State<ProfessionalRequest> {
                         SliverToBoxAdapter(
                           child: Container(
                             padding: EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
-                            child: Text('Seleccione los servicios que puede brindar en estos momentos'),
+                            child: Text(allTranslations.traslate('seleccione_los_servicios_brindar')),
                           ),
                         ),
                         state.status != ProfessionalStatus.readyServices ? SliverList(
@@ -88,7 +91,7 @@ class _ProfessionalRequestState extends State<ProfessionalRequest> {
                                   children: [
                                     Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                                     SizedBox(height: 10),
-                                    Text('No hay registros para mostrar')
+                                    Text(allTranslations.traslate('no_hay_informacion'))
                                   ],
                                 )
                               ),
@@ -109,10 +112,10 @@ class _ProfessionalRequestState extends State<ProfessionalRequest> {
                       bloc.respuestaSolicitudResponse.listen((response) {
                         if (response.error == 0) {
                           Navigator.pop(_scaffoldKey.currentContext);
-                          this._showDialog('Envio exitoso', 'Su respuesta ha sido enviada exitosamente');
+                          Navigator.of(context).push(FadeRouteBuilder(page: SuccessPage(message: 'Su respuesta ha sido enviada exitosamente', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
                         } else {
                           Navigator.pop(_scaffoldKey.currentContext);
-                          this._showDialog('Envio fallido', response.message);
+                          this._showDialog(allTranslations.traslate('envio_fallido'), response.message);
                         }
                       });
                     }, 
@@ -160,7 +163,7 @@ class _ProfessionalRequestState extends State<ProfessionalRequest> {
           content: Text(message, style: TextStyle(fontSize: 16.0),),
           actions: <Widget>[
             FlatButton(
-              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
               onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
             )
           ],

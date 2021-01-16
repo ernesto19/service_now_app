@@ -49,7 +49,7 @@ class _ProfessionalAptitudesPageState extends State<ProfessionalAptitudesPage> {
 
           return CustomScrollView(
             slivers: [
-              SliverList(
+              aptitudes.length > 0 ? SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     Aptitude aptitude = aptitudes[index];
@@ -137,6 +137,22 @@ class _ProfessionalAptitudesPageState extends State<ProfessionalAptitudesPage> {
                     );
                   },
                   childCount: aptitudes.length
+                )
+              ) : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Container(
+                    padding: EdgeInsets.only(top: 150),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.mood_bad, size: 60, color: Colors.black38),
+                          SizedBox(height: 10),
+                          Text(allTranslations.traslate('no_hay_informacion'))
+                        ],
+                      )
+                    ),
+                  ),
+                  childCount: 1
                 )
               )
             ],

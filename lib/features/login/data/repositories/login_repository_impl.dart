@@ -54,11 +54,11 @@ class LoginRepositoryImpl implements LoginRepository {
       try {
         final login = await loginType();
         if (login.data != null) {
-          if (login.data.rol != null) {
+          if (login.data != null) {
             UserPreferences.instance.rol = login.data.rol.id;
 
-            if (login.data.rol.permissions != null) {
-              localDataSource.createPermissions(login.data.rol.permissions);
+            if (login.data.permissions != null) {
+              localDataSource.createPermissions(login.data.permissions);
             }
           }
         }

@@ -32,6 +32,8 @@ class Repository {
   Future<ServiciosPendientesResponse> obtenerBandejaServiciosPendientes() => professionalApiProvider.obtenerBandejaServiciosPendientes();
   Future<void> iniciarServicio(int id) => professionalApiProvider.iniciarServicio(id);
   Future<void> terminarServicio(int id) => professionalApiProvider.terminarServicio(id);
+  Future<ProfessionalCRUDResponse> agregarImagenesNegocio(int id, List<Asset> images) => professionalApiProvider.agregarImagenesNegocio(id, images);
+  Future<ProfessionalCRUDResponse> agregarImagenesServicio(int id, List<Asset> images) => professionalApiProvider.agregarImagenesServicio(id, images);
 
   // USER
   Future<UserCRUDResponse> registerProfessionalProfile(String phone, String resume, String facebook, String linkedin) => userApiProvider.registerProfessionalProfile(phone, resume, facebook, linkedin);
@@ -45,6 +47,6 @@ class Repository {
   Future<ProfessionalResponse> obtenerProfesionalesPorNegocio(int businessId) => appointmentApiProvider.obtenerProfesionalesPorNegocio(businessId);
   Future<ProfessionalDetailResponse> obtenerPerfilProfesional(int id) => appointmentApiProvider.obtenerPerfilProfesional(id);
   Future<AppointmentCRUDResponse> solicitarServicio(int businessId, int professionalId) => appointmentApiProvider.solicitarServicio(businessId, professionalId);
-  Future<AppointmentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) => appointmentApiProvider.finalizarSolicitud(services, professionalId);
+  Future<PaymentCRUDResponse> finalizarSolicitud(List<Service> services, int professionalId) => appointmentApiProvider.finalizarSolicitud(services, professionalId);
   Future<AppointmentCRUDResponse> enviarCalificacion(int id, String comentario, double calificacion) => appointmentApiProvider.enviarCalificacion(id, comentario, calificacion);
 }

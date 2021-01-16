@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
+import 'package:service_now/utils/all_translations.dart';
 
 class BusinessPhotosPage extends StatelessWidget {
   final Business business;
@@ -76,7 +77,7 @@ class BusinessPhotosPage extends StatelessWidget {
                       SizedBox(height: 50),
                       Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                       SizedBox(height: 10),
-                      Text('No hay información disponible para mostrar'),
+                      Text(allTranslations.traslate('no_hay_informacion')),
                     ],
                   ),
                 );

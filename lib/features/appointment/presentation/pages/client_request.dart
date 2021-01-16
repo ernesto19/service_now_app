@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
@@ -8,8 +9,7 @@ import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/widgets/rounded_button.dart';
-
-import 'payment_services_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ClientRequest extends StatefulWidget {
   final String notification;
@@ -23,6 +23,7 @@ class ClientRequest extends StatefulWidget {
 class _ClientRequestState extends State<ClientRequest> {
   Map<String, dynamic> message;
   List<Service> services = List();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -35,17 +36,15 @@ class _ClientRequestState extends State<ClientRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Solicitud', style: labelTitleForm),
+        title: Text(allTranslations.traslate('solicitud'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: BlocProvider(
         create: (_) => sl<AppointmentBloc>(),
         child: BlocBuilder<AppointmentBloc, AppointmentState>(
           builder: (context, state) {
-            // ignore: close_sinks
-            // final bloc = AppointmentBloc.of(context);
-
             return Column(
               children: [
                 Expanded(
@@ -56,7 +55,7 @@ class _ClientRequestState extends State<ClientRequest> {
                         SliverToBoxAdapter(
                           child: Container(
                             padding: EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
-                            child: Text('Seleccione los servicios que desee solicitar al negocio:'),
+                            child: Text(allTranslations.traslate('seleccione_los_servicios_solicitar')),
                           ),
                         ),
                         services.length > 0 ? SliverList(
@@ -67,7 +66,7 @@ class _ClientRequestState extends State<ClientRequest> {
                               return CheckboxListTile(
                                 title: Row(
                                   children: [
-                                    Text(service.name + ' - ' + 'S/ ${service.price}', style: TextStyle(fontSize: 13))
+                                    Text(service.name + ' - ' + '\$${service.price} USD', style: TextStyle(fontSize: 13))
                                   ],
                                 ),
                                 value: service.selected == 1,
@@ -90,7 +89,7 @@ class _ClientRequestState extends State<ClientRequest> {
                                   children: [
                                     Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                                     SizedBox(height: 10),
-                                    Text('No hay registros para mostrar')
+                                    Text(allTranslations.traslate('no_hay_informacion'))
                                   ],
                                 )
                               ),
@@ -104,20 +103,23 @@ class _ClientRequestState extends State<ClientRequest> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
-                  child: RoundedButton(
-                    onPressed: () {
-                      double totalPagar = 0.0;
-                      services.where((element) => element.selected == 1)
-                              .toList()
-                              .forEach((service) {
-                        totalPagar += double.parse(service.price);
-                      });
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentServicesPage(totalPrice: totalPagar, services: services, professionaUserId: int.parse(message['professional_user_id'].toString()))));
-                    }, 
+                  child: RoundedButton( 
                     label: allTranslations.traslate('confirm_request_button_text'),
                     backgroundColor: secondaryDarkColor,
-                    width: double.infinity
+                    width: double.infinity,
+                    onPressed: () {
+                      this._showProgressDialog();
+                      bloc.finalizarSolicitud(services, int.parse(message['professional_user_id'].toString()));
+                      bloc.finalizarServicioResponse.listen((response) {
+                        if (response.error == 0) {
+                          Navigator.pop(context);
+                          _openWeb(response.url);
+                        } else {
+                          Navigator.pop(_scaffoldKey.currentContext);
+                          this._showDialog(allTranslations.traslate('registro_fallido'), response.message);
+                        }
+                      });
+                    }
                   )
                 )
               ],
@@ -126,6 +128,54 @@ class _ClientRequestState extends State<ClientRequest> {
         )
       )
     );
+  }
+
+  void _showProgressDialog() {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('registering_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  _openWeb(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   List<Service> _getServices(Map<String, dynamic> json) {

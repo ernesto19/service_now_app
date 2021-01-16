@@ -73,7 +73,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                             children: [
                               Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                               SizedBox(height: 10),
-                              Text('No hay registros para mostrar')
+                              Text(allTranslations.traslate('no_hay_informacion'))
                             ],
                           )
                         ),
@@ -164,7 +164,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                       }
                     ),
                     SizedBox(width: 10),
-                    Text('Negocio')
+                    Text(allTranslations.traslate('negocio'))
                   ],
                 )
               )
@@ -217,7 +217,7 @@ class _ProfessionalBusinessPageState extends State<ProfessionalBusinessPage> {
                     }
                   ),
                   SizedBox(width: 10),
-                  Text('Jornada laboral')
+                  Text(allTranslations.traslate('jornada_laboral'))
                 ],
               )
             )

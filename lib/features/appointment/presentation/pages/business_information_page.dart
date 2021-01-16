@@ -33,7 +33,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Solicitar colaboración',
+        labelText: allTranslations.traslate('solicitar_colaboracion'),
         currentButton: FloatingActionButton(
           heroTag: "colaboracion",
           backgroundColor: secondaryDarkColor,
@@ -45,10 +45,10 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
             bloc.solicitudColaboracionResponse.listen((response) {
               if (response.error == 0) {
                 Navigator.pop(_scaffoldKey.currentContext);
-                  this._showDialog('Envio exitoso', 'Su solicitud ha sido enviada exitosamente');
+                  this._showDialog(allTranslations.traslate('envio_exitoso'), 'Su solicitud ha sido enviada exitosamente');
                 } else {
                   Navigator.pop(_scaffoldKey.currentContext);
-                  this._showDialog('Envio fallido', response.message);
+                  this._showDialog(allTranslations.traslate('envio_fallido'), response.message);
                 }
             });
           }
@@ -59,7 +59,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Solicitar servicio',
+        labelText: allTranslations.traslate('solicitar_servicio'),
         currentButton: FloatingActionButton(
           heroTag: "servicio",
           backgroundColor: secondaryDarkColor,
@@ -98,7 +98,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(widget.business.rating),
+                            Text(double.parse(widget.business.rating).toString()),
                             SizedBox(width: 10),
                             RatingBar(
                               initialRating: double.parse(widget.business.rating),
@@ -161,7 +161,6 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
               child: Icon(Icons.send),
               backgroundColor: secondaryDarkColor,
               onPressed: () {
-                // bloc.add(RequestBusinessForUser(business.id, context));
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessListPage(business: widget.business)));
               }
             ) : UnicornDialer(
@@ -199,7 +198,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                     Expanded(
                       child: Text(comment.firstName + ' ' + comment.lastName, style: TextStyle(fontSize: 12))
                     ),
-                    Text(_buildMoment(comment.createdAt).replaceFirst('En', 'Hace'), style: TextStyle(fontSize: 11))
+                    Text(_buildMoment(comment.createdAt).replaceFirst(allTranslations.traslate('en'), allTranslations.traslate('hace')), style: TextStyle(fontSize: 11))
                   ],
                 ),
                 SizedBox(height: 5),
@@ -268,7 +267,7 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
           content: Text(message, style: TextStyle(fontSize: 16.0),),
           actions: <Widget>[
             FlatButton(
-              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
               onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
             )
           ],

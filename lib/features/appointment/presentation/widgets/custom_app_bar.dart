@@ -5,6 +5,7 @@ import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/libs/polylines/polylines_points.dart';
 import 'package:service_now/libs/search_api.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_now/utils/all_translations.dart';
 
 class CustomAppBar extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 child: GestureDetector(
                   child: Container(
                     child: Text(
-                      'Buscar',
+                      allTranslations.traslate('buscar'),
                       style: TextStyle(
                         color: Colors.black38,
                         fontSize: 17

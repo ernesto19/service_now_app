@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/user_bloc.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
+import 'package:service_now/models/user.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
@@ -9,10 +10,13 @@ import 'package:service_now/widgets/input_form_field.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 import 'package:service_now/widgets/success_page.dart';
 import 'home_page.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 class ProfessionalProfileRegisterPage extends StatefulWidget {
   static final routeName = 'professional_profile_register_page';
+
+  final UserProfile profile;
+
+  const ProfessionalProfileRegisterPage({ @required this.profile });
 
   @override
   _ProfessionalProfileRegisterPageState createState() => _ProfessionalProfileRegisterPageState();
@@ -25,49 +29,22 @@ class _ProfessionalProfileRegisterPageState extends State<ProfessionalProfileReg
   final _linkedinPageController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.profile != null) {
+      _phoneController.text        = widget.profile.phone;
+      _resumeController.text       = widget.profile.resume;
+      _facebookPageController.text = widget.profile.facebookPage;
+      _linkedinPageController.text = widget.profile.linkedin;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var childButtons = List<UnicornButton>();
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Choo choo",
-        currentButton: FloatingActionButton(
-          heroTag: "train",
-          backgroundColor: Colors.redAccent,
-          mini: true,
-          child: Icon(Icons.train),
-          onPressed: () {},
-        )
-      )
-    );
-
-    childButtons.add(UnicornButton(
-      currentButton: FloatingActionButton(
-          heroTag: "airplane",
-          backgroundColor: Colors.greenAccent,
-          mini: true,
-          child: Icon(Icons.airplanemode_active), 
-          onPressed: () {}
-        )
-      )
-    );
-
-    childButtons.add(
-      UnicornButton(
-        currentButton: FloatingActionButton(
-          heroTag: "directions",
-          backgroundColor: Colors.blueAccent,
-          mini: true,
-          child: Icon(Icons.directions_car),
-          onPressed: () {}
-        )
-      )
-    );
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(allTranslations.traslate('register_professional_profile_title'), style: labelTitleForm),
+        title: Text(widget.profile == null ? allTranslations.traslate('register_professional_profile_title') : allTranslations.traslate('actualziar_perfil_profesional'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: SafeArea(
@@ -148,10 +125,10 @@ class _ProfessionalProfileRegisterPageState extends State<ProfessionalProfileReg
 
   Widget _buildSaveButton() {
     return RoundedButton(
-      label: allTranslations.traslate('register_button_text'),
+      label: allTranslations.traslate(widget.profile == null ? 'register_button_text' : 'update_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
-      onPressed: () {
+      onPressed: widget.profile == null ? () {
         showDialog(
           context: context,
           builder: (context) {
@@ -182,18 +159,19 @@ class _ProfessionalProfileRegisterPageState extends State<ProfessionalProfileReg
             Navigator.of(context).pop();
 
             String facebook = response.validation[0]['facebook_page'] != null ? response.validation[0]['facebook_page'][0] + '\n' : '';
-            String linkedin = response.validation[0]['linkedin'] != null ? response.validation[0]['linkedin'][0] : '';
-            String message = facebook + linkedin;
+            String linkedin = response.validation[0]['linkedin'] != null ? response.validation[0]['linkedin'][0] + '\n' : '';
+            String resume = response.validation[0]['resume'] != null ? response.validation[0]['resume'][0] : '';
+            String message = facebook + linkedin + resume;
 
             showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Registro fallido', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                  title: Text(allTranslations.traslate('registro_fallido'), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
                   content: Text(message, style: TextStyle(fontSize: 16)),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('ACEPTAR', style: TextStyle(fontSize: 14)),
+                      child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14)),
                       onPressed: () {
                         Navigator.pop(context);
                       }
@@ -209,11 +187,11 @@ class _ProfessionalProfileRegisterPageState extends State<ProfessionalProfileReg
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Registro fallido', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                  title: Text(allTranslations.traslate('registro_fallido'), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
                   content: Text(response.message, style: TextStyle(fontSize: 16)),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('ACEPTAR', style: TextStyle(fontSize: 14)),
+                      child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14)),
                       onPressed: () {
                         Navigator.pop(context);
                       }
@@ -224,7 +202,7 @@ class _ProfessionalProfileRegisterPageState extends State<ProfessionalProfileReg
             );
           }
         });
-      }
+      } : null
     );
   }
 }

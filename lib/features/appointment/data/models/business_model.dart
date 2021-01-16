@@ -23,7 +23,7 @@ class BusinessModel extends Business {
       description:  json['description'], 
       latitude:     json['lat'].toString(),
       longitude:    json['lng'].toString(),
-      rating:       json['rating'],
+      rating:       json['rating'] ?? '0.0',
       distance:     json['distance'],
       active:       json['active'],
       address:      json['address'] ?? '',

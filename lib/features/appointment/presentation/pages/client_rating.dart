@@ -39,7 +39,7 @@ class _ClientRatingState extends State<ClientRating> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Calificación', style: labelTitleForm),
+        title: Text(allTranslations.traslate('calificacion'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: Column(
@@ -63,7 +63,7 @@ class _ClientRatingState extends State<ClientRating> {
                             maxLength: 500,
                             decoration: InputDecoration(
                               hintStyle: TextStyle(color: hintColor),
-                              hintText: 'Escribe tu comentario',
+                              hintText: allTranslations.traslate('escribe_tu_comentario'),
                               counterText: ''
                             ),
                             style: TextStyle(fontSize: 15.0, color: Colors.black87),
@@ -91,7 +91,7 @@ class _ClientRatingState extends State<ClientRating> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Calificación: ', style: TextStyle(fontSize: 16)),
+                              Text('${allTranslations.traslate('calificacion')}: ', style: TextStyle(fontSize: 16)),
                               Text(rating.toString(), style: TextStyle(fontSize: 20))
                             ]
                           )
@@ -116,7 +116,7 @@ class _ClientRatingState extends State<ClientRating> {
                   }
                 });
               }, 
-              label: 'Enviar calificación',
+              label: allTranslations.traslate('enviar_calificacion'),
               backgroundColor: secondaryDarkColor,
               width: double.infinity
             )

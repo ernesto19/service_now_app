@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/features/appointment/presentation/bloc/payment_services/bloc.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
+import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
 import 'package:service_now/injection_container.dart';
-// import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_now/utils/text_styles.dart';
+import 'package:service_now/widgets/success_page.dart';
 
 class PaymentServicesPage extends StatefulWidget {
   static final routeName = 'payment_services_page';
@@ -50,9 +52,6 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
       create: (_) => sl<PaymentServicesBloc>(),
       child: BlocBuilder<PaymentServicesBloc, PaymentServicesState>(
         builder: (context, state) {
-          // ignore: close_sinks
-          // final bloc = PaymentServicesBloc.of(context);
-
           return Container(
             padding: EdgeInsets.only(top: 30),
             child: Column(
@@ -253,21 +252,21 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                         children: [
                           Text('Pagar', style: TextStyle(color: Colors.white, fontSize: 19, fontFamily: 'raleway')),
                           SizedBox(width: 10),
-                          Text('S/ ${widget.totalPrice}', style: TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold, fontFamily: 'raleway'))
+                          Text('\$${widget.totalPrice} USD', style: TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold, fontFamily: 'raleway'))
                         ],
                       )
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0)
                     ),
-                    // onPressed: () => bloc.add(PaymentServicesForUser(UserPreferences.instance.userId, widget.services, context))
                     onPressed: () {
                       this._showProgressDialog();
                       bloc.finalizarSolicitud(widget.services, widget.professionaUserId);
                       bloc.finalizarServicioResponse.listen((response) {
                         if (response.error == 0) {
                           Navigator.pop(_scaffoldKey.currentContext);
-                          this._showDialog('Registro exitoso', 'La solicitud ha sido registrada exitosamente.');
+                          // this._showDialog('Registro exitoso', 'La solicitud ha sido registrada exitosamente.');
+                          Navigator.of(context).push(FadeRouteBuilder(page: SuccessPage(message: 'La solicitud ha sido registrada exitosamente', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
                         } else {
                           Navigator.pop(_scaffoldKey.currentContext);
                           this._showDialog('Registro fallido', response.message);
@@ -296,7 +295,7 @@ class _PaymentServicesPageState extends State<PaymentServicesPage> {
                 CircularProgressIndicator(),
                 Container(
                   padding: EdgeInsets.only(left: 20.0),
-                  child: Text(/*allTranslations.traslate('sending_response_message')*/'Registrando solicitud ....', style: TextStyle(fontSize: 15.0)),
+                  child: Text(allTranslations.traslate('registering_message'), style: TextStyle(fontSize: 15.0)),
                 )
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:service_now/features/professional/domain/entities/professional_s
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_service_register_page.dart';
 import 'package:service_now/models/professional_business.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 
 class ProfessionalBusinessServicesPage extends StatelessWidget {
@@ -52,7 +53,7 @@ class ProfessionalBusinessServicesPage extends StatelessWidget {
                           children: [
                             Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                             SizedBox(height: 10),
-                            Text('No hay registros para mostrar')
+                            Text(allTranslations.traslate('no_hay_informacion'))
                           ],
                         )
                       ),
@@ -95,30 +96,13 @@ class ProfessionalServiceItem extends StatelessWidget {
           title: InkWell(
             child: Row(
               children: [
-                Text('Editar')
+                Text(allTranslations.traslate('editar'))
               ]
             )
           )
         )
       )
     );
-
-    // menuOptions.add(
-    //   PopupMenuItem<String>(
-    //     value: '2',
-    //     child: ListTile(
-    //       leading: Icon(Icons.redeem), 
-    //       title: InkWell(
-    //         child: Row(
-    //           children: [
-    //             Text('Promociones'),
-    //             SizedBox(width: 20)
-    //           ]
-    //         )
-    //       )
-    //     )
-    //   )
-    // );
 
     return Column(
       children: [
@@ -139,7 +123,7 @@ class ProfessionalServiceItem extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
                               children: [
-                                Text('Servicio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                Text('${allTranslations.traslate('servicio')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                                 Text(service.name.toUpperCase(), style: TextStyle(fontSize: 14))
                               ]
                             ),
@@ -149,9 +133,9 @@ class ProfessionalServiceItem extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('Precio: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                                Text('S/ ', style: TextStyle(fontSize: 14)),
-                                Text(service.price, style: TextStyle(fontSize: 16))
+                                Text('${allTranslations.traslate('precio')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                Text('\$ ', style: TextStyle(fontSize: 14)),
+                                Text(service.price + ' USD', style: TextStyle(fontSize: 16))
                               ]
                             )
                           )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/models/appointment.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
@@ -53,19 +54,19 @@ class _ProfessionalDetailPageState extends State<ProfessionalDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 5),
-                      Text('Celular', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(allTranslations.traslate('celular'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                       Text(profesional.phone.isEmpty ? '-' : profesional.phone),
                       SizedBox(height: 8),
-                      Text('Correo electrónico', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(allTranslations.traslate('email'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                       Text(profesional.email),
                       SizedBox(height: 8),
-                      Text('Facebook', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(allTranslations.traslate('facebook'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                       Text(profesional.facebook),
                       SizedBox(height: 8),
-                      Text('LinkedIn', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(allTranslations.traslate('linkedin'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                       Text(profesional.linkedin),
                       SizedBox(height: 8),
-                      Text('Resumen profesional', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(allTranslations.traslate('resumen_profesional'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                       Text(profesional.resume)
                     ],
                   ),

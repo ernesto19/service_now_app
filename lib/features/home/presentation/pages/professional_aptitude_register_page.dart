@@ -133,7 +133,6 @@ class _ProfessionalAptitudeRegisterPageState extends State<ProfessionalAptitudeR
         bloc.registerProfessionalAptitude(_titleController.text ?? '', _descriptionController.text ?? '', UserPreferences.instance.profileId, images);
         bloc.aptitudeRegisterResponse.listen((response) {
           if (response.error == 0) {
-            UserPreferences.instance.profileId = response.data.id;
             Navigator.of(context).pop();
             Navigator.of(context).push(FadeRouteBuilder(page: SuccessPage(message: 'La aptitud ha sido registrada exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
           } else if (response.error == 2) {
@@ -147,11 +146,11 @@ class _ProfessionalAptitudeRegisterPageState extends State<ProfessionalAptitudeR
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Registro fallido', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                  title: Text(allTranslations.traslate('registro_fallido'), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
                   content: Text(message, style: TextStyle(fontSize: 16)),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('ACEPTAR', style: TextStyle(fontSize: 14)),
+                      child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14)),
                       onPressed: () {
                         Navigator.pop(context);
                       }
@@ -167,11 +166,11 @@ class _ProfessionalAptitudeRegisterPageState extends State<ProfessionalAptitudeR
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Registro fallido', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                  title: Text(allTranslations.traslate('registro_fallido'), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
                   content: Text(response.message, style: TextStyle(fontSize: 16)),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('ACEPTAR', style: TextStyle(fontSize: 14)),
+                      child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14)),
                       onPressed: () {
                         Navigator.pop(context);
                       }
@@ -218,15 +217,15 @@ class _ProfessionalAptitudeRegisterPageState extends State<ProfessionalAptitudeR
       resultList = await MultiImagePicker.pickImages(
         maxImages: 5,
         materialOptions: MaterialOptions(
-          actionBarTitle: "Seleccionadas",
-          allViewTitle: "Seleccionadas",
+          actionBarTitle: allTranslations.traslate('seleccionadas'),
+          allViewTitle: allTranslations.traslate('seleccionadas'),
           actionBarColor: "#E2C662",
           actionBarTitleColor: "#FFFFFF",
           lightStatusBar: false,
           statusBarColor: '#B3993B',
           startInAllView: true,
           selectCircleStrokeColor: "#000000",
-          selectionLimitReachedText: "No puede seleccionar más",
+          selectionLimitReachedText: allTranslations.traslate('no_puede_seleccionar'),
         )
       );
     } on Exception catch (e) {

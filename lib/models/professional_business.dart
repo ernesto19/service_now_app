@@ -64,6 +64,11 @@ class Picture {
   int id;
   String url;
 
+  Picture({
+    this.id,
+    this.url
+  });
+
   Picture.fromJson(dynamic json) {
     id  = json['id'];
     url = 'https://archivosprestape.s3.amazonaws.com/' + json['url'];

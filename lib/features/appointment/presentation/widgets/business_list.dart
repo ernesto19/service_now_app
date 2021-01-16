@@ -3,8 +3,8 @@ import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/appointment/presentation/pages/business_detail_page.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
-
 import 'custom_rating_bar.dart';
 
 class BusinessList extends StatelessWidget {
@@ -53,7 +53,7 @@ class BusinessList extends StatelessWidget {
                                     children: [
                                       Icon(Icons.send, color: Colors.white, size: 15),
                                       SizedBox(width: 10),
-                                      Text('Solicitar', style: TextStyle(color: Colors.white))
+                                      Text(allTranslations.traslate('solicitar'), style: TextStyle(color: Colors.white))
                                     ],
                                   ),
                                   onPressed: () {

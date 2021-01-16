@@ -10,6 +10,23 @@ class AppointmentCRUDResponse {
   }
 }
 
+class PaymentCRUDResponse {
+  int error;
+  String message;
+  String url;
+
+  PaymentCRUDResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error   = json['error'];
+    message = json['message'];
+
+    if (error == 0) {
+      url = json['data']['payment'];
+    }
+  }
+}
+
 class ProfessionalNegocio {
   int id;
   int userId;

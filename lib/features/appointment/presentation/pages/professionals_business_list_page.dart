@@ -73,7 +73,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                             children: [
                               Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                               SizedBox(height: 10),
-                              Text('No hay registros para mostrar')
+                              Text(allTranslations.traslate('no_hay_informacion'))
                             ],
                           )
                         ),
@@ -139,21 +139,21 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                         child: Text(status, style: TextStyle(color: Colors.white, fontSize: 12), textAlign: TextAlign.center),
                         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         decoration: BoxDecoration(
-                          color: status == 'ACTIVO' ? Colors.green : status == 'INACTIVO' ? Colors.red : Colors.purple,
+                          color: status == allTranslations.traslate('activo') ? Colors.green : status == allTranslations.traslate('inactivo') ? Colors.red : Colors.purple,
                           borderRadius: BorderRadius.all(Radius.circular(20))
                         )
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Text('C. electrónico: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text('${allTranslations.traslate('c_electronico')}: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                           Text(profesional.email, style: TextStyle(fontSize: 13)),
                         ],
                       ),
                       SizedBox(height: 5),
                       Row(
                         children: [
-                          Text('Celular: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text('${allTranslations.traslate('celular')}: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                           Text(profesional.phone.isEmpty ? '-' : profesional.phone, style: TextStyle(fontSize: 13)),
                         ],
                       ),
@@ -167,7 +167,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                 children: [
                                   Icon(Icons.send, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Solicitar', style: TextStyle(fontSize: 14, color: Colors.white))
+                                  Text(allTranslations.traslate('solicitar'), style: TextStyle(fontSize: 14, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
@@ -180,10 +180,10 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                 bloc.solicitudServicioResponse.listen((response) {
                                   if (response.error == 0) {
                                     Navigator.pop(_scaffoldKey.currentContext);
-                                    this._showDialog('Envio exitoso', 'Su solicitud ha sido enviada exitosamente');
+                                    this._showDialog(allTranslations.traslate('envio_exitoso'), 'Su solicitud ha sido enviada exitosamente');
                                   } else {
                                     Navigator.pop(_scaffoldKey.currentContext);
-                                    this._showDialog('Envio fallido', response.message);
+                                    this._showDialog(allTranslations.traslate('envio_fallido'), response.message);
                                   }
                                 });
                               }
@@ -197,14 +197,14 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                 children: [
                                   Icon(Icons.call, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Llamar', style: TextStyle(fontSize: 14, color: Colors.white))
+                                  Text(allTranslations.traslate('llamar'), style: TextStyle(fontSize: 14, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)
                               ),
                               color: Colors.green,
-                              onPressed: profesional.phone.isEmpty ? null : () => launch('tel://+51${profesional.phone}')
+                              onPressed: profesional.phone.isEmpty ? null : () => launch('tel://${profesional.phone}')
                             ),
                           )
                         ]
@@ -266,7 +266,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
           content: Text(message, style: TextStyle(fontSize: 16.0),),
           actions: <Widget>[
             FlatButton(
-              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
               onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
             )
           ],

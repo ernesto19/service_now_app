@@ -13,8 +13,6 @@ class CustomRatingBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Text(business.rating, style: TextStyle(fontSize: 20),),
-        // SizedBox(width: 5),
         RatingBar(
           initialRating: double.parse(business.rating),
           minRating: 1,

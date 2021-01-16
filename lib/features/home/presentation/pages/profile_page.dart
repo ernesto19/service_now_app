@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/preferences/user_preferences.dart';
+import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 
@@ -16,19 +17,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextStyle textStyle = TextStyle(fontSize: 16.0);
   String _nombreCompleto = '';
   String versionName = '1.0.0';
-  
-  // _obtenerVersion() {
-  //   PackageInfo.fromPlatform().then((packageInfo) {
-  //     setState(() {
-  //       versionName = packageInfo.version;
-  //     });
-  //   });
-  // }
 
   @override
   void initState() {
     _obtenerDatos();
-    // _obtenerVersion();
     super.initState();
   }
 
@@ -36,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil', style: labelTitleForm),
+        title: Text(allTranslations.traslate('perfil'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
       body: Container(
@@ -87,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               flex: 4,
               child: Center(
-                child: Text('Perfil profesional')
+                child: Text(allTranslations.traslate('perfil_profesional'))
               ),
             ),
             Expanded(
@@ -97,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserPreferences.instance.profileId == 0 ? ProfessionalProfileRegisterPage() : ProfessionalProfilePage()))
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserPreferences.instance.profileId == 0 ? ProfessionalProfileRegisterPage(profile: null) : ProfessionalProfilePage()))
     );
   }
 
@@ -114,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               flex: 4,
               child: Center(
-                child: Text('Cambiar contraseña')
+                child: Text(allTranslations.traslate('cambiar_contrasena'))
               ),
             ),
             Expanded(
@@ -160,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return RaisedButton(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 14.0),
-        child: Text('Cerrar sesión', style: textStyle),
+        child: Text(allTranslations.traslate('log_out'), style: textStyle),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5.0)
@@ -205,31 +197,5 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // void _clearData() {
   //   preferencias.nombreUsuario    = '';
-  //   preferencias.codigoTrabajador = '';
-  //   preferencias.idRol            = '';
-  //   preferencias.descripcionRol   = '';
-  //   preferencias.genero           = '';
-  //   preferencias.anioIngreso      = '';
-  //   preferencias.consultora       = '';
-  //   preferencias.nombreConsultora = '';
-  //   preferencias.codigoCliente    = '';
-  //   preferencias.nombreCliente    = '';
-  //   preferencias.codigoCentroCosto = '';
-  //   preferencias.nombreCentroCosto = '';
-  //   preferencias.fechaIngreso     = '';
-  //   preferencias.remuneracion     = '';
-  //   preferencias.puesto           = '';
-  //   preferencias.idUsuario        = '';
-  //   preferencias.salary           = '';
-  //   preferencias.accessToken      = '';
-  //   preferencias.countMessages    = 0;
-  //   preferencias.countVacationRequest = 0;
-  //   preferencias.countAccessAuthorizationRequest = 0;
-  //   preferencias.countTransferAuthorizationRequest = 0;
-  //   preferencias.countMedicalBreakRequest = 0;
-  //   preferencias.inicioSesion     = '0';
-  //   preferencias.saldoVacaciones = '0.0';
-  //   preferencias.vacacionesTruncas = '0.0';
-  //   preferencias.codigoResponsable = '';
   // }
 }

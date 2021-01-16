@@ -49,7 +49,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Solicitudes de colaboración',
+        labelText: allTranslations.traslate('solicitudes_colaboracion'),
         currentButton: FloatingActionButton(
           heroTag: "solicitudes",
           backgroundColor: secondaryDarkColor,
@@ -65,7 +65,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Configurar medios de pago',
+        labelText: allTranslations.traslate('configurar_medios_pago'),
         currentButton: FloatingActionButton(
           heroTag: "medios_pago",
           backgroundColor: secondaryDarkColor,
@@ -81,7 +81,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Promociones',
+        labelText: allTranslations.traslate('promociones'),
         currentButton: FloatingActionButton(
           heroTag: "promocion",
           backgroundColor: secondaryDarkColor,
@@ -97,7 +97,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: 'Editar',
+        labelText: allTranslations.traslate('editar'),
         currentButton: FloatingActionButton(
           heroTag: "editar",
           backgroundColor: secondaryDarkColor,
@@ -152,62 +152,6 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
         parentButton: Icon(Icons.menu),
         childButtons: childButtons
       )
-      // floatingActionButton: Column(
-      //   mainAxisSize: MainAxisSize.min,
-      //   children: List.generate(icons.length, (int index) {
-      //     Widget child = Container(
-      //       height: 70.0,
-      //       width: 56.0,
-      //       alignment: FractionalOffset.topCenter,
-      //       child: ScaleTransition(
-      //         scale: CurvedAnimation(
-      //           parent: _controller,
-      //           curve: Interval(
-      //             0.0,
-      //             1.0 - index / icons.length / 2.0,
-      //             curve: Curves.easeOut
-      //           ),
-      //         ),
-      //         child: FloatingActionButton(
-      //           heroTag: null,
-      //           backgroundColor: Colors.white,
-      //           mini: true,
-      //           child: Icon(icons[index], color: secondaryDarkColor),
-      //           onPressed: () {
-      //             if (index == 1) {
-      //               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalBusinessRegisterPage(business: widget.business)));
-      //             } else {
-      //               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalPromotionsPage(business: widget.business)));
-      //             }
-      //           },
-      //         ),
-      //       ),
-      //     );
-      //     return child;
-      //   }).toList()..add(
-      //     FloatingActionButton(
-      //       heroTag: null,
-      //       backgroundColor: secondaryDarkColor,
-      //       child: AnimatedBuilder(
-      //         animation: _controller,
-      //         builder: (BuildContext context, Widget child) {
-      //           return Transform(
-      //             transform: Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
-      //             alignment: FractionalOffset.center,
-      //             child: Icon(_controller.isDismissed ? Icons.menu : Icons.close),
-      //           );
-      //         },
-      //       ),
-      //       onPressed: () {
-      //         if (_controller.isDismissed) {
-      //           _controller.forward();
-      //         } else {
-      //           _controller.reverse();
-      //         }
-      //       },
-      //     ),
-      //   ),
-      // )
     );
   }
 
@@ -277,7 +221,7 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
       ? Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Galería', style: labelFormStyle),
+          Text(allTranslations.traslate('galeria'), style: labelFormStyle),
           StreamBuilder(
             stream: bloc.allProfessionalBusinessGallery,
             builder: (context, AsyncSnapshot<GalleryResponse> snapshot) {

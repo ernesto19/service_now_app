@@ -94,8 +94,8 @@ class _ProfessionalPromotionRegisterPageState extends State<ProfessionalPromotio
   Widget _buildDiscountTypeSelect() {
     List<DiscountType> list = List();
 
-    list.add(DiscountType(id: 1, description: 'Porcentaje'));
-    list.add(DiscountType(id: 2, description: 'Monto'));
+    list.add(DiscountType(id: 1, description: allTranslations.traslate('porcentaje')));
+    list.add(DiscountType(id: 2, description: allTranslations.traslate('monto')));
 
     return Container(
       child: Column(
@@ -161,11 +161,11 @@ class _ProfessionalPromotionRegisterPageState extends State<ProfessionalPromotio
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Registro exitoso', style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
-                  content: Text('La promoción ha sido registrada exitosamente', style: TextStyle(fontSize: 16.0),),
+                  title: Text(allTranslations.traslate('registro_exitoso'), style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+                  content: Text(allTranslations.traslate('promocion_registrada'), style: TextStyle(fontSize: 16.0),),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+                      child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context, true);

@@ -70,7 +70,7 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                             children: [
                               Icon(Icons.mood_bad, size: 60, color: Colors.black38),
                               SizedBox(height: 10),
-                              Text('No hay registros para mostrar')
+                              Text(allTranslations.traslate('no_hay_informacion'))
                             ],
                           )
                         ),
@@ -145,7 +145,7 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                                 children: [
                                   Icon(Icons.check, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Aprobar', style: TextStyle(fontSize: 14, color: Colors.white))
+                                  Text(allTranslations.traslate('aprobar'), style: TextStyle(fontSize: 14, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
@@ -153,11 +153,11 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                               ),
                               color: Colors.blueAccent,
                               onPressed: () {
-                                this._showProgressDialog('Aprobando solicitud ...');
+                                this._showProgressDialog(allTranslations.traslate('aprobando_solicitud'));
                                 bloc.aprobarSolicitud(solicitud.id);
                                 bloc.aprobarSolicitudResponse.listen((response) {
                                   Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog('Aprobación exitosa', 'La solicitud de colaboración ha sido aprobada exitosamente.');
+                                  this._showDialog(allTranslations.traslate('aprobacion_exitosa'), 'La solicitud de colaboración ha sido aprobada exitosamente.');
                                   bloc.obtenerBandejaSolicitudes(widget.business.id);
                                 });
                               }
@@ -171,7 +171,7 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                                 children: [
                                   Icon(Icons.close, color: Colors.white, size: 20),
                                   SizedBox(width: 5),
-                                  Text('Denegar', style: TextStyle(fontSize: 14, color: Colors.white))
+                                  Text(allTranslations.traslate('denegar'), style: TextStyle(fontSize: 14, color: Colors.white))
                                 ]
                               ),
                               shape: RoundedRectangleBorder(
@@ -179,11 +179,11 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
                               ),
                               color: Colors.redAccent,
                               onPressed: () {
-                                this._showProgressDialog('Denegando solicitud ...');
+                                this._showProgressDialog(allTranslations.traslate('denegando_solicitud'));
                                 bloc.denegarSolicitud(solicitud.id);
                                 bloc.denegarSolicitudResponse.listen((response) {
                                   Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog('Denegación exitosa', 'La solicitud de colaboración ha sido denegada exitosamente.');
+                                  this._showDialog(allTranslations.traslate('denegacion_exitosa'), 'La solicitud de colaboración ha sido denegada exitosamente.');
                                   bloc.obtenerBandejaSolicitudes(widget.business.id);
                                 });
                               }
@@ -248,7 +248,7 @@ class _RequestTrayPageState extends State<RequestTrayPage> {
           content: Text(message, style: TextStyle(fontSize: 16.0),),
           actions: <Widget>[
             FlatButton(
-              child: Text('ACEPTAR', style: TextStyle(fontSize: 14.0)),
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
               onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
             )
           ],
