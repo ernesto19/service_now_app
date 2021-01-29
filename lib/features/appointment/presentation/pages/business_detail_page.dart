@@ -50,7 +50,7 @@ class _BusinessDetailPageState extends State<BusinessDetailPage> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: allTranslations.traslate('information_tab_title')),
-                      Tab(text: allTranslations.traslate('photos_tab_title'))
+                      Tab(text: allTranslations.traslate('services_tab_title'))
                     ]
                   )
                 )

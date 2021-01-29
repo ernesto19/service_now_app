@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:service_now/blocs/user_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_bloc.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_event.dart';
 import 'package:service_now/features/home/presentation/bloc/menu/menu_state.dart';
 import 'package:service_now/features/home/presentation/pages/conditions_page.dart';
 import 'package:service_now/features/home/presentation/pages/membership_page.dart';
 import 'package:service_now/features/home/presentation/pages/messages_page.dart';
-import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
@@ -19,6 +19,7 @@ import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/widgets/rounded_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
   @override
@@ -26,6 +27,8 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -38,8 +41,8 @@ class _MenuState extends State<Menu> {
       child: BlocBuilder<MenuBloc, MenuState>(
         builder: (context, state) {
           // ignore: close_sinks
-          final bloc = MenuBloc.of(context);
-          bloc.add(GetPermissionsForUser());
+          final menuBloc = MenuBloc.of(context);
+          menuBloc.add(GetPermissionsForUser());
 
           if (state.status == MenuStatus.ready) {
             List<Permission> permissions = state.permissions;
@@ -48,6 +51,7 @@ class _MenuState extends State<Menu> {
             });
             
             return Scaffold(
+              key: _scaffoldKey,
               body: SafeArea(
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
@@ -83,7 +87,7 @@ class _MenuState extends State<Menu> {
                                 height: 23
                               ),
                               title: Text(allTranslations.traslate(permissions[index].translateName)),
-                              onTap: () => _onTap(permissions[index].id, context, bloc)
+                              onTap: () => _onTap(permissions[index].id, context, menuBloc)
                             );
                           }
                         )
@@ -91,7 +95,6 @@ class _MenuState extends State<Menu> {
                       UserPreferences.instance.rol == 3 ? Container(
                         padding: EdgeInsets.all(10),
                         child: RoundedButton(
-                          onPressed: () => Navigator.pushNamed(context, PaymentGatewayPage.routeName), 
                           label: allTranslations.traslate('acquire_membership'),
                           backgroundColor: secondaryDarkColor,
                           width: double.infinity,
@@ -99,7 +102,19 @@ class _MenuState extends State<Menu> {
                           icon: Container(
                             padding: EdgeInsets.only(right: 8),
                             child: Icon(Icons.person_add, color: Colors.white, size: 18)
-                          )
+                          ),
+                          onPressed: () {
+                            bloc.acquireMembership();
+                            bloc.membershipResponse.listen((response) {
+                              if (response.error == 0) {
+                                Navigator.pop(context);
+                                _openWeb(response.data);
+                              } else {
+                                Navigator.pop(_scaffoldKey.currentContext);
+                                this._showDialog(allTranslations.traslate('registro_fallido'), response.message);
+                              }
+                            });
+                          } 
                         )
                       ) : Container()
                     ]
@@ -117,6 +132,32 @@ class _MenuState extends State<Menu> {
         }
       )
     );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(message, style: TextStyle(fontSize: 16.0),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pop(_scaffoldKey.currentContext)
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  _openWeb(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void _onTap(int id, BuildContext context, MenuBloc bloc) {

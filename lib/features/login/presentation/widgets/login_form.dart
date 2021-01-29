@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/features/login/presentation/bloc/pages/login/bloc.dart';
+import 'package:service_now/features/login/presentation/pages/password_recover_page.dart';
 import 'package:service_now/features/login/presentation/pages/sign_up_page.dart';
 import 'package:service_now/libs/auth.dart';
 import 'package:service_now/utils/all_translations.dart';
@@ -69,7 +70,9 @@ class _LoginFormState extends State<LoginForm> {
                           fontFamily: 'sans'
                         )
                       ), 
-                      onPressed: () { }
+                      onPressed: () {
+                        Navigator.pushNamed(context, PasswordRecoverPage.routeName);
+                      }
                     )
                   ),
                   SizedBox(height: responsive.ip(2)),

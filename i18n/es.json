@@ -172,5 +172,7 @@
     "configurar_medios_pago": "Configurar medios de pago",
     "promociones": "Promociones",
     "servicio": "Servicio",
-    "precio": "Precio"
+    "precio": "Precio",
+    "recuperar_boton": "Recuperar",
+    "codigo": "Código"
 }

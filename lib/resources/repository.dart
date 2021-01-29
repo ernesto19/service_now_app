@@ -1,4 +1,5 @@
 import 'package:service_now/features/appointment/domain/entities/service.dart';
+import 'package:service_now/features/login/data/responses/login_response.dart';
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/models/appointment.dart';
 import 'package:service_now/models/professional_business.dart';
@@ -41,6 +42,9 @@ class Repository {
   Future<UserCRUDResponse> registerProfessionalAptitude(String title, String description, int professionalId, List<Asset> images) => userApiProvider.registerProfessionalAptitude(title, description, professionalId, images);
   Future<AptitudeResponse> fetchAptitudes(int id) => userApiProvider.fetchAptitudes(id);
   Future<ConditionsResponse> fetchConditions() => userApiProvider.fetchConditions();
+  Future<MembershipResponse> acquireMembership() => userApiProvider.acquireMembership();
+  Future<UserCRUDResponse> solicitudRecuperarContrasena(String email) => userApiProvider.solicitudRecuperarContrasena(email);
+  Future<UserCRUDResponse> recuperarContrasena(String code, String password, String passwordConfirm) => userApiProvider.recuperarContrasena(code, password, passwordConfirm);
 
   // APPOINTMENT
   Future<AppointmentCRUDResponse> solicitarColaboracion(int businessId) => appointmentApiProvider.solicitarColaboracion(businessId);

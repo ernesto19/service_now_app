@@ -66,7 +66,31 @@ class _ClientRequestState extends State<ClientRequest> {
                               return CheckboxListTile(
                                 title: Row(
                                   children: [
-                                    Text(service.name + ' - ' + '\$${service.price} USD', style: TextStyle(fontSize: 13))
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(service.name, style: TextStyle(fontSize: 13)),
+                                        Row(
+                                          children: [
+                                            service.discount.isEmpty ? Text('\$${service.price} USD', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)) : Text('\$${service.price} USD', style: TextStyle(fontSize: 13, decoration: TextDecoration.lineThrough)),
+                                            SizedBox(width: 5),
+                                            service.discount.isEmpty ? Container() : Container(
+                                              child: Row(
+                                                children: [
+                                                  Text('\$${service.finalPrice} USD', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                                  SizedBox(width: 5),
+                                                  Container(
+                                                    color: Colors.green,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                                    child: Text('-' + service.discount, style: TextStyle(fontSize: 10, color: Colors.white)),
+                                                  )
+                                                ]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
                                   ],
                                 ),
                                 value: service.selected == 1,
@@ -187,6 +211,9 @@ class _ClientRequestState extends State<ClientRequest> {
           name: service['name'],
           price: service['price'],
           photos: [],
+          discount: service['discount'] ?? '',
+          discountAmount: service['discount_ammount'] != null ? service['discount_ammount'].toString() : '',
+          finalPrice: service['total'] != null ? service['total'].toString() : '',
           selected: 0
         )
       );

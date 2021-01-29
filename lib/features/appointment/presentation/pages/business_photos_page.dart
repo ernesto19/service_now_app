@@ -40,6 +40,26 @@ class BusinessPhotosPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(service.name),
+                                SizedBox(height: 2),
+                                Row(
+                                  children: [
+                                    service.discount.isEmpty ? Text('\$${service.price} USD', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)) : Text('\$${service.price} USD', style: TextStyle(fontSize: 13, decoration: TextDecoration.lineThrough)),
+                                    SizedBox(width: 5),
+                                    service.discount.isEmpty ? Container() : Container(
+                                      child: Row(
+                                        children: [
+                                          Text('\$${service.finalPrice} USD', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                          SizedBox(width: 5),
+                                          Container(
+                                            color: Colors.green,
+                                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                            child: Text('-' + service.discount, style: TextStyle(fontSize: 10, color: Colors.white)),
+                                          )
+                                        ]
+                                      )
+                                    )
+                                  ]
+                                ),
                                 SizedBox(height: 10),
                                 Container(
                                   height: 200.0,

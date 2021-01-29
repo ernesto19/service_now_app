@@ -172,6 +172,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
           name: service['name'],
           price: service['price'],
           photos: [],
+          discount: service['discount'],
+          discountAmount: service['discount_ammount'],
+          finalPrice: service['total'],
           selected: 0
         )
       );

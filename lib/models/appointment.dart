@@ -22,7 +22,8 @@ class PaymentCRUDResponse {
     message = json['message'];
 
     if (error == 0) {
-      url = json['data']['payment'];
+      // url = json['data']['payment'];
+      url = json['data'];
     }
   }
 }

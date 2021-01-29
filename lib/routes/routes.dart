@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:service_now/features/appointment/presentation/pages/search_business_page.dart';
+import 'package:service_now/features/home/presentation/pages/change_password_page.dart';
 import 'package:service_now/features/home/presentation/pages/conditions_page.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/home/presentation/pages/membership_page.dart';
@@ -8,6 +9,8 @@ import 'package:service_now/features/home/presentation/pages/payment_gateway_pag
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
+import 'package:service_now/features/login/presentation/pages/password_recover_change_page.dart';
+import 'package:service_now/features/login/presentation/pages/password_recover_page.dart';
 import 'package:service_now/features/login/presentation/pages/sign_up_page.dart';
 import 'package:service_now/features/professional/presentation/pages/pending_service_tray_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
@@ -25,6 +28,9 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     MembershipPage.routeName      : (context) => MembershipPage(),
     ProfilePage.routeName         : (context) => ProfilePage(),
     PendingServiceTrayPage.routeName : (context) => PendingServiceTrayPage(),
-    ConditionsPage.routeName      : (context) => ConditionsPage()
+    ConditionsPage.routeName      : (context) => ConditionsPage(),
+    PasswordRecoverPage.routeName : (context) => PasswordRecoverPage(),
+    ChangePasswordPage.routeName  : (context) => ChangePasswordPage(),
+    PasswordRecoverChangePage.routeName : (context) => PasswordRecoverChangePage()
   };
 }

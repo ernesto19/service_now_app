@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:service_now/features/home/domain/entities/category.dart';
 
-enum HomeStatus { checking, loading, selecting, downloading, ready, error }
+enum HomeStatus { checking, loading, selecting, downloading, ready, error, unauthenticated }
 
 class HomeState extends Equatable {
   final List<Category> categories;

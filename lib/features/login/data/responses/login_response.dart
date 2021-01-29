@@ -19,3 +19,17 @@ class LoginResponse {
     }
   }
 }
+
+class MembershipResponse {
+  int error;
+  String message;
+  String data;
+
+  MembershipResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error   = json['error'];
+    message = json['message'];
+    data    = json['data'];
+  }
+}

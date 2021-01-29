@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:service_now/core/helpers/api_base_helper.dart';
+import 'package:service_now/features/login/data/responses/login_response.dart';
 import 'package:service_now/models/user.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 
@@ -79,5 +80,32 @@ class UserApiProvider {
   Future<ConditionsResponse> fetchConditions() async {
     final response = await _helper.get('business/get_terms');
     return ConditionsResponse.fromJson(response);
+  }
+
+  Future<MembershipResponse> acquireMembership() async {
+    final response = await _helper.get('permissions/add_role');
+    return MembershipResponse.fromJson(response);
+  }
+
+  Future<UserCRUDResponse> solicitudRecuperarContrasena(String email) async {
+    final response = await _helper.post(
+      'reset_password', 
+      {
+        'email': email
+      }
+    );
+    return UserCRUDResponse.fromJson(response);
+  }
+
+  Future<UserCRUDResponse> recuperarContrasena(String code, String password, String passwordConfirm) async {
+    final response = await _helper.post(
+      'change_password', 
+      {
+        'password_reset_code': code,
+        'password' : password,
+        'password_confirmation' : passwordConfirm
+      }
+    );
+    return UserCRUDResponse.fromJson(response);
   }
 }
