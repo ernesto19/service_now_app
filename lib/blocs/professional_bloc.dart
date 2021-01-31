@@ -27,6 +27,7 @@ class ProfessionalUserBloc {
   final _terminarServicio = PublishSubject<void>();
   final _agregarImagenNegocio = PublishSubject<ProfessionalCRUDResponse>();
   final _agregarImagenServicio = PublishSubject<ProfessionalCRUDResponse>();
+  final _paypalRegistro = PublishSubject<ProfessionalCRUDResponse>();
 
   Observable<ProfessionalBusinessResponse> get allProfessionalBusiness => _professionalBusinessFetcher.stream;
   Observable<GalleryResponse> get allProfessionalBusinessGallery => _professionalBusinessGalleryFetcher.stream;
@@ -47,6 +48,7 @@ class ProfessionalUserBloc {
   Observable<void> get terminarServicioResponse => _terminarServicio.stream;
   Observable<ProfessionalCRUDResponse> get agregarImagenNegocioResponse => _agregarImagenNegocio.stream;
   Observable<ProfessionalCRUDResponse> get agregarImagenServicioResponse => _agregarImagenServicio.stream;
+  Observable<ProfessionalCRUDResponse> get paypalRegistroResponse => _paypalRegistro.stream;
 
   Future fetchProfessionalBusiness() async {
     ProfessionalBusinessResponse response = await _repository.fetchProfessionalBusiness();
@@ -136,6 +138,11 @@ class ProfessionalUserBloc {
     _agregarImagenServicio.sink.add(response);
   }
 
+  Future registerPaypal(String key, String secret, int businessId) async {
+    ProfessionalCRUDResponse response = await _repository.registerPaypal(key, secret, businessId);
+    _paypalRegistro.sink.add(response);
+  }
+
   dispose() {
     _professionalBusinessFetcher.close();
     _professionalBusinessGalleryFetcher.close();
@@ -156,6 +163,7 @@ class ProfessionalUserBloc {
     _terminarServicio.close();
     _agregarImagenNegocio.close();
     _agregarImagenServicio.close();
+    _paypalRegistro.close();
   }
 }
 

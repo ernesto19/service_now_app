@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/features/professional/presentation/pages/payment_means_configuration_page.dart';
 import 'package:service_now/features/professional/presentation/pages/request_tray_page.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:service_now/blocs/professional_bloc.dart';
@@ -61,21 +62,21 @@ class _ProfessionalBusinessInformationPageState extends State<ProfessionalBusine
       )
     );
 
-    // childButtons.add(
-    //   UnicornButton(
-    //     hasLabel: true,
-    //     labelText: allTranslations.traslate('configurar_medios_pago'),
-    //     currentButton: FloatingActionButton(
-    //       heroTag: "medios_pago",
-    //       backgroundColor: secondaryDarkColor,
-    //       mini: true,
-    //       child: Icon(Icons.payment),
-    //       onPressed: () {
-    //         Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMeansConfigurationPage(business: widget.business)));
-    //       },
-    //     )
-    //   )
-    // );
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: allTranslations.traslate('configurar_medios_pago'),
+        currentButton: FloatingActionButton(
+          heroTag: "medios_pago",
+          backgroundColor: secondaryDarkColor,
+          mini: true,
+          child: Icon(Icons.payment),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMeansConfigurationPage(business: widget.business)));
+          },
+        )
+      )
+    );
 
     childButtons.add(
       UnicornButton(

@@ -76,9 +76,23 @@ class _ClientRatingState extends State<ClientRating> {
                             direction: Axis.horizontal,
                             itemCount: 5,
                             itemSize: 50,
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber
+                            // itemBuilder: (context, _) => Icon(
+                            //   Icons.star,
+                            //   color: Colors.amber
+                            // ),
+                            ratingWidget: RatingWidget(
+                              full: Icon(
+                                Icons.star,
+                                color: Colors.amber
+                              ),
+                              half: Icon(
+                                Icons.star,
+                                color: Colors.amber
+                              ),
+                              empty: Icon(
+                                Icons.star,
+                                color: Colors.amber
+                              )
                             ),
                             unratedColor: Colors.grey[300],
                             onRatingUpdate: (value) {

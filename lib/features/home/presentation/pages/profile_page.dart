@@ -3,7 +3,7 @@ import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
-
+import 'change_password_page.dart';
 import 'professional_profile_page.dart';
 import 'professional_profile_register_page.dart';
 
@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       onTap: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));
       },
     );
   }

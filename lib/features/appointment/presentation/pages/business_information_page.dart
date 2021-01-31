@@ -107,9 +107,23 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                               allowHalfRating: true,
                               itemCount: 5,
                               itemSize: 20,
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber
+                              // itemBuilder: (context, _) => Icon(
+                              //   Icons.star,
+                              //   color: Colors.amber
+                              // ),
+                              ratingWidget: RatingWidget(
+                                full: Icon(
+                                  Icons.star,
+                                  color: Colors.amber
+                                ),
+                                half: Icon(
+                                  Icons.star,
+                                  color: Colors.amber
+                                ),
+                                empty: Icon(
+                                  Icons.star,
+                                  color: Colors.amber
+                                )
                               ),
                               ignoreGestures: true,
                               onRatingUpdate: null
@@ -209,9 +223,23 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                   allowHalfRating: true,
                   itemCount: 5,
                   itemSize: 15,
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber
+                  // itemBuilder: (context, _) => Icon(
+                  //   Icons.star,
+                  //   color: Colors.amber
+                  // ),
+                  ratingWidget: RatingWidget(
+                    full: Icon(
+                      Icons.star,
+                      color: Colors.amber
+                    ),
+                    half: Icon(
+                      Icons.star,
+                      color: Colors.amber
+                    ),
+                    empty: Icon(
+                      Icons.star,
+                      color: Colors.amber
+                    )
                   ),
                   ignoreGestures: true,
                   onRatingUpdate: null

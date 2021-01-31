@@ -15,6 +15,7 @@ class UserBloc {
   final _membershipResponse = PublishSubject<MembershipResponse>();
   final _solicitudRecuperarResponse = PublishSubject<UserCRUDResponse>();
   final _recuperarResponse = PublishSubject<UserCRUDResponse>();
+  final _cambiarResponse = PublishSubject<PasswordCRUDResponse>();
 
   Observable<UserCRUDResponse> get profileRegisterResponse => _profileRegister.stream;
   Observable<ProfileResponse> get profile => _profileFetcher.stream;
@@ -24,6 +25,7 @@ class UserBloc {
   Observable<MembershipResponse> get membershipResponse => _membershipResponse.stream;
   Observable<UserCRUDResponse> get solicitudRecuperarResponse => _solicitudRecuperarResponse.stream;
   Observable<UserCRUDResponse> get recuperarResponse => _recuperarResponse.stream;
+  Observable<PasswordCRUDResponse> get cambiarResponse => _cambiarResponse.stream;
 
   Future registerProfessionalProfile(String phone, String resume, String facebook, String linkedin) async {
     UserCRUDResponse response = await _repository.registerProfessionalProfile(phone, resume, facebook, linkedin);
@@ -65,6 +67,11 @@ class UserBloc {
     _recuperarResponse.sink.add(response);
   }
 
+  Future cambiarContrasena(String currentPassword, String password, String passwordConfirm) async {
+    PasswordCRUDResponse response = await _repository.cambiarContrasena(currentPassword, password, passwordConfirm);
+    _cambiarResponse.sink.add(response);
+  }
+
   dispose() {
     _profileRegister.close();
     _profileFetcher.close();
@@ -74,6 +81,7 @@ class UserBloc {
     _membershipResponse.close();
     _solicitudRecuperarResponse.close();
     _recuperarResponse.close();
+    _cambiarResponse.close();
   }
 }
 

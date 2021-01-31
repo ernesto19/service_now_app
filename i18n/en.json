@@ -153,6 +153,7 @@
     "servicio_finalizado_exitosamente": "The service has been terminated successfully.",
     "agregar_imagenes": "Add images",
     "actualizacion_exitosa": "Successful upgrade",
+    "actualizacion_fallida": "Failed upgrade",
     "imagenes_agregadas": "The images were added to the business successfully.",
     "imagenes_agregadas_servicio": "The images were added to the service successfully.",
     "galeria": "Gallery",
@@ -174,5 +175,8 @@
     "servicio": "Service",
     "precio": "Price",
     "recuperar_boton": "Recover",
-    "codigo": "Code"
+    "codigo": "Code",
+    "contrasena_actual": "Current password",
+    "nueva_contrasena": "New password",
+    "confirmar_nueva_contrasena": "Confirm new password"
 }

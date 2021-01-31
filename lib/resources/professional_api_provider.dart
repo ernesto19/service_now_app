@@ -252,4 +252,16 @@ class ProfessionalApiProvider {
 
     return ProfessionalCRUDResponse.fromJson(json.decode(resp.body));
   }
+
+  Future<ProfessionalCRUDResponse> registerPaypal(String key, String secret, int businessId) async {
+    final response = await _helper.post(
+      'business/update_paypal', 
+      {
+        'id': businessId,
+        'paypal_key': key,
+        'paypal_secret': secret
+      }
+    );
+    return ProfessionalCRUDResponse.fromJson(response);
+  }
 }

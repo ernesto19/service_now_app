@@ -102,10 +102,22 @@ class UserApiProvider {
       'change_password', 
       {
         'password_reset_code': code,
-        'password' : password,
-        'password_confirmation' : passwordConfirm
+        'password': password,
+        'password_confirmation': passwordConfirm
       }
     );
     return UserCRUDResponse.fromJson(response);
+  }
+
+  Future<PasswordCRUDResponse> cambiarContrasena(String currentPassword, String password, String passwordConfirm) async {
+    final response = await _helper.post(
+      'update_password', 
+      {
+        'old_password': currentPassword,
+        'password': password,
+        'password_confirmation': passwordConfirm
+      }
+    );
+    return PasswordCRUDResponse.fromJson(response);
   }
 }

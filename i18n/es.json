@@ -153,6 +153,7 @@
     "servicio_finalizado_exitosamente": "El servicio ha sido terminado exitosamente.",
     "agregar_imagenes": "Agregar imágenes",
     "actualizacion_exitosa": "Actualización exitosa",
+    "actualizacion_fallida": "Actualización fallida",
     "imagenes_agregadas": "Las imágenes fueron agregadas al negocio exitosamente.",
     "imagenes_agregadas_servicio": "Las imágenes fueron agregadas al servicio exitosamente.",
     "galeria": "Galería",
@@ -174,5 +175,8 @@
     "servicio": "Servicio",
     "precio": "Precio",
     "recuperar_boton": "Recuperar",
-    "codigo": "Código"
+    "codigo": "Código",
+    "contrasena_actual": "Contraseña actual",
+    "nueva_contrasena": "Nueva contraseña",
+    "confirmar_nueva_contrasena": "Confirmar nueva contraseña"
 }

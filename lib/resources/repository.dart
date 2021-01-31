@@ -35,6 +35,7 @@ class Repository {
   Future<void> terminarServicio(int id) => professionalApiProvider.terminarServicio(id);
   Future<ProfessionalCRUDResponse> agregarImagenesNegocio(int id, List<Asset> images) => professionalApiProvider.agregarImagenesNegocio(id, images);
   Future<ProfessionalCRUDResponse> agregarImagenesServicio(int id, List<Asset> images) => professionalApiProvider.agregarImagenesServicio(id, images);
+  Future<ProfessionalCRUDResponse> registerPaypal(String key, String secret, int businessId) => professionalApiProvider.registerPaypal(key, secret, businessId);
 
   // USER
   Future<UserCRUDResponse> registerProfessionalProfile(String phone, String resume, String facebook, String linkedin) => userApiProvider.registerProfessionalProfile(phone, resume, facebook, linkedin);
@@ -45,6 +46,7 @@ class Repository {
   Future<MembershipResponse> acquireMembership() => userApiProvider.acquireMembership();
   Future<UserCRUDResponse> solicitudRecuperarContrasena(String email) => userApiProvider.solicitudRecuperarContrasena(email);
   Future<UserCRUDResponse> recuperarContrasena(String code, String password, String passwordConfirm) => userApiProvider.recuperarContrasena(code, password, passwordConfirm);
+  Future<PasswordCRUDResponse> cambiarContrasena(String currentPassword, String password, String passwordConfirm) => userApiProvider.cambiarContrasena(currentPassword, password, passwordConfirm);
 
   // APPOINTMENT
   Future<AppointmentCRUDResponse> solicitarColaboracion(int businessId) => appointmentApiProvider.solicitarColaboracion(businessId);

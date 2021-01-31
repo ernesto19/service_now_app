@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/blocs/professional_bloc.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
-import 'package:service_now/widgets/input_form_field.dart';
+import 'package:service_now/widgets/input_text.dart';
+import 'package:service_now/widgets/rounded_button.dart';
 
 class PaymentMeansConfigurationPage extends StatefulWidget {
   final ProfessionalBusiness business;
@@ -15,170 +18,101 @@ class PaymentMeansConfigurationPage extends StatefulWidget {
 }
 
 class _PaymentMeansConfigurationPageState extends State<PaymentMeansConfigurationPage> {
-  bool _isSelectedCredit = false;
-  bool _isSelectedTransfer = false;
-  final _fullNameController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _paypalKeyController = TextEditingController();
+  final _paypalSecretController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(allTranslations.traslate('configurar_medios_pago'), style: labelTitleForm),
         backgroundColor: primaryColor
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-          child: Column(
-            children: [
-              Row(
-                children: <Widget>[
-                  Checkbox(
-                    value: _isSelectedCredit,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isSelectedCredit = value;
-                      });
-                    }
-                  ),
-                  Text('Tarjeta de crédito', style: TextStyle(color: Colors.black))
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Checkbox(
-                    value: _isSelectedTransfer,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isSelectedTransfer = value;
-                      });
-                    }
-                  ),
-                  Text('Transferencia', style: TextStyle(color: Colors.black))
-                ]
-              ),
-              SizedBox(height: 20),
-              _isSelectedCredit ? Container(
-                margin: EdgeInsets.only(bottom: 15),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 20, right: 10, top: 15, bottom: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text('TARJETA DE CRÉDITO', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
-                            )
-                          ]
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: 'NOMBRES APELLIDOS',
-                          label: 'Nombre completo',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: '00/00',
-                          label: 'Fecha de vencimiento',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: '123',
-                          label: 'CVV',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 10)
-                      ]
-                    )
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                      offset: Offset(2, 2)
-                    )
-                  ]
-                )
-              ) : Container(),
-              SizedBox(height: 10),
-              _isSelectedTransfer ? Container(
-                margin: EdgeInsets.only(bottom: 15),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 20, right: 10, top: 15, bottom: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text('TRANSFERENCIA', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))
-                            )
-                          ]
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: 'NOMBRE BANCO',
-                          label: 'Banco',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: '198-93254158',
-                          label: 'Número de cuenta',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 20),
-                        InputFormField(
-                          hint: '0918756933214',
-                          label: 'CCI',
-                          inputType: TextInputType.text,
-                          controller: _fullNameController,
-                          maxLength: 100
-                        ),
-                        SizedBox(height: 10)
-                      ]
-                    )
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 3,
-                      spreadRadius: 1,
-                      offset: Offset(2, 2)
-                    )
-                  ]
-                )
-              ) : Container()
-            ]
-          )
-        ),
+      body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(children: [
+            InputText(
+              controller: _paypalKeyController,
+              iconPath: 'assets/icons/license.svg',
+              placeholder: 'Key paypal',
+              obscureText: false
+            ),
+            SizedBox(height: 10),
+            InputText(
+              controller: _paypalSecretController,
+              iconPath: 'assets/icons/key.svg',
+              placeholder: 'Secret paypal',
+              obscureText: false
+            ),
+            SizedBox(height: 30),
+            RoundedButton(
+              label: allTranslations.traslate('register_button_text'),
+              width: 200,
+              onPressed: () {
+                this._showProgressDialog();
+                String key = _paypalKeyController.text;
+                String secret = _paypalSecretController.text;
+                bloc.registerPaypal(key, secret, widget.business.id);
+                bloc.paypalRegistroResponse.listen((response) {
+                  if (response.error == 0) {
+                    Navigator.pop(_scaffoldKey.currentContext);
+                    this._showDialog(allTranslations.traslate('registro_exitoso'), 'Sus datos de pago han sido almacenados correctamente.');
+                  } else {
+                    Navigator.pop(_scaffoldKey.currentContext);
+                    this._showDialog(allTranslations.traslate('registro_fallido'), response.message);
+                  }
+                });
+              }
+            )
+          ]
+        )
       )
+    );
+  }
+
+  void _showProgressDialog() {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return Container(
+          child: AlertDialog(
+            content: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(allTranslations.traslate('register_message'), style: TextStyle(fontSize: 15.0)),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title,
+              style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold)),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(allTranslations.traslate('aceptar'), style: TextStyle(fontSize: 14.0)),
+              onPressed: () => Navigator.pushNamedAndRemoveUntil(_scaffoldKey.currentContext, HomePage.routeName, (route) => false)
+            )
+          ],
+        );
+      }
     );
   }
 }

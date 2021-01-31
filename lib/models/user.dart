@@ -18,6 +18,18 @@ class UserCRUDResponse {
   }
 }
 
+class PasswordCRUDResponse {
+  int error;
+  String message;
+
+  PasswordCRUDResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error = json['error'];
+    message = json['message'];
+  }
+}
+
 class UserProfile {
   int id;
   String resume;
