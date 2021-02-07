@@ -5,6 +5,8 @@ import 'package:service_now/models/professional_business.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/hex_color.dart';
 
+import 'client_map_page.dart';
+
 class PendingServiceTrayPage extends StatefulWidget {
   static final routeName = 'pending_service_tray_page';
 
@@ -160,7 +162,23 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                           ),
                           Expanded(
                             flex: 3,
-                            child: Text(servicio.total, style: TextStyle(fontSize: 13))
+                            child: Text('\$' + servicio.total + ' USD', style: TextStyle(fontSize: 13))
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text('${allTranslations.traslate('ubicacion')}: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: GestureDetector(
+                              child: Text('${allTranslations.traslate('ver_mapa')}', style: TextStyle(fontSize: 13, color: Colors.blue, decoration: TextDecoration.underline)),
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ClientMapPage(latitude: double.parse(servicio.clientLatitude), longitude: double.parse(servicio.clientLongitude), client: servicio.firstName + ' ' + servicio.lastName)))
+                            )
                           )
                         ],
                       ),
@@ -185,9 +203,14 @@ class _PendingServiceTrayPageState extends State<PendingServiceTrayPage> {
                                 this._showProgressDialog(allTranslations.traslate('iniciando_servicio'));
                                 bloc.iniciarServicio(servicio.id);
                                 bloc.iniciarServicioResponse.listen((response) {
-                                  Navigator.pop(_scaffoldKey.currentContext);
-                                  this._showDialog(allTranslations.traslate('inicio_exitoso'), allTranslations.traslate('servicio_iniciado_exitosamente'));
-                                  bloc.obtenerBandejaServiciosPendientes();
+                                  if (response.error == 0) {
+                                    Navigator.pop(_scaffoldKey.currentContext);
+                                    this._showDialog(allTranslations.traslate('inicio_exitoso'), allTranslations.traslate('servicio_iniciado_exitosamente'));
+                                    bloc.obtenerBandejaServiciosPendientes();
+                                  } else {
+                                    Navigator.pop(_scaffoldKey.currentContext);
+                                    this._showDialog(allTranslations.traslate('inicio_fallido'), response.message);
+                                  }
                                 });
                               } : () {}
                             ),

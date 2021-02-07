@@ -10,6 +10,7 @@ import 'package:service_now/features/home/presentation/pages/conditions_page.dar
 import 'package:service_now/features/home/presentation/pages/membership_page.dart';
 import 'package:service_now/features/home/presentation/pages/messages_page.dart';
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
+import 'package:service_now/features/home/presentation/pages/service_tray_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/professional/presentation/pages/pending_service_tray_page.dart';
@@ -182,6 +183,9 @@ class _MenuState extends State<Menu> {
         break;
       case 9:
         Navigator.pushNamed(context, PendingServiceTrayPage.routeName);
+        break;
+      case 10:
+        Navigator.pushNamed(context, ServiceTrayPage.routeName);
         break;
       case 4:
         Navigator.pushNamed(context, ConditionsPage.routeName);

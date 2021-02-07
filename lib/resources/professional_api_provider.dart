@@ -151,14 +151,15 @@ class ProfessionalApiProvider {
     return ServiciosPendientesResponse.fromJson(response);
   }
 
-  Future<void> iniciarServicio(int id) async {
-    await _helper.post(
+  Future<ServicioCRUDResponse> iniciarServicio(int id) async {
+    final response = await _helper.post(
       'business_service/service_status', 
       {
         'payment_id': id,
         "status": 1
       }
     );
+    return ServicioCRUDResponse.fromJson(response);
   }
 
   Future<void> terminarServicio(int id) async {

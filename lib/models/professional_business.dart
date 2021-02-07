@@ -167,29 +167,50 @@ class ServicioPendiente {
   int id;
   String firstName;
   String lastName;
+  int businessId;
   String businessName;
   String servicesName;
   String total;
   int status;
+  int professionalId;
+  String professionalName;
+  String professionalLastName;
+  String progessionalPhone;
+  String clientLatitude;
+  String clientLongitude;
 
   ServicioPendiente({
     this.id,
     this.firstName,
     this.lastName,
+    this.businessId,
     this.businessName,
     this.servicesName,
     this.total,
-    this.status
+    this.status,
+    this.professionalId,
+    this.professionalName,
+    this.professionalLastName,
+    this.progessionalPhone,
+    this.clientLatitude,
+    this.clientLongitude
   });
 
   ServicioPendiente.fromJson(dynamic json) {
     id        = json['id'];
     firstName = json['client_name']  ?? '';
     lastName  = json['client_last_name']   ?? '';
+    businessId = json['business_id'] ?? 0;
     businessName = json['business_name'] ?? '';
     servicesName = json['services'] ?? '';
     total     = json['total']       ?? '';
     status    = json['status']      ?? 0;
+    professionalId = json['profesional_user_id'] ?? 0;
+    professionalName = json['profesional_name'] ?? '';
+    professionalLastName = json['profesional_last_name'] ?? '';
+    progessionalPhone = json['profesional_phone'] ?? '';
+    clientLatitude  = json['client_lat'] ?? '';
+    clientLongitude  = json['client_long'] ?? '';
   }
 }
 
@@ -216,5 +237,17 @@ class ServiciosPendientesResponse {
         data.add(servicio);
       }
     }
+  }
+}
+
+class ServicioCRUDResponse {
+  int error;
+  String message;
+
+  ServicioCRUDResponse.fromJson(dynamic json) {
+    if (json == null) return;
+
+    error   = json['error'];
+    message = json['message'];
   }
 }

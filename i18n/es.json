@@ -20,6 +20,7 @@
     "menu_message": "Mensajes",
     "menu_membership": "Membresía",
     "menu_pending_services": "Servicios pendientes",
+    "menu_tray_services": "Bandeja de servicios",
     "log_out": "Cerrar sesión",
     "authenticating_message": "Autenticando ...",
     "registering_message": "Registrando ...",
@@ -148,6 +149,7 @@
     "iniciando_servicio": "Iniciando servicio ...",
     "finalizando_servicio": "Finalizando servicio ...",
     "inicio_exitoso": "Inicio exitoso",
+    "inicio_fallido": "Inicio fallido",
     "finalizacion_exitosa": "Finalización exitosa",
     "servicio_iniciado_exitosamente": "El servicio ha sido iniciado exitosamente.",
     "servicio_finalizado_exitosamente": "El servicio ha sido terminado exitosamente.",
@@ -178,5 +180,12 @@
     "codigo": "Código",
     "contrasena_actual": "Contraseña actual",
     "nueva_contrasena": "Nueva contraseña",
-    "confirmar_nueva_contrasena": "Confirmar nueva contraseña"
+    "confirmar_nueva_contrasena": "Confirmar nueva contraseña",
+    "services_tray_title": "Bandeja de servicios",
+    "profesional_label": "Profesional",
+    "estado_pendiente": "Pendiente",
+    "estado_iniciado": "Iniciado",
+    "estado_terminado": "Terminado",
+    "ver_mapa": "Ver mapa",
+    "ubicacion": "Ubicación"
 }

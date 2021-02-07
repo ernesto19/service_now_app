@@ -69,30 +69,16 @@ class CustomDialog extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              RatingBar(
+              RatingBar.builder(
                 initialRating: double.parse(rating),
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 30,
-                // itemBuilder: (context, _) => Icon(
-                //   Icons.star,
-                //   color: Colors.amber
-                // ),
-                ratingWidget: RatingWidget(
-                  full: Icon(
-                    Icons.star,
-                    color: Colors.amber
-                  ),
-                  half: Icon(
-                    Icons.star,
-                    color: Colors.amber
-                  ),
-                  empty: Icon(
-                    Icons.star,
-                    color: Colors.amber
-                  )
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber
                 ),
                 ignoreGestures: true,
                 onRatingUpdate: null

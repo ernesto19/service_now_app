@@ -91,4 +91,20 @@ class UserPreferences {
   set profileId(int value) {
     _preferences.setInt('profileId', value);
   }
+
+  get currentLatitude {
+    return _preferences.getDouble('currentLatitude' ?? '');
+  }
+
+  set currentLatitude(double value) {
+    _preferences.setDouble('currentLatitude', value);
+  }
+
+  get currentLongitude {
+    return _preferences.getDouble('currentLongitude' ?? '');
+  }
+
+  set currentLongitude(double value) {
+    _preferences.setDouble('currentLongitude', value);
+  }
 }

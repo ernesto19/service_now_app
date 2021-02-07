@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
+import 'package:service_now/features/home/presentation/pages/web_view_payment.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/features/appointment/domain/entities/service.dart';
 import 'package:service_now/widgets/rounded_button.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ClientRequest extends StatefulWidget {
   final String notification;
@@ -136,8 +136,7 @@ class _ClientRequestState extends State<ClientRequest> {
                       bloc.finalizarSolicitud(services, int.parse(message['professional_user_id'].toString()));
                       bloc.finalizarServicioResponse.listen((response) {
                         if (response.error == 0) {
-                          Navigator.pop(context);
-                          _openWeb(response.url);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewPage(url: response.url)));
                         } else {
                           Navigator.pop(_scaffoldKey.currentContext);
                           this._showDialog(allTranslations.traslate('registro_fallido'), response.message);
@@ -192,14 +191,6 @@ class _ClientRequestState extends State<ClientRequest> {
         );
       }
     );
-  }
-
-  _openWeb(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   List<Service> _getServices(Map<String, dynamic> json) {

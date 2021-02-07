@@ -50,7 +50,9 @@ class AppointmentApiProvider {
       {
         'professional_user_id': professionalId,
         'services': serviceArray,
-        'user_id': UserPreferences.instance.userId
+        'user_id': UserPreferences.instance.userId,
+        'client_long': UserPreferences.instance.currentLatitude,
+        'client_lat': UserPreferences.instance.currentLongitude
       }
     );
     return PaymentCRUDResponse.fromJson(response);

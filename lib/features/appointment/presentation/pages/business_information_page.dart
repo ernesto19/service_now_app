@@ -100,30 +100,16 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                           children: [
                             Text(double.parse(widget.business.rating).toString()),
                             SizedBox(width: 10),
-                            RatingBar(
+                            RatingBar.builder(
                               initialRating: double.parse(widget.business.rating),
                               minRating: 1,
                               direction: Axis.horizontal,
                               allowHalfRating: true,
                               itemCount: 5,
                               itemSize: 20,
-                              // itemBuilder: (context, _) => Icon(
-                              //   Icons.star,
-                              //   color: Colors.amber
-                              // ),
-                              ratingWidget: RatingWidget(
-                                full: Icon(
-                                  Icons.star,
-                                  color: Colors.amber
-                                ),
-                                half: Icon(
-                                  Icons.star,
-                                  color: Colors.amber
-                                ),
-                                empty: Icon(
-                                  Icons.star,
-                                  color: Colors.amber
-                                )
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber
                               ),
                               ignoreGestures: true,
                               onRatingUpdate: null
@@ -216,30 +202,16 @@ class _BusinessInformationPageState extends State<BusinessInformationPage> {
                   ],
                 ),
                 SizedBox(height: 5),
-                RatingBar(
+                RatingBar.builder(
                   initialRating: double.parse(comment.rating),
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
                   itemSize: 15,
-                  // itemBuilder: (context, _) => Icon(
-                  //   Icons.star,
-                  //   color: Colors.amber
-                  // ),
-                  ratingWidget: RatingWidget(
-                    full: Icon(
-                      Icons.star,
-                      color: Colors.amber
-                    ),
-                    half: Icon(
-                      Icons.star,
-                      color: Colors.amber
-                    ),
-                    empty: Icon(
-                      Icons.star,
-                      color: Colors.amber
-                    )
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber
                   ),
                   ignoreGestures: true,
                   onRatingUpdate: null

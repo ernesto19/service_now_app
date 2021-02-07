@@ -7,6 +7,7 @@ import 'package:service_now/features/home/domain/entities/category.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_now/injection_container.dart';
 import 'package:service_now/libs/polylines/polylines_points.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import '../widgets/custom_search.dart';
@@ -61,6 +62,9 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
 
             _originLatitude = state.myLocation.latitude;
             _originLongitude = state.myLocation.longitude;
+
+            UserPreferences.instance.currentLatitude = state.myLocation.latitude;
+            UserPreferences.instance.currentLongitude = state.myLocation.longitude;
           
             return Scaffold(
               body: Stack(
@@ -219,7 +223,14 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
           SizedBox(height: 10),
           CustomRatingBar(business: business),
           SizedBox(height: 8),
-          Text(address, style: TextStyle(fontSize: 17)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.pin_drop, size: 19),
+              SizedBox(width: 5),
+              Text(address, style: TextStyle(fontSize: 17))
+            ]
+          ),
           SizedBox(height: 8),
           Container(
             child: Text(

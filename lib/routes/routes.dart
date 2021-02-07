@@ -7,6 +7,7 @@ import 'package:service_now/features/home/presentation/pages/membership_page.dar
 import 'package:service_now/features/home/presentation/pages/messages_page.dart';
 import 'package:service_now/features/home/presentation/pages/payment_gateway_page.dart';
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
+import 'package:service_now/features/home/presentation/pages/service_tray_page.dart';
 import 'package:service_now/features/login/presentation/pages/login_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
 import 'package:service_now/features/login/presentation/pages/password_recover_change_page.dart';
@@ -28,6 +29,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     MembershipPage.routeName      : (context) => MembershipPage(),
     ProfilePage.routeName         : (context) => ProfilePage(),
     PendingServiceTrayPage.routeName : (context) => PendingServiceTrayPage(),
+    ServiceTrayPage.routeName     : (context) => ServiceTrayPage(),
     ConditionsPage.routeName      : (context) => ConditionsPage(),
     PasswordRecoverPage.routeName : (context) => PasswordRecoverPage(),
     ChangePasswordPage.routeName  : (context) => ChangePasswordPage(),

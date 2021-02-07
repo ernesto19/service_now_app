@@ -20,6 +20,7 @@
     "menu_message": "Messages",
     "menu_membership": "Membership",
     "menu_pending_services": "Pending services",
+    "menu_tray_services": "Services tray",
     "log_out": "Log out",
     "authenticating_message": "Authenticating ...",
     "registering_message": "Registering ...",
@@ -148,6 +149,7 @@
     "iniciando_servicio": "Starting service ...",
     "finalizando_servicio": "Ending service ...",
     "inicio_exitoso": "Successful start",
+    "inicio_fallido": "Failed start",
     "finalizacion_exitosa": "Successful completion",
     "servicio_iniciado_exitosamente": "The service has been started successfully.",
     "servicio_finalizado_exitosamente": "The service has been terminated successfully.",
@@ -178,5 +180,12 @@
     "codigo": "Code",
     "contrasena_actual": "Current password",
     "nueva_contrasena": "New password",
-    "confirmar_nueva_contrasena": "Confirm new password"
+    "confirmar_nueva_contrasena": "Confirm new password",
+    "services_tray_title": "Services tray",
+    "profesional_label": "Professional",
+    "estado_pendiente": "Pending",
+    "estado_iniciado": "Initiated",
+    "estado_terminado": "Finished",
+    "ver_mapa": "See map",
+    "ubicacion": "Location"
 }

@@ -174,7 +174,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                 borderRadius: BorderRadius.circular(5)
                               ),
                               color: Colors.blueAccent,
-                              onPressed: () {
+                              onPressed: status == allTranslations.traslate('activo') ? () {
                                 this._showProgressDialog();
                                 bloc.solicitarServicio(widget.business.id, profesional.userId);
                                 bloc.solicitudServicioResponse.listen((response) {
@@ -186,7 +186,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                     this._showDialog(allTranslations.traslate('envio_fallido'), response.message);
                                   }
                                 });
-                              }
+                              } : null
                             ),
                           ),
                           SizedBox(width: 5),
@@ -204,7 +204,7 @@ class _ProfessionalBusinessListPageState extends State<ProfessionalBusinessListP
                                 borderRadius: BorderRadius.circular(5)
                               ),
                               color: Colors.green,
-                              onPressed: profesional.phone.isEmpty ? null : () => launch('tel://${profesional.phone}')
+                              onPressed: status != allTranslations.traslate('activo') || profesional.phone.isEmpty ? null : () => launch('tel://${profesional.phone}')
                             ),
                           )
                         ]

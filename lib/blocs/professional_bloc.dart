@@ -23,7 +23,7 @@ class ProfessionalUserBloc {
   final _denegarSolicitud = PublishSubject<void>();
   final _respuestaSolicitud = PublishSubject<ProfessionalCRUDResponse>();
   final _serviciosPendientesFetcher = PublishSubject<ServiciosPendientesResponse>();
-  final _iniciarServicio = PublishSubject<void>();
+  final _iniciarServicio = PublishSubject<ServicioCRUDResponse>();
   final _terminarServicio = PublishSubject<void>();
   final _agregarImagenNegocio = PublishSubject<ProfessionalCRUDResponse>();
   final _agregarImagenServicio = PublishSubject<ProfessionalCRUDResponse>();
@@ -44,7 +44,7 @@ class ProfessionalUserBloc {
   Observable<void> get denegarSolicitudResponse => _denegarSolicitud.stream;
   Observable<ProfessionalCRUDResponse> get respuestaSolicitudResponse => _respuestaSolicitud.stream;
   Observable<ServiciosPendientesResponse> get allServiciosPendientes => _serviciosPendientesFetcher.stream;
-  Observable<void> get iniciarServicioResponse => _iniciarServicio.stream;
+  Observable<ServicioCRUDResponse> get iniciarServicioResponse => _iniciarServicio.stream;
   Observable<void> get terminarServicioResponse => _terminarServicio.stream;
   Observable<ProfessionalCRUDResponse> get agregarImagenNegocioResponse => _agregarImagenNegocio.stream;
   Observable<ProfessionalCRUDResponse> get agregarImagenServicioResponse => _agregarImagenServicio.stream;
@@ -121,7 +121,8 @@ class ProfessionalUserBloc {
   }
 
   Future iniciarServicio(int id) async {
-    _iniciarServicio.add(await _repository.iniciarServicio(id));
+    ServicioCRUDResponse response = await _repository.iniciarServicio(id);
+    _iniciarServicio.sink.add(response);
   }
 
   Future terminarServicio(int id) async {

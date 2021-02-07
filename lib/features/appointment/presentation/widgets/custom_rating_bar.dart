@@ -13,30 +13,16 @@ class CustomRatingBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RatingBar(
+        RatingBar.builder(
           initialRating: double.parse(business.rating),
           minRating: 1,
           direction: Axis.horizontal,
           allowHalfRating: true,
           itemCount: 5,
           itemSize: 25,
-          // itemBuilder: (context, _) => Icon(
-          //   Icons.star,
-          //   color: Colors.amber
-          // ),
-          ratingWidget: RatingWidget(
-            full: Icon(
-              Icons.star,
-              color: Colors.amber
-            ),
-            half: Icon(
-              Icons.star,
-              color: Colors.amber
-            ),
-            empty: Icon(
-              Icons.star,
-              color: Colors.amber
-            )
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber
           ),
           ignoreGestures: true,
           onRatingUpdate: null

@@ -19,7 +19,7 @@ class BusinessDetailPage extends StatefulWidget {
 
 class _BusinessDetailPageState extends State<BusinessDetailPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     final Responsive responsive = Responsive.of(context);
 
     return Scaffold(
