@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
-import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/widgets/success_page.dart';
-import 'home_page.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewPage extends StatefulWidget {
+class WebViewMembershipPage extends StatefulWidget {
   static final routeName = 'change_password_page';
 
   final String url;
-  final int professionalUserId;
 
-  const WebViewPage({ @required this.url, @required this.professionalUserId });
+  const WebViewMembershipPage({ @required this.url });
 
   @override
-  _WebViewPageState createState() => _WebViewPageState();
+  _WebViewMembershipPageState createState() => _WebViewMembershipPageState();
 }
 
-class _WebViewPageState extends State<WebViewPage> {
+class _WebViewMembershipPageState extends State<WebViewMembershipPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +29,7 @@ class _WebViewPageState extends State<WebViewPage> {
           JavascriptChannel(
             name: 'MessageInvoker',
             onMessageReceived: (s) {
-              UserPreferences.instance.serviceProfessionalId = widget.professionalUserId;
-              UserPreferences.instance.serviceIsPending = 1;
-              Navigator.of(context).push(FadeRouteBuilder(page: SuccessPage(message: 'Su pago ha sido realizado exitosamente. El profesional lo atenderá según lo acordado.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
+              Navigator.of(context).push(FadeRouteBuilder(page: SuccessPage(message: 'Su pago ha sido realizado exitosamente.', assetImage: 'assets/images/check.png', page: Container(), levelsNumber: 1, pageName: HomePage.routeName)));
             }
           ),
         ].toSet(),

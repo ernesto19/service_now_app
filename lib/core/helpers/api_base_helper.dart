@@ -7,8 +7,7 @@ import 'package:service_now/preferences/user_preferences.dart';
 import 'app_exceptions.dart';
 
 class ApiBaseHelper {
-  // final String baseUrl = 'https://test.konxulto.com/service_now/public/api/';
-  final String baseUrl = 'https://test.konxulto.com/service_now_desa/public/api/';
+  final String baseUrl = 'https://servicenow.konxulto.com/service_now/public/api/';
 
   Future<dynamic> get(String url) async {
     var responseJson;

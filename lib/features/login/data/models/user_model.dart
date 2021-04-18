@@ -58,7 +58,7 @@ class PermissionModel extends Permission {
       name: json['name']  ?? '',
       icon: json['icon']  ?? '',
       translateName: json['translate_name']  ?? '',
-      order: json['order'] ?? 0
+      order: json['order'] == null ? 0 : json['order'] is int ? json['order'] : int.parse(json['order'])
     );
   }
 

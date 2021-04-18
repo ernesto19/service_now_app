@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:service_now/blocs/appointment_bloc.dart';
 import 'package:service_now/features/home/presentation/pages/home_page.dart';
 import 'package:service_now/features/professional/presentation/widgets/animation_fab.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
@@ -107,6 +108,7 @@ class _ClientRatingState extends State<ClientRating> {
             padding: EdgeInsets.all(10),
             child: RoundedButton(
               onPressed: () {
+                UserPreferences.instance.serviceIsPending = 0;
                 this._showProgressDialog();
                 bloc.enviarCalificacion(paymentId, _commentController.text, rating);
                 bloc.enviarCalificacionResponse.listen((response) {

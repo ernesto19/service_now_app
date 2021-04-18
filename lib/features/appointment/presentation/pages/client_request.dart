@@ -136,7 +136,7 @@ class _ClientRequestState extends State<ClientRequest> {
                       bloc.finalizarSolicitud(services, int.parse(message['professional_user_id'].toString()));
                       bloc.finalizarServicioResponse.listen((response) {
                         if (response.error == 0) {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewPage(url: response.url)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewPage(url: response.url, professionalUserId: int.parse(message['professional_user_id'].toString()))));
                         } else {
                           Navigator.pop(_scaffoldKey.currentContext);
                           this._showDialog(allTranslations.traslate('registro_fallido'), response.message);

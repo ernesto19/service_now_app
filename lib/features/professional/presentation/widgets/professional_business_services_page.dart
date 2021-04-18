@@ -69,7 +69,7 @@ class ProfessionalBusinessServicesPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: secondaryDarkColor,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage(businessId: business.id, professionalService: null)))
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage(business: business, professionalService: null)))
       )
     );
   }
@@ -148,7 +148,7 @@ class ProfessionalServiceItem extends StatelessWidget {
                     icon: Icon(Icons.more_vert),
                     onSelected: (value) {
                       if (value == '1') {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage(businessId: business.id, professionalService: service)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfessionalServiceRegisterPage(business: business, professionalService: service)));
                       } else if (value == '2') {
                         // this._showConfirmDialog(context);
                       }

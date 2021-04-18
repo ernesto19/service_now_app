@@ -6,6 +6,7 @@ import 'package:service_now/libs/polylines/polylines_points.dart';
 import 'package:service_now/libs/search_api.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/utils/all_translations.dart';
+import 'package:service_now/utils/strings.dart';
 
 class CustomAppBar extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class CustomAppBar extends StatefulWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = 'AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc';
+  String googleAPiKey = googleMapsKey;
 
   @override
   Widget build(BuildContext context) {

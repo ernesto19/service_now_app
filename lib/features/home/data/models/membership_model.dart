@@ -17,7 +17,7 @@ class MembershipModel extends Membership {
       id: json['id'], 
       acquisitionDate: json['acquisition_date'] != null ? format.format(DateTime.parse(json['acquisition_date'])) : '-',
       expiration: json['expiration'] != null ? format.format(DateTime.parse(json['expiration'])) : '-',
-      active: json['active']
+      active: json['active'] is int ? json['active'] : int.parse(json['active'])
     );
   }
 }

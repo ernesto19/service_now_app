@@ -26,7 +26,7 @@ class CategoryModel extends Category {
     return CategoryModel(
       id:   json['id']    ?? 0, 
       name: json['name']  ?? '',
-      industryId: json['industry_id'] ?? 0,
+      industryId: json['industry_id'] is int ? json['industry_id'] ?? 0 : int.parse(json['industry_id'] ?? '0'),
     );
   }
 }

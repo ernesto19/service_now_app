@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_now/features/appointment/presentation/bloc/bloc.dart';
 import 'package:service_now/libs/polylines/polylines_points.dart';
+import 'package:service_now/utils/strings.dart';
 import 'custom_search.dart';
 
 class CustomGoogleMap extends StatefulWidget {
@@ -19,7 +20,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   double _destLatitude = -12.156865846418716, _destLongitude = -76.95942968130112;
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = 'AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc';
+  String googleAPiKey = googleMapsKey;
   Map<PolylineId, Polyline> polylines = {};
 
   @override

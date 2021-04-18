@@ -10,6 +10,7 @@ import 'package:service_now/libs/polylines/polylines_points.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
+import 'package:service_now/utils/strings.dart';
 import '../widgets/custom_search.dart';
 import 'business_detail_page.dart';
 
@@ -28,7 +29,7 @@ class _SearchBusinessPageState extends State<SearchBusinessPage> {
   double _originLongitude = 0.0;
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = 'AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc';
+  String googleAPiKey = googleMapsKey;
   Map<PolylineId, Polyline> polylines = {};
 
   BitmapDescriptor pinLocationIcon;

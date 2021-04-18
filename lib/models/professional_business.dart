@@ -15,6 +15,7 @@ class ProfessionalBusiness {
   int active;
   int professionalActive;
   int owner;
+  String zipCode;
   List<Picture> gallery = List();
 
   ProfessionalBusiness({
@@ -32,15 +33,18 @@ class ProfessionalBusiness {
     this.latitude,
     this.active,
     this.professionalActive,
-    this.owner
+    this.owner,
+    this.zipCode
   });
 
   ProfessionalBusiness.fromJson(Map<String, dynamic> json) {
     id            = json['id'];
     name          = json['name']            ?? '';
     description   = json['description']     ?? '';
+    // categoryId    = json['category_id'] is int ? json['category_id'] ?? 0 : int.parse(json['category_id']);
     categoryId    = json['category_id']     ?? 0;
     categoryName  = json['category_name']   ?? '';
+    // industryId    = json['industry_id'] is int ? json['industry_id'] ?? 0 : int.parse(json['industry_id']);
     industryId    = json['industry_id']     ?? 0;
     address       = json['address']         ?? '';
     licenseNumber = json['license']         ?? '';
@@ -52,6 +56,7 @@ class ProfessionalBusiness {
     active        = json['active']          ?? 0;
     professionalActive = json['professional_status'] == 1 || json['professional_status'] == 2 ? 1 : 0;
     owner         = json['owner']           ?? 0;
+    zipCode       = json['zip_code']        ?? '';
 
     for (var item in json['gallery']) {
       final image = Picture.fromJson(item);
@@ -178,6 +183,7 @@ class ServicioPendiente {
   String progessionalPhone;
   String clientLatitude;
   String clientLongitude;
+  List<int> servicesId = List();
 
   ServicioPendiente({
     this.id,
@@ -193,7 +199,8 @@ class ServicioPendiente {
     this.professionalLastName,
     this.progessionalPhone,
     this.clientLatitude,
-    this.clientLongitude
+    this.clientLongitude,
+    this.servicesId
   });
 
   ServicioPendiente.fromJson(dynamic json) {
@@ -211,6 +218,12 @@ class ServicioPendiente {
     progessionalPhone = json['profesional_phone'] ?? '';
     clientLatitude  = json['client_lat'] ?? '';
     clientLongitude  = json['client_long'] ?? '';
+
+    if (json['services_id'] != null) {
+      for (var item in json['services_id']) {
+        servicesId.add(item);
+      }
+    }
   }
 }
 

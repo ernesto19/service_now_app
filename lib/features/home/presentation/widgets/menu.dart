@@ -12,6 +12,7 @@ import 'package:service_now/features/home/presentation/pages/messages_page.dart'
 import 'package:service_now/features/home/presentation/pages/profile_page.dart';
 import 'package:service_now/features/home/presentation/pages/service_tray_page.dart';
 import 'package:service_now/features/home/presentation/pages/settings_services_page.dart';
+import 'package:service_now/features/home/presentation/widgets/web_view_membership.dart';
 import 'package:service_now/features/login/domain/entities/user.dart';
 import 'package:service_now/features/professional/presentation/pages/pending_service_tray_page.dart';
 import 'package:service_now/features/professional/presentation/pages/professional_business_page.dart';
@@ -19,6 +20,7 @@ import 'package:service_now/injection_container.dart';
 import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
+import 'package:service_now/widgets/expired_token_dialog.dart';
 import 'package:service_now/widgets/rounded_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -108,8 +110,20 @@ class _MenuState extends State<Menu> {
                             bloc.acquireMembership();
                             bloc.membershipResponse.listen((response) {
                               if (response.error == 0) {
-                                Navigator.pop(context);
-                                _openWeb(response.data);
+                                // Navigator.pop(context);
+                                // _openWeb(response.data);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewMembershipPage(url: response.data )));
+                              } else if (response.message == 'Unauthenticated') {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return WillPopScope(
+                                      onWillPop: () async => false,
+                                      child: ExpiredTokenDialog()
+                                    );
+                                  }
+                                );
                               } else {
                                 Navigator.pop(_scaffoldKey.currentContext);
                                 this._showDialog(allTranslations.traslate('registro_fallido'), response.message);

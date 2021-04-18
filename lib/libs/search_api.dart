@@ -6,6 +6,7 @@ import 'package:service_now/features/appointment/data/responses/get_business_res
 import 'package:service_now/features/appointment/domain/entities/business.dart';
 import 'package:service_now/models/place.dart';
 import 'package:service_now/preferences/user_preferences.dart';
+import 'package:service_now/utils/strings.dart';
 
 class SearchAPI {
   SearchAPI._internal();
@@ -23,7 +24,7 @@ class SearchAPI {
       + '?query=$query'
       + '&location=${at.latitude},${at.longitude}'
       + '&radius=10000'
-      + '&key=AIzaSyAQdtC9uL--5mlAEHC6W-niIeWKUCpE2Cc'
+      + '&key=$googleMapsKey'
     );
 
     if (response.statusCode == 200) {

@@ -93,7 +93,7 @@ class UserPreferences {
   }
 
   get currentLatitude {
-    return _preferences.getDouble('currentLatitude' ?? '');
+    return _preferences.getDouble('currentLatitude' ?? 0.0);
   }
 
   set currentLatitude(double value) {
@@ -101,10 +101,35 @@ class UserPreferences {
   }
 
   get currentLongitude {
-    return _preferences.getDouble('currentLongitude' ?? '');
+    return _preferences.getDouble('currentLongitude' ?? 0.0);
   }
 
   set currentLongitude(double value) {
     _preferences.setDouble('currentLongitude', value);
+  }
+
+  get currentDatetime {
+    return _preferences.getString('currentDatetime' ?? '');
+  }
+
+  set currentDatetime(String value) {
+    _preferences.setString('currentDatetime', value);
+  }
+
+  // SERVICIO
+  get serviceProfessionalId {
+    return _preferences.getInt('serviceProfessionalId' ?? 0);
+  }
+
+  set serviceProfessionalId(int value) {
+    _preferences.setInt('serviceProfessionalId', value);
+  }
+
+  get serviceIsPending {
+    return _preferences.getInt('serviceIsPending' ?? 0);
+  }
+
+  set serviceIsPending(int value) {
+    _preferences.setInt('serviceIsPending', value);
   }
 }

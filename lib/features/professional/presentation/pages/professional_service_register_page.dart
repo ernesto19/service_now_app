@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -5,21 +7,23 @@ import 'package:service_now/features/professional/domain/entities/industry.dart'
 import 'package:service_now/features/professional/domain/entities/professional_service.dart';
 import 'package:service_now/features/professional/presentation/bloc/pages/business_register/bloc.dart';
 import 'package:service_now/injection_container.dart';
+import 'package:service_now/preferences/user_preferences.dart';
 import 'package:service_now/utils/all_translations.dart';
 import 'package:service_now/utils/colors.dart';
 import 'package:service_now/utils/text_styles.dart';
 import 'package:service_now/widgets/input_form_field.dart';
 import 'package:service_now/widgets/rounded_button.dart';
-
+import 'package:http/http.dart' as http;
 import 'professional_service_gallery_page.dart';
+import 'package:service_now/models/professional_business.dart';
 
 class ProfessionalServiceRegisterPage extends StatefulWidget {
   static final routeName = 'professional_service_register_page';
 
-  final int businessId;
+  final ProfessionalBusiness business;
   final ProfessionalService professionalService;
 
-  const ProfessionalServiceRegisterPage({ @required this.businessId, @required this.professionalService });
+  const ProfessionalServiceRegisterPage({ @required this.business, @required this.professionalService });
 
   @override
   _ProfessionalServiceRegisterPageState createState() => _ProfessionalServiceRegisterPageState();
@@ -31,6 +35,9 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
   String _categorySelected;
   String _serviceSelected;
   List<Asset> images = List<Asset>();
+  final http.Client client = http.Client();
+  String minPrice = '';
+  String maxPrice = '';
 
   @override
   void initState() {
@@ -260,6 +267,8 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
             }).toList(),
             value: _serviceSelected,
             onChanged: (value) {
+              getJusticePrice(value);
+
               setState(() {
                 _serviceSelected = value;
               });
@@ -270,13 +279,43 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
     );
   }
 
+  Future getJusticePrice(String serviceId) async {
+    final response = await client.post(
+      'https://servicenow.konxulto.com/service_now/public/api/business/social_justice_price',
+      headers: {
+        'Authorization': 'Bearer ${UserPreferences.instance.token}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json.encode(
+        {
+          'service_id': serviceId,
+          'zip_code': widget.business.zipCode
+        }
+      )
+    );
+
+    if (response.statusCode == 200) {
+      final body = ResponsePrecioJusto.fromJson(json.decode(response.body));
+
+      if (body.error == 0 && body.data != null) {
+        setState(() {
+          minPrice = body.data.min;
+          maxPrice = body.data.max;
+        });
+      }
+    } else {
+      print('error');
+    }
+  }
+
   Widget _buildSaveButton(ProfessionalBloc bloc) {
     return RoundedButton(
       label: widget.professionalService == null ? allTranslations.traslate('register_button_text') : allTranslations.traslate('update_button_text'),
       backgroundColor: secondaryDarkColor,
       width: double.infinity,
       onPressed: widget.professionalService == null
-        ? () => bloc.add(RegisterServiceForProfessional(widget.businessId, int.parse(_serviceSelected), double.parse(_priceController.text), images, context))
+        ? () => bloc.add(RegisterServiceForProfessional(widget.business.id, int.parse(_serviceSelected), double.parse(_priceController.text), images, context))
         : () => bloc.add(UpdateServiceForProfessional(widget.professionalService.id, double.parse(_priceController.text), context))
     );
   }
@@ -333,5 +372,29 @@ class _ProfessionalServiceRegisterPageState extends State<ProfessionalServiceReg
     setState(() {
       images = resultList;
     });
+  }
+}
+
+class PrecioJusto {
+  String min;
+  String max;
+
+  PrecioJusto.fromJson(dynamic json) {
+    min = json['min'];
+    max = json['max'];
+  }
+}
+
+class ResponsePrecioJusto {
+  int error;
+  String message;
+  PrecioJusto data;
+
+  ResponsePrecioJusto.fromJson(dynamic json) {
+    error   = json['error'];
+    message = json['message'];
+
+    if (error == 0)
+      data = PrecioJusto.fromJson(json['data']);
   }
 }

@@ -90,7 +90,7 @@ class _ProfessionalAptitudeRegisterPageState extends State<ProfessionalAptitudeR
       label: allTranslations.traslate('aptitude_title_label'),
       inputType: TextInputType.number,
       controller: _titleController,
-      maxLength: 20
+      maxLength: 40
     );
   }
 

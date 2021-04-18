@@ -146,12 +146,16 @@ class _ServiceTrayPageState extends State<ServiceTrayPage> {
                             icon: Icon(Icons.more_vert),
                             onSelected: (value) {
                               if (value == '1') {
-                                // TODO implementar solicitud de servicio
                                 List<Service> services = [];
+                                servicio.servicesId.forEach((element) {
+                                  // ignore: missing_required_param
+                                  services.add(Service(id: element));
+                                });
+                                
                                 AppointmentBloc.bloc.finalizarSolicitud(services, servicio.professionalId);
                                 AppointmentBloc.bloc.finalizarServicioResponse.listen((response) {
                                   if (response.error == 0) {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewPage(url: response.url)));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewPage(url: response.url, professionalUserId: servicio.professionalId)));
                                   } else {
                                     Navigator.pop(_scaffoldKey.currentContext);
                                     this._showDialog(allTranslations.traslate('registro_fallido'), response.message);
